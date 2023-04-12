@@ -1,4 +1,4 @@
-package com.example.medcheckb8.enums;
+package com.example.medcheckb8.db.enums;
 
 public enum Position {
     SURGEON,

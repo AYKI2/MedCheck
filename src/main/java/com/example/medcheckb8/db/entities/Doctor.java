@@ -1,10 +1,12 @@
-package com.example.medcheckb8.entities;
+package com.example.medcheckb8.db.entities;
 
-import com.example.medcheckb8.enums.Position;
+import com.example.medcheckb8.db.enums.Position;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -14,11 +16,11 @@ import static jakarta.persistence.CascadeType.*;
 @Entity
 @Table(name = "doctors")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doctor_gen")
-    @SequenceGenerator(name = "doctor_seq",allocationSize = 1)
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "doctor_gen", sequenceName = "doctor_seq")
     private Long id;
     private String firstName;
     private String lastName;
@@ -28,18 +30,16 @@ public class Doctor {
     private String image;
     private String description;
     @OneToMany(mappedBy = "doctor",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Appointment> appointments ;
+            cascade = ALL)
+    private List<Appointment> appointments;
 
-    @ManyToOne(cascade ={PERSIST,
+    @ManyToOne(cascade = {PERSIST,
             REFRESH,
             MERGE,
             DETACH})
     private Department department;
     @OneToMany(mappedBy = "doctor",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Schedule> schedules ;
+            cascade = ALL)
+    private List<Schedule> schedules;
 
 }

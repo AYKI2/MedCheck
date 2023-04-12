@@ -1,4 +1,4 @@
-package com.example.medcheckb8.entities;
+package com.example.medcheckb8.db.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,10 +13,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "applications")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_gen")
-    @SequenceGenerator(name = "application_seq",allocationSize = 1)
+    @SequenceGenerator(name = "application_gen", sequenceName = "application_seq")
     private Long id;
     private String name;
     private LocalDate date;

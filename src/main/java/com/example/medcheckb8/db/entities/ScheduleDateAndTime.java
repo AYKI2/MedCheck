@@ -1,6 +1,7 @@
-package com.example.medcheckb8.entities;
+package com.example.medcheckb8.db.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,18 +14,21 @@ import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "schedule_date_and_time")
+@Table(name = "schedule_date_and_times")
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScheduleDateAndTime {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_gen")
-    @SequenceGenerator(name = "schedule_date_and_time_seq",allocationSize = 1)
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "schedule_date_and_time_gen", sequenceName = "schedule_date_time_day_seq")
     private Long id;
     private LocalDate date;
     private LocalTime timeFrom;
-    private LocalDate timeTo;
-    @ManyToOne(cascade = {PERSIST,DETACH,MERGE,REFRESH})
-    Schedule schedule;
+    private LocalTime timeTo;
+    @ManyToOne(cascade = {PERSIST,
+            DETACH,
+            MERGE,
+            REFRESH})
+    private Schedule schedule;
 
 }

@@ -1,7 +1,8 @@
-package com.example.medcheckb8.entities;
+package com.example.medcheckb8.db.entities;
 
-import com.example.medcheckb8.enums.Status;
+import com.example.medcheckb8.db.enums.Status;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,10 +15,11 @@ import static jakarta.persistence.CascadeType.*;
 @Entity
 @Table(name = "appointments")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_gen")
-    @SequenceGenerator(name = "appointment_seq",allocationSize = 1)
+    @SequenceGenerator(name = "appointment_gen",sequenceName = "appointment_seq")
     private Long id;
     private String fullName;
     private String phoneNumber;
