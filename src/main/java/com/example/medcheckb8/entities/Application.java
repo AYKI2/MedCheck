@@ -23,10 +23,4 @@ public class Application {
     private String phoneNumber;
     private Boolean processed;
 
-    public Application(String name, LocalDate date, String phoneNumber, Boolean processed) {
-        this.name = name;
-        this.date = date;
-        this.phoneNumber = phoneNumber;
-        this.processed = processed;
-    }
 }

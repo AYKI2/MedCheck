@@ -33,10 +33,5 @@ public class User {
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<Appointment> appointment = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
     private List<Result> results = new ArrayList<>();
 }
