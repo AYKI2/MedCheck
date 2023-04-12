@@ -16,19 +16,17 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_gen")
     @SequenceGenerator(name = "department_seq",allocationSize = 1)
     private Long id;
     private String name;
     @OneToMany(mappedBy = "department",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = CascadeType.ALL)
     private List<Appointment> appointments;
 
     @OneToMany(mappedBy = "department",
-            cascade = ALL,
-            orphanRemoval = true)
-    private List<Doctor> doctors = new ArrayList<>();
+            cascade = ALL)
+    private List<Doctor> doctors;
 
 
 

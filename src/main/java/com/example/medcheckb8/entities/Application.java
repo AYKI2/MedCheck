@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Application {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_gen")
     @SequenceGenerator(name = "application_seq",allocationSize = 1)
     private Long id;
     private String name;

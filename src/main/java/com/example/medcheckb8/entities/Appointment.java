@@ -16,7 +16,7 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class Appointment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_gen")
     @SequenceGenerator(name = "appointment_seq",allocationSize = 1)
     private Long id;
     private String fullName;

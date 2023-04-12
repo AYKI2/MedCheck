@@ -17,7 +17,7 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class ScheduleDateAndTime {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_gen")
     @SequenceGenerator(name = "schedule_date_and_time_seq",allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;

@@ -17,7 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class Schedule {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scheduel_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_gen")
     @SequenceGenerator(name = "schedule_seq",allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -28,7 +28,6 @@ public class Schedule {
     private Map<Repeat,Boolean>repeatDay;
     @ManyToOne(cascade = CascadeType.ALL)
     private Doctor doctor   ;
-
     @ManyToOne(cascade = CascadeType.ALL)
     private Department department;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "schedule")
