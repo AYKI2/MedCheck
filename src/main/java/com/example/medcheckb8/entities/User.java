@@ -14,23 +14,15 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq")
+    @SequenceGenerator(name = "user_seq",allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-
-    public User(String firstName, String lastName, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-
-    }
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_id")
     private Account account;

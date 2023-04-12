@@ -3,6 +3,7 @@ package com.example.medcheckb8.entities;
 import com.example.medcheckb8.enums.Repeat;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,10 +14,11 @@ import java.util.Map;
 @Setter
 @Entity
 @Table(name = "schedules")
+@NoArgsConstructor
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scheduel_seq")
-    @SequenceGenerator(name = "schedule_seq")
+    @SequenceGenerator(name = "schedule_seq",allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     private LocalDate dataOfStart;

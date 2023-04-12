@@ -2,6 +2,7 @@ package com.example.medcheckb8.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import static jakarta.persistence.CascadeType.*;
 @Setter
 @Entity
 @Table(name = "departments")
+@NoArgsConstructor
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq")
-    @SequenceGenerator(name = "department_seq")
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "department_seq",allocationSize = 1)
     private Long id;
     private String name;
     @OneToMany(mappedBy = "department",

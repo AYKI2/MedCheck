@@ -13,12 +13,10 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "applications")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_seq")
-    @SequenceGenerator(name = "application_seq")
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "application_seq",allocationSize = 1)
     private Long id;
     private String name;
     private LocalDate date;

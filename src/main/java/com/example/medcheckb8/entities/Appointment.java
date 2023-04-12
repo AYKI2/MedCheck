@@ -3,21 +3,21 @@ package com.example.medcheckb8.entities;
 import com.example.medcheckb8.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "appointments")
+@NoArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_seq")
-    @SequenceGenerator(name = "appointment_seq")
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "appointment_seq",allocationSize = 1)
     private Long id;
     private String fullName;
     private String phoneNumber;

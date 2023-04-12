@@ -2,6 +2,7 @@ package com.example.medcheckb8.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,10 +14,11 @@ import static jakarta.persistence.CascadeType.*;
 @Setter
 @Entity
 @Table(name = "schedule_date_and_time")
+@NoArgsConstructor
 public class ScheduleDateAndTime {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_seq")
-    @SequenceGenerator(name = "schedule_date_and_time_seq")
+    @SequenceGenerator(name = "schedule_date_and_time_seq",allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     private LocalDate date;
