@@ -18,6 +18,7 @@ public class Account {
     private Long id;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToOne(mappedBy = "account",

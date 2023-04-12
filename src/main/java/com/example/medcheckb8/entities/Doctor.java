@@ -22,6 +22,7 @@ public class Doctor {
     private Long id;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
     private Position position;
     private Boolean isActive;
     private String image;
