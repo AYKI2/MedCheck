@@ -24,13 +24,11 @@ public class Result {
     private String orderNumber;
     private String file;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = {PERSIST,
             MERGE,
             REFRESH,
             DETACH})
-    @JoinColumn(name = "service_id")
     private Department department;
 
 }

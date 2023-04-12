@@ -28,19 +28,16 @@ public class Appointment {
             MERGE,
             PERSIST,
             REFRESH})
-    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = {PERSIST,
             MERGE,
             REFRESH,
             DETACH})
-    @JoinColumn(name = "doctors_id")
     private Doctor doctor;
     @ManyToOne(cascade = {PERSIST,
             MERGE,
             REFRESH,
             DETACH})
-    @JoinColumn(name = "service_id")
     private Department department;
 
 }

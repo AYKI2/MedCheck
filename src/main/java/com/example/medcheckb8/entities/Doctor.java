@@ -35,7 +35,6 @@ public class Doctor {
             REFRESH,
             MERGE,
             DETACH})
-    @JoinColumn(name = "service_id")
     private Department department;
     @OneToMany(mappedBy = "doctor",
             cascade = CascadeType.ALL,

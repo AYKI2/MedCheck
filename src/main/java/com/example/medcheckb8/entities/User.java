@@ -24,7 +24,6 @@ public class User {
     private String lastName;
     private String phoneNumber;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
     private Account account;
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,

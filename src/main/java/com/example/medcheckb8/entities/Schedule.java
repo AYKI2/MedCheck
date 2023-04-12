@@ -27,11 +27,9 @@ public class Schedule {
     @ElementCollection
     private Map<Repeat,Boolean>repeatDay;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "doctors_id")
     private Doctor doctor   ;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "service_id")
     private Department department;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "schedule")
     List< ScheduleDateAndTime> dateAndTimes;
