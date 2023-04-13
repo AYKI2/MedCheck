@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.entities;
 
+import com.example.medcheckb8.db.enums.Detachment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_gen")
     @SequenceGenerator(name = "department_gen", sequenceName = "department_seq")
     private Long id;
-    private com.example.medcheckb8.db.enums.Department name;
+    private Detachment name;
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
 

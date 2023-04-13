@@ -1,6 +1,6 @@
 package com.example.medcheckb8.db.enums;
 
-public enum Department {
+public enum Detachment {
     ALLERGOLOGY,
     ANESTHESIOLOGY,
     VACCINATION,
