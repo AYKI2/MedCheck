@@ -21,7 +21,7 @@ values (1, 'ALLERGOLOGY'),
        (4, 'GASTROENTEROLOGY'),
        (5, 'GYNECOLOGY'),
        (6, 'DERMATOLOGY'),
-       (7, 'Кардиология'),
+       (7, 'CARDIOLOGY'),
        (8, 'NEUROLOGY'),
        (9, 'NEUROSURGERY'),
        (10, 'ONCOLOGY'),
@@ -222,13 +222,13 @@ values (1, '2023-07-01','file','88888888888', 4, 2),
 
 
 insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)
-values (1, true, 'MONDAY'),
-       (2, true, 'TUESDAY'),
-       (3, true, 'WEDNESDAY'),
-       (4, true, 'THURSDAY'),
-       (5, true, 'FRIDAY'),
-       (6, false, 'SATURDAY'),
-       (7, false, 'SUNDAY');
+values (1, true, 0),
+       (2, true, 1),
+       (3, true, 2),
+       (4, true, 3),
+       (5, true, 4),
+       (6, false, 5),
+       (7, false, 6);
 
 
 insert into applications (id, date, name, phone_number, processed)
