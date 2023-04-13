@@ -15,28 +15,28 @@ values (1, 'Админ', 'Админов', '0708281398', 1),
 
 
 insert into departments (id, name)
-values (1, 'Аллергология'),
-       (2, 'Анестезиология'),
-       (3, 'Вакцинация'),
-       (4, 'Гастроэнтерология'),
-       (5, 'Гинекология'),
-       (6, 'Дерматология'),
+values (1, 'ALLERGOLOGY'),
+       (2, 'ANESTHESIOLOGY'),
+       (3, 'VACCINATION'),
+       (4, 'GASTROENTEROLOGY'),
+       (5, 'GYNECOLOGY'),
+       (6, 'DERMATOLOGY'),
        (7, 'Кардиология'),
-       (8, 'Неврология'),
-       (9, 'Нейрохирургия'),
-       (10, 'Онкология'),
-       (11, 'Ортопедия'),
-       (12, 'Оториноларингология'),
-       (13, 'Офтальмология'),
-       (14, 'Проктология'),
-       (15, 'Психатерапия'),
-       (16, 'Пульмонология'),
-       (17, 'Ревмотология'),
-       (18, 'Терапия'),
-       (19, 'Урология'),
-       (20, 'Флебология'),
-       (21, 'Физиотерапия'),
-       (22, 'Эндокринология');
+       (8, 'NEUROLOGY'),
+       (9, 'NEUROSURGERY'),
+       (10, 'ONCOLOGY'),
+       (11, 'ORTHOPEDICS'),
+       (12, 'OTORHINOLARYNGOLOGY'),
+       (13, 'OPHTHALMOLOGY'),
+       (14, 'PROCTOLOGY'),
+       (15, 'PSYCHOTHERAPY'),
+       (16, 'PULMONOLOGY'),
+       (17, 'RHEUMATOLOGY'),
+       (18, 'THERAPY'),
+       (19, 'UROLOGY'),
+       (20, 'PHLEBOLOGY'),
+       (21, 'PHYSIOTHERAPY'),
+       (22, 'ENDOCRINOLOGY');
 
 
 insert into doctors (id, description, first_name, image, is_active, last_name, position, department_id)
@@ -221,23 +221,15 @@ values (1, '2023-07-01','file','88888888888', 4, 2),
        (4, '2023-07-01','file','88888888888', 11, 5);
 
 
--- insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)
--- values (1, true, 'MONDAY'),
---        (2, true, 'TUESDAY'),
---        (3, true, 'WEDNESDAY'),
---        (4, true, 'THURSDAY'),
---        (5, true, 'FRIDAY'),
---        (6, false, 'SATURDAY'),
---        (7, false, 'SUNDAY');
-
 insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)
-values (1, true, 0),
-       (2, true, 1),
-       (3, true, 2),
-       (4, true, 3),
-       (5, true, 4),
-       (6, false, 5),
-       (7, false, 6);
+values (1, true, 'MONDAY'),
+       (2, true, 'TUESDAY'),
+       (3, true, 'WEDNESDAY'),
+       (4, true, 'THURSDAY'),
+       (5, true, 'FRIDAY'),
+       (6, false, 'SATURDAY'),
+       (7, false, 'SUNDAY');
+
 
 insert into applications (id, date, name, phone_number, processed)
 VALUES (1, '2023-04-15', 'Асан', '0709990099', true);
