@@ -25,6 +25,7 @@ public class Appointment {
     private String fullName;
     private String phoneNumber;
     private String email;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDateTime dateOfVisit;
     @ManyToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
