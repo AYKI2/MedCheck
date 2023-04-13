@@ -35,7 +35,4 @@ public class Schedule {
     private Department department;
     @OneToMany(cascade = ALL,mappedBy = "schedule")
     List< ScheduleDateAndTime> dateAndTimes;
-
-
-
 }

@@ -18,15 +18,13 @@ import static jakarta.persistence.CascadeType.ALL;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_gen")
-    @SequenceGenerator(name = "account_gen",sequenceName = "account_seq")
+    @SequenceGenerator(name = "account_gen", sequenceName = "account_seq")
     private Long id;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToOne(mappedBy = "account",
-            cascade = ALL)
+    @OneToOne(mappedBy = "account", cascade = ALL)
     private User user;
 
 }

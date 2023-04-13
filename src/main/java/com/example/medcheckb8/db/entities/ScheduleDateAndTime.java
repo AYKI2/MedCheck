@@ -25,10 +25,7 @@ public class ScheduleDateAndTime {
     private LocalDate date;
     private LocalTime timeFrom;
     private LocalTime timeTo;
-    @ManyToOne(cascade = {PERSIST,
-            DETACH,
-            MERGE,
-            REFRESH})
+    @ManyToOne(cascade = {PERSIST, DETACH, MERGE, REFRESH})
     private Schedule schedule;
 
 }

@@ -22,12 +22,10 @@ public class Department {
     @SequenceGenerator(name = "department_gen", sequenceName = "department_seq")
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "department",
-            cascade = ALL)
+    @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
 
-    @OneToMany(mappedBy = "department",
-            cascade = ALL)
+    @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Doctor> doctors;
 
 

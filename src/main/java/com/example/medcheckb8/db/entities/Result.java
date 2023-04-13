@@ -26,10 +26,6 @@ public class Result {
     private String file;
     @ManyToOne(cascade = ALL)
     private User user;
-    @ManyToOne(cascade = {PERSIST,
-            MERGE,
-            REFRESH,
-            DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
-
 }

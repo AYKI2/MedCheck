@@ -29,17 +29,12 @@ public class Doctor {
     private Boolean isActive;
     private String image;
     private String description;
-    @OneToMany(mappedBy = "doctor",
-            cascade = ALL)
+    @OneToMany(mappedBy = "doctor", cascade = ALL)
     private List<Appointment> appointments;
 
-    @ManyToOne(cascade = {PERSIST,
-            REFRESH,
-            MERGE,
-            DETACH})
+    @ManyToOne(cascade = {PERSIST, REFRESH, MERGE, DETACH})
     private Department department;
-    @OneToMany(mappedBy = "doctor",
-            cascade = ALL)
+    @OneToMany(mappedBy = "doctor", cascade = ALL)
     private List<Schedule> schedules;
 
 }

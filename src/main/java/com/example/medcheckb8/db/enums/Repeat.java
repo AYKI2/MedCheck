@@ -7,5 +7,5 @@ public enum Repeat {
     THURSDAY,
     FRIDAY,
     SATURDAY,
-    SUNDAY;
+    SUNDAY
 }

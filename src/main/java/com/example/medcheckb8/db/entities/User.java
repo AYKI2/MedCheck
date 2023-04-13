@@ -26,10 +26,8 @@ public class User {
     private String phoneNumber;
     @OneToOne(cascade = ALL)
     private Account account;
-    @OneToMany(mappedBy = "user",
-            cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Appointment> appointments;
-    @OneToMany(mappedBy = "user",
-            cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Result> results;
 }
