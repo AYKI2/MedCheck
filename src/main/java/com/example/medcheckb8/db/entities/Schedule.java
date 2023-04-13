@@ -28,6 +28,7 @@ public class Schedule {
     private LocalDate dataOfFinish;
     private int intervalOfHours;
     @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Map<Repeat,Boolean>repeatDay;
     @ManyToOne(cascade = ALL)
     private Doctor doctor   ;
