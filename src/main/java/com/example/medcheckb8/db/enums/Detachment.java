@@ -7,6 +7,7 @@ public enum Detachment {
     GASTROENTEROLOGY,
     GYNECOLOGY,
     DERMATOLOGY,
+    CARDIOLOGY,
     NEUROLOGY,
     NEUROSURGERY,
     ONCOLOGY,
