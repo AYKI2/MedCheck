@@ -1,6 +1,5 @@
 package com.example.medcheckb8.db.entities;
 
-import com.example.medcheckb8.db.enums.Position;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,14 +23,12 @@ public class Doctor {
     private Long id;
     private String firstName;
     private String lastName;
-    @Enumerated(EnumType.STRING)
-    private Position position;
+    private String position;
     private Boolean isActive;
     private String image;
     private String description;
     @OneToMany(mappedBy = "doctor", cascade = ALL)
     private List<Appointment> appointments;
-
     @ManyToOne(cascade = {PERSIST, REFRESH, MERGE, DETACH})
     private Department department;
     @OneToMany(mappedBy = "doctor", cascade = ALL)
