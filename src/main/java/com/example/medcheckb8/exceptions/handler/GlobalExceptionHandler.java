@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler(NotFountException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse handlerNotFound(NotFountException e) {
         return new ExceptionResponse(HttpStatus.NOT_FOUND,
                 e.getMessage(), NotFountException.class.getSimpleName());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(AlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse handlerAlreadyExist(AlreadyExistException e) {
         return new ExceptionResponse(HttpStatus.CONFLICT,
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                 AlreadyExistException.class.getSimpleName());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handlerBadRequest(BadRequestException e) {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST,
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 BadRequestException.class.getSimpleName());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerForbidden(ForbiddenException e) {
         return new ExceptionResponse(HttpStatus.FORBIDDEN,
