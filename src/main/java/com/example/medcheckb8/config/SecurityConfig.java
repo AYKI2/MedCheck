@@ -1,4 +1,4 @@
-package com.example.medcheckb8.db.config;
+package com.example.medcheckb8.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

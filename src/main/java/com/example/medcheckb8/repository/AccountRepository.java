@@ -1,4 +1,4 @@
-package com.example.medcheckb8.db.repository;
+package com.example.medcheckb8.repository;
 
 import com.example.medcheckb8.db.entities.Account;
 import org.springframework.data.jpa.repository.JpaRepository;

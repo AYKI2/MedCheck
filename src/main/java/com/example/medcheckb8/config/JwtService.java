@@ -1,4 +1,4 @@
-package com.example.medcheckb8.db.config;
+package com.example.medcheckb8.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

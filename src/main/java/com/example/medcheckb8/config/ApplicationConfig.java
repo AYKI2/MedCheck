@@ -1,6 +1,6 @@
-package com.example.medcheckb8.db.config;
+package com.example.medcheckb8.config;
 
-import com.example.medcheckb8.db.repository.AccountRepository;
+import com.example.medcheckb8.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
