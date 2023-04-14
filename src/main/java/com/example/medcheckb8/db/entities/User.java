@@ -1,10 +1,7 @@
 package com.example.medcheckb8.db.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import static jakarta.persistence.CascadeType.ALL;
 @Setter
 @Entity
 @Table(name = "users")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
