@@ -1,10 +1,10 @@
-package com.example.medcheckb8.exceptions.handler;
+package com.example.medcheckb8.db.exceptions.handler;
 
+import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.dto.response.ExceptionResponse;
-import com.example.medcheckb8.exceptions.AlreadyExistException;
-import com.example.medcheckb8.exceptions.BadRequestException;
-import com.example.medcheckb8.exceptions.ForbiddenException;
-import com.example.medcheckb8.exceptions.NotFountException;
+import com.example.medcheckb8.db.exceptions.AlreadyExistException;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
+import com.example.medcheckb8.db.exceptions.ForbiddenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -43,5 +43,6 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 ForbiddenException.class.getSimpleName());
     }
+
 
 }
