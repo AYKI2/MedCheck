@@ -21,7 +21,7 @@ public class Result {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_gen")
     @SequenceGenerator(name = "result_gen", sequenceName = "result_seq")
     private Long id;
-    private LocalDateTime dateOdIssue;
+    private LocalDateTime dateOfIssue;
     private String orderNumber;
     private String file;
     @ManyToOne(cascade = ALL)

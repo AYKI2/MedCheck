@@ -25,6 +25,7 @@ public class ScheduleDateAndTime {
     private LocalDate date;
     private LocalTime timeFrom;
     private LocalTime timeTo;
+    private Boolean isBusy;
     @ManyToOne(cascade = {PERSIST, DETACH, MERGE, REFRESH})
     private Schedule schedule;
 
