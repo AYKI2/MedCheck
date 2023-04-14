@@ -214,7 +214,7 @@ values (1, '2023-06-01', false, '08:00:00', '09:00:00', 1),
        (100, '2023-06-04', false, '16:00:00', '17:00:00', 7);
 
 
-insert into results (id, date_od_issue, file, order_number, department_id, user_id)
+insert into results (id, date_of_issue, file, order_number, department_id, user_id)
 values (1, '2023-07-01','file','88888888888', 4, 2),
        (2, '2023-07-01','file','99999999999', 3, 3),
        (3, '2023-07-01','file','11111111111', 19, 4),
