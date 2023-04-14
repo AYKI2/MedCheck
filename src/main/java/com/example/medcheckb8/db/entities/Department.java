@@ -22,6 +22,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_gen")
     @SequenceGenerator(name = "department_gen", sequenceName = "department_seq")
     private Long id;
+    @Enumerated(EnumType.STRING)
     private Detachment name;
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
