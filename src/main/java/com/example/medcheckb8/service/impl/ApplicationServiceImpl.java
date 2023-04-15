@@ -26,6 +26,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setPhoneNumber(request.phoneNumber());
         application.setProcessed(false);
         repository.save(application);
-        return new SimpleResponse(HttpStatus.OK,String.format("Successfully  %s saved!",request.name()));
+        return new SimpleResponse(HttpStatus.OK, String.format("Successfully  %s saved!", request.name()));
     }
 }
