@@ -10,9 +10,11 @@ import com.example.medcheckb8.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.repository.AccountRepository;
 import com.example.medcheckb8.repository.UserRepository;
 import com.example.medcheckb8.service.AccountService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,27 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    @PostConstruct
+    void initMethod(){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User user = User.builder()
+                .firstName("admin")
+                .lastName("admin")
+                .phoneNumber("+996550434204")
+                .build();
+        Account account = Account.builder()
+                .email("admin@gmail.com")
+                .password(passwordEncoder.encode("Admin123"))
+                .role(Role.ADMIN)
+                .user(user)
+                .build();
+        user.setAccount(account);
+        if(!repository.existsByEmail(account.getEmail())){
+            userRepository.save(user);
+            repository.save(account);
+        }
+    }
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
