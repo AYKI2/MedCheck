@@ -34,22 +34,19 @@ public class AccountServiceImpl implements AccountService {
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .phoneNumber(request.phoneNumber())
+                .account(Account.builder()
+                        .email(request.email())
+                        .password(passwordEncoder.encode(request.password()))
+                        .role(Role.PATIENT)
+                        .build())
                 .build();
-        Account account = Account.builder()
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .role(Role.PATIENT)
-                .user(user)
-                .build();
-        user.setAccount(account);
         userRepository.save(user);
-        repository.save(account);
 
-        String jwt = jwtService.generateToken(account);
+        String jwt = jwtService.generateToken(user.getAccount());
         return AuthenticationResponse.builder()
-                .email(account.getEmail())
+                .email(user.getAccount().getEmail())
                 .token(jwt)
-                .role(account.getRole().name())
+                .role(user.getAccount().getRole().name())
                 .build();
     }
 
@@ -58,18 +55,18 @@ public class AccountServiceImpl implements AccountService {
         if(!repository.existsByEmail(request.email())){
             throw new BadRequestException("User with email: "+request.email()+" doesn't exists!");
         }
+        Account account = repository.findByEmail(request.email())
+                .orElseThrow(() ->
+                        new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
+        if(!passwordEncoder.matches(request.password(), account.getPassword())){
+            throw new BadCredentialException("Invalid password!");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
-        Account account = repository.findByEmail(request.email())
-                .orElseThrow(() ->
-                        new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
-        if(!passwordEncoder.matches(account.getPassword(), request.password())){
-            throw new BadCredentialException("Invalid password!");
-        }
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())

@@ -22,7 +22,7 @@ import static jakarta.persistence.CascadeType.ALL;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_gen")
-    @SequenceGenerator(name = "schedule_gen",sequenceName = "schedule_seq")
+    @SequenceGenerator(name = "schedule_gen",sequenceName = "schedule_seq", allocationSize = 1, initialValue = 8)
     private Long id;
     private LocalDate dataOfStart;
     private LocalDate dataOfFinish;
