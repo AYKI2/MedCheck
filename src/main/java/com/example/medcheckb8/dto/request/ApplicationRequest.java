@@ -6,9 +6,9 @@ import lombok.Builder;
 
 @Builder
 public record ApplicationRequest(
-        @NotBlank(message = "name cannot be empty!")
+        @NotBlank(message = "Name cannot be empty!")
         String name,
-        @NotBlank(message = "phone number cannot be empty!")
+        @NotBlank(message = "Phone number cannot be empty!")
         @PhoneNumberValid
         String phoneNumber) {
 }
