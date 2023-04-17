@@ -7,8 +7,8 @@ public class PasswordValidator implements ConstraintValidator<PasswordValid, Str
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         boolean isValid = true;
-        if(s == null || !s.isBlank()){
-            System.out.println("Name cannot be empty!");
+        if(s == null || s.isBlank()){
+            System.out.println("Password cannot be empty!");
             return false;
         }
         if (s.length() > 20 || s.length() < 6)

@@ -4,6 +4,7 @@ import com.example.medcheckb8.dto.request.AuthenticationRequest;
 import com.example.medcheckb8.dto.request.RegisterRequest;
 import com.example.medcheckb8.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.service.AccountService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,11 +16,11 @@ public class AccountApi {
         this.service = service;
     }
     @PostMapping("/signUp")
-    public AuthenticationResponse singUp(@RequestBody RegisterRequest request){
+    public AuthenticationResponse singUp(@RequestBody @Validated RegisterRequest request){
         return service.register(request);
     }
     @PostMapping("/signIn")
-    public AuthenticationResponse signIn(@RequestBody AuthenticationRequest request){
+    public AuthenticationResponse signIn(@RequestBody @Validated AuthenticationRequest request){
         return service.authenticate(request);
     }
 }

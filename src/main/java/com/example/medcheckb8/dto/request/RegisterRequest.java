@@ -19,13 +19,13 @@ public record RegisterRequest(
         String lastName,
         @NotBlank(message = "Phone number cannot be empty!")
         @NotNull(message = "Phone number cannot be empty!")
-        @PhoneNumberValid
+        @PhoneNumberValid(message = "Invalid phone number!")
         String phoneNumber,
         @NotBlank(message = "Email cannot be empty!")
         @NotNull(message = "Email cannot be empty!")
-        @Email(regexp = "^(?=.{1,32}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$", message = "Not valid email!")
+        @Email(message = "Not valid email!")
         String email,
-        @PasswordValid
+        @PasswordValid(message = "Invalid password!")
         String password
 ) {
 }
