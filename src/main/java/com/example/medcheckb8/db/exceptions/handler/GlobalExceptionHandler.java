@@ -1,10 +1,7 @@
 package com.example.medcheckb8.db.exceptions.handler;
 
-import com.example.medcheckb8.db.exceptions.NotFountException;
+import com.example.medcheckb8.db.exceptions.*;
 import com.example.medcheckb8.dto.response.ExceptionResponse;
-import com.example.medcheckb8.db.exceptions.AlreadyExistException;
-import com.example.medcheckb8.db.exceptions.BadRequestException;
-import com.example.medcheckb8.db.exceptions.ForbiddenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,5 +39,13 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(HttpStatus.FORBIDDEN,
                 e.getMessage(),
                 ForbiddenException.class.getSimpleName());
+    }
+    @ExceptionHandler(BadCredentialException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResponse handlerBadCredential(BadCredentialException e) {
+        return new ExceptionResponse(
+                HttpStatus.FORBIDDEN,
+                e.getMessage(),
+                BadRequestException.class.getSimpleName());
     }
 }

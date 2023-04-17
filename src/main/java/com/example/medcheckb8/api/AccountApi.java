@@ -20,7 +20,7 @@ public class AccountApi {
         return service.register(request);
     }
     @PostMapping("/signIn")
-    public AuthenticationResponse signIn(@RequestBody @Validated AuthenticationRequest request){
+    public AuthenticationResponse signIn(@RequestBody AuthenticationRequest request){
         return service.authenticate(request);
     }
 }

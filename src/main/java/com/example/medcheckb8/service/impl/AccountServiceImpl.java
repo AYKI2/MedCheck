@@ -4,21 +4,20 @@ import com.example.medcheckb8.config.JwtService;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.enums.Role;
+import com.example.medcheckb8.db.exceptions.BadCredentialException;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
+import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.dto.request.AuthenticationRequest;
 import com.example.medcheckb8.dto.request.RegisterRequest;
 import com.example.medcheckb8.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.repository.AccountRepository;
 import com.example.medcheckb8.repository.UserRepository;
 import com.example.medcheckb8.service.AccountService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,27 +27,6 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
-    @PostConstruct
-    void initMethod(){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        User user = User.builder()
-                .firstName("admin")
-                .lastName("admin")
-                .phoneNumber("+996550434204")
-                .build();
-        Account account = Account.builder()
-                .email("admin@gmail.com")
-                .password(passwordEncoder.encode("Admin123"))
-                .role(Role.ADMIN)
-                .user(user)
-                .build();
-        user.setAccount(account);
-        if(!repository.existsByEmail(account.getEmail())){
-            userRepository.save(user);
-            repository.save(account);
-        }
-    }
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
@@ -77,6 +55,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        if(!repository.existsByEmail(request.email())){
+            throw new BadRequestException("User with email: "+request.email()+" doesn't exists!");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
@@ -85,8 +66,10 @@ public class AccountServiceImpl implements AccountService {
         );
         Account account = repository.findByEmail(request.email())
                 .orElseThrow(() ->
-                        new NoSuchElementException(String.format("User with email: %s doesn't exists!", request.email())));
-
+                        new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
+        if(!passwordEncoder.matches(account.getPassword(), request.password())){
+            throw new BadCredentialException("Invalid password!");
+        }
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())
