@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
-
 @Getter
 @Setter
 @Entity
@@ -33,5 +32,4 @@ public class Doctor {
     private Department department;
     @OneToMany(mappedBy = "doctor", cascade = ALL)
     private List<Schedule> schedules;
-
 }

@@ -23,5 +23,4 @@ public class Application {
     private LocalDate date;
     private String phoneNumber;
     private Boolean processed;
-
 }

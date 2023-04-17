@@ -28,5 +28,4 @@ public class ScheduleDateAndTime {
     private Boolean isBusy;
     @ManyToOne(cascade = {PERSIST, DETACH, MERGE, REFRESH})
     private Schedule schedule;
-
 }

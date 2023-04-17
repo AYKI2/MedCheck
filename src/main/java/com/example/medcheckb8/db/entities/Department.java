@@ -26,9 +26,6 @@ public class Department {
     private Detachment name;
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
-
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Doctor> doctors;
-
-
 }
