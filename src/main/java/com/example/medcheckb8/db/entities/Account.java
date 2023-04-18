@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
-
 @Getter
 @Setter
 @Entity

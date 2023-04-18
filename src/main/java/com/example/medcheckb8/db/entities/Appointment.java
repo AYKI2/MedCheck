@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.CascadeType.*;
-
 @Getter
 @Setter
 @Entity

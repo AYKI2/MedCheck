@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/applications")
 public class ApplicationAPI {
     private final ApplicationService service;
-    @PostMapping
+    @PostMapping("/add")
     public SimpleResponse addApplication(@RequestBody @Valid ApplicationRequest request) {
         return service.addApplication(request);
     }
-
 }

@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.enums.Role;
+import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.BadCredentialException;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
@@ -18,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -29,6 +29,12 @@ public class AccountServiceImpl implements AccountService {
     private final AuthenticationManager authenticationManager;
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
+        if(repository.existsByEmail(request.email())){
+            throw new AlreadyExistException("This email already exists!");
+        }
+        if(userRepository.existsByPhoneNumber(request.phoneNumber())){
+            throw new AlreadyExistException("This number is already in use!");
+        }
         User user = User.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())

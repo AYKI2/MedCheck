@@ -2,7 +2,6 @@ package com.example.medcheckb8.db.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-
 public class PhoneNumberValidator implements ConstraintValidator<PhoneNumberValid, String> {
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {

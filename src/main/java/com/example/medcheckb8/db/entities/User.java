@@ -2,11 +2,8 @@ package com.example.medcheckb8.db.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.ALL;
-
 @Getter
 @Setter
 @Entity
