@@ -1,11 +1,17 @@
 package com.example.medcheckb8.db.config.jwt;
 
+import com.example.medcheckb8.db.entities.Account;
+import com.example.medcheckb8.db.exceptions.NotFountException;
+import com.example.medcheckb8.db.repository.AccountRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.security.Key;
@@ -14,7 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 @Service
+@Slf4j
 public class JwtService {
+    private final AccountRepository accountRepository;
+
+    public JwtService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
     @Value("${jwt.secret-key}")
     private String SECRET_KEY;
     public String extractUsername(String token){
@@ -60,5 +72,14 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+    public Account getAccountInToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+        log.info("Token has been taken!");
+        return accountRepository.findByEmail(login).orElseThrow(()-> {
+            log.error("User not found!");
+            throw new NotFountException("User not found!");
+        });
     }
 }
