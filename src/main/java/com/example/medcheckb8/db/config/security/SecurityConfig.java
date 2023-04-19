@@ -23,7 +23,6 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/applications/add").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
