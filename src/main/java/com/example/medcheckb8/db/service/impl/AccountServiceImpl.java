@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -27,12 +28,13 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
-        if(repository.existsByEmail(request.email())){
+        if (repository.existsByEmail(request.email())) {
             throw new AlreadyExistException("This email already exists!");
         }
-        if(userRepository.existsByPhoneNumber(request.phoneNumber())){
+        if (userRepository.existsByPhoneNumber(request.phoneNumber())) {
             throw new AlreadyExistException("This number is already in use!");
         }
         User user = User.builder()
@@ -54,15 +56,16 @@ public class AccountServiceImpl implements AccountService {
                 .role(user.getAccount().getRole().name())
                 .build();
     }
+
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        if(!repository.existsByEmail(request.email())){
-            throw new BadRequestException("User with email: "+request.email()+" doesn't exists!");
+        if (!repository.existsByEmail(request.email())) {
+            throw new BadRequestException("User with email: " + request.email() + " doesn't exists!");
         }
         Account account = repository.findByEmail(request.email())
                 .orElseThrow(() ->
                         new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
-        if(!passwordEncoder.matches(request.password(), account.getPassword())){
+        if (!passwordEncoder.matches(request.password(), account.getPassword())) {
             throw new BadCredentialException("Invalid password!");
         }
         authenticationManager.authenticate(

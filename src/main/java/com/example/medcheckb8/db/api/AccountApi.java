@@ -7,17 +7,20 @@ import com.example.medcheckb8.db.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AccountApi {
     private final AccountService service;
+
     @PostMapping("/signUp")
-    public AuthenticationResponse singUp(@RequestBody @Valid RegisterRequest request){
+    public AuthenticationResponse singUp(@RequestBody @Valid RegisterRequest request) {
         return service.register(request);
     }
+
     @PostMapping("/signIn")
-    public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request){
+    public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request) {
         return service.authenticate(request);
     }
 }

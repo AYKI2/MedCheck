@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.validation.PasswordValid;
 import com.example.medcheckb8.db.validation.PhoneNumberValid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
+
 @Builder
 public record RegisterRequest(
         @Size(min = 2, max = 30, message = "The Firstname must contain between 2 and 30 characters.")

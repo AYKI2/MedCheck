@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -17,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class ScheduleDateAndTime {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_gen")
-    @SequenceGenerator(name = "schedule_date_and_time_gen", sequenceName = "schedule_date_time_day_seq",allocationSize = 1,initialValue = 195)
+    @SequenceGenerator(name = "schedule_date_and_time_gen", sequenceName = "schedule_date_time_day_seq", allocationSize = 1, initialValue = 195)
     private Long id;
     private LocalDate date;
     private LocalTime timeFrom;

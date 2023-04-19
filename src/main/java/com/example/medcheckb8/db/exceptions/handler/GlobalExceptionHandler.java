@@ -9,7 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.util.stream.Collectors;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(NotFountException.class)
@@ -18,6 +20,7 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(HttpStatus.NOT_FOUND,
                 e.getMessage(), NotFountException.class.getSimpleName());
     }
+
     @ExceptionHandler(AlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse handlerAlreadyExist(AlreadyExistException e) {
@@ -25,6 +28,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 AlreadyExistException.class.getSimpleName());
     }
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handlerBadRequest(BadRequestException e) {
@@ -32,6 +36,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 BadRequestException.class.getSimpleName());
     }
+
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerForbidden(ForbiddenException e) {
@@ -39,6 +44,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 ForbiddenException.class.getSimpleName());
     }
+
     @ExceptionHandler(BadCredentialException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerBadCredential(BadCredentialException e) {
@@ -47,6 +53,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 BadRequestException.class.getSimpleName());
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {

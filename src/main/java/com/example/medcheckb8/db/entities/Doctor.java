@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -16,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doctor_gen")
-    @SequenceGenerator(name = "doctor_gen", sequenceName = "doctor_seq", allocationSize = 1,initialValue = 47)
+    @SequenceGenerator(name = "doctor_gen", sequenceName = "doctor_seq", allocationSize = 1, initialValue = 47)
     private Long id;
     private String firstName;
     private String lastName;
