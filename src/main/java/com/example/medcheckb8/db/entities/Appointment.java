@@ -20,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_gen")
-    @SequenceGenerator(name = "appointment_gen", sequenceName = "appointment_seq")
+    @SequenceGenerator(name = "appointment_gen", sequenceName = "appointment_seq", allocationSize = 1, initialValue = 5)
     private Long id;
     private String fullName;
     private String phoneNumber;
@@ -34,5 +34,4 @@ public class Appointment {
     private Doctor doctor;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
-
 }

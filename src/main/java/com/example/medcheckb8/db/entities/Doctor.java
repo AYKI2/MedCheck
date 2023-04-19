@@ -19,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doctor_gen")
-    @SequenceGenerator(name = "doctor_gen", sequenceName = "doctor_seq")
+    @SequenceGenerator(name = "doctor_gen", sequenceName = "doctor_seq", allocationSize = 1, initialValue = 47)
     private Long id;
     private String firstName;
     private String lastName;
@@ -33,5 +33,4 @@ public class Doctor {
     private Department department;
     @OneToMany(mappedBy = "doctor", cascade = ALL)
     private List<Schedule> schedules;
-
 }

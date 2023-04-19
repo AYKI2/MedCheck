@@ -1,4 +1,4 @@
-package com.example.medcheckb8.validation;
+package com.example.medcheckb8.db.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

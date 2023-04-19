@@ -17,11 +17,10 @@ import java.time.LocalDate;
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_gen")
-    @SequenceGenerator(name = "application_gen", sequenceName = "application_seq", allocationSize = 3)
+    @SequenceGenerator(name = "application_gen", sequenceName = "application_seq", allocationSize = 1, initialValue = 3)
     private Long id;
     private String name;
     private LocalDate date;
     private String phoneNumber;
     private Boolean processed;
-
 }

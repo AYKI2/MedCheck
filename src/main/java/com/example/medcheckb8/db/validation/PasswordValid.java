@@ -1,4 +1,4 @@
-package com.example.medcheckb8.validation;
+package com.example.medcheckb8.db.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PhoneNumberValidator.class)
+@Constraint(validatedBy = PasswordValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PhoneNumberValid {
-    String message() default "Invalid phone number";
+public @interface PasswordValid {
+    String message() default "Invalid password";
 
     Class<?>[] groups() default {};
 

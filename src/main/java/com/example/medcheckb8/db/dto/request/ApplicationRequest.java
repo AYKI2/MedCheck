@@ -1,6 +1,6 @@
-package com.example.medcheckb8.dto.request;
+package com.example.medcheckb8.db.dto.request;
 
-import com.example.medcheckb8.validation.PhoneNumberValid;
+import com.example.medcheckb8.db.validation.PhoneNumberValid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
