@@ -1,10 +1,10 @@
-package com.example.medcheckb8.service.impl;
+package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.entities.Application;
-import com.example.medcheckb8.dto.request.ApplicationRequest;
-import com.example.medcheckb8.dto.response.SimpleResponse;
-import com.example.medcheckb8.repository.ApplicationRepository;
-import com.example.medcheckb8.service.ApplicationService;
+import com.example.medcheckb8.db.service.ApplicationService;
+import com.example.medcheckb8.db.dto.request.ApplicationRequest;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
+import com.example.medcheckb8.db.repository.ApplicationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

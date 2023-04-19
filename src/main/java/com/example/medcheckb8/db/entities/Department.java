@@ -20,15 +20,12 @@ import static jakarta.persistence.CascadeType.*;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_gen")
-    @SequenceGenerator(name = "department_gen", sequenceName = "department_seq")
+    @SequenceGenerator(name = "department_gen", sequenceName = "department_seq", allocationSize = 1, initialValue = 23)
     private Long id;
     @Enumerated(EnumType.STRING)
     private Detachment name;
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
-
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Doctor> doctors;
-
-
 }

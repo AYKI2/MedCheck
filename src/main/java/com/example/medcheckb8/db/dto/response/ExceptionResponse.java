@@ -1,4 +1,4 @@
-package com.example.medcheckb8.dto.response;
+package com.example.medcheckb8.db.dto.response;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
