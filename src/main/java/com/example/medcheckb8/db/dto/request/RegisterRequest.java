@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.dto.request;
 
 import com.example.medcheckb8.db.validation.PasswordValid;
+import com.example.medcheckb8.db.validation.PhoneNumberValid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 @Builder
@@ -17,6 +18,7 @@ public record RegisterRequest(
         String lastName,
         @NotBlank(message = "Phone number cannot be empty!")
         @NotNull(message = "Phone number cannot be empty!")
+        @PhoneNumberValid(message = "Invalid phone number!")
         String phoneNumber,
         @NotBlank(message = "Email cannot be empty!")
         @NotNull(message = "Email cannot be empty!")
