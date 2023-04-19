@@ -1,9 +1,9 @@
 insert into accounts (id, email, password, role)
-VALUES (1, 'admin@gmai.com', 'admin', 'ADMIN'),
-       (2, 'kuban@gmai.com', 'kuban', 'PATIENT'),
-       (3, 'eliza@gmai.com', 'eliza', 'PATIENT'),
-       (4, 'isxak@gmai.com', 'isxak', 'PATIENT'),
-       (5, 'uluk@gmai.com', 'uluk', 'PATIENT');
+VALUES (1, 'admin@gmail.com', '$2a$12$448IReue43rqpYW27HWLQO5JJmvYSyjDvpVlwijFQq.FotkxRepBm', 'ADMIN'),
+       (2, 'kuban@gmail.com', '$2a$12$edF8P1CF93xkBX.WsT.NAOqJ6CGJVLke45MXKcMNKJ3uaQrT7bvk6', 'PATIENT'),
+       (3, 'eliza@gmail.com', '$2a$12$d8O64rMuOp/PgiAr0zf42eN1xn1G4mH7xxNYeUnCWIIFdb.NnYRbq', 'PATIENT'),
+       (4, 'isxak@gmail.com', '$2a$12$dYWxM1tOa.mMqFCVJ/rikeZxYxF0qck9pr1ioSijJN2k5/vCUcCs2', 'PATIENT'),
+       (5, 'uluk@gmail.com', '$2a$12$QBzhWSs8erQeKuqfz.ZxEO.thonK92aJz6cqnYff8zatE7MZMOdyu', 'PATIENT');
 
 
 insert into users (id, first_name, last_name, phone_number, account_id)
