@@ -25,7 +25,7 @@ public class ApplicationAPI {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @GetMapping("/getAll")
-    public List<ApplicationResponse> getAllApplication(@RequestParam String word) {
+    public List<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word) {
         return service.getAllApplication(word);
     }
 }
