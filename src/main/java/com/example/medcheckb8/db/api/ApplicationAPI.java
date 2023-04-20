@@ -1,15 +1,15 @@
 package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
+import com.example.medcheckb8.db.dto.response.ApplicationResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +21,11 @@ public class ApplicationAPI {
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     public SimpleResponse addApplication(@RequestBody @Valid ApplicationRequest request) {
         return service.addApplication(request);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
+    @GetMapping("/getAll")
+    public List<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word) {
+        return service.getAllApplication(word);
     }
 }
