@@ -50,8 +50,8 @@ public class DoctorAPI {
     }
 
     @PostMapping("/isActive")
-    public SimpleResponse isActive(@RequestParam(required = false) Boolean isActive,
-                                   @RequestParam(required = false) Long doctorId) {
+    public SimpleResponse isActive(@RequestParam Boolean isActive,
+                                   @RequestParam Long doctorId) {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
 
