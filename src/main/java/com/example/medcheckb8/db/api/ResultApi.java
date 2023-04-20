@@ -1,13 +1,10 @@
 package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.ResultRequest;
-import com.example.medcheckb8.db.dto.response.ResultResponse;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResultApi {
     private final ResultService resultService;
 
-    @PostMapping("/add")
-    public ResultResponse addResult(@RequestBody ResultRequest request){
-        return resultService.addResult(request);
+    @PostMapping("/add/{patientId}")
+    public SimpleResponse addResult(@RequestBody ResultRequest request,
+                                    @PathVariable Long patientId){
+        return resultService.addResult(patientId, request);
     }
 }
