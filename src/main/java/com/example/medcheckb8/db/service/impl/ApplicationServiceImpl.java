@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.service.impl;
 
+import com.example.medcheckb8.db.dto.response.ApplicationResponse;
 import com.example.medcheckb8.db.entities.Application;
 import com.example.medcheckb8.db.service.ApplicationService;
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +29,13 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setProcessed(false);
         repository.save(application);
         return new SimpleResponse(HttpStatus.OK, String.format("Successfully  %s saved!", request.name()));
+    }
+
+    @Override
+    public List<ApplicationResponse> getAllApplication(String word) {
+        if (word == null) {
+            return repository.getAllApplication();
+        }
+        return repository.globalSearch(word);
     }
 }
