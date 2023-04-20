@@ -17,5 +17,5 @@ public interface DoctorService {
 
     SimpleResponse delete(Long id);
 
-    SimpleResponse isActive(Boolean isActive, Long doctorId);
+    SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 }

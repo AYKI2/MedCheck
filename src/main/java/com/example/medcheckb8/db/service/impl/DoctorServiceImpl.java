@@ -91,7 +91,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public SimpleResponse isActive(Boolean isActive, Long doctorId) {
+    public SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new NotFountException(
                 String.format("Doctor with id: %d not found.", doctorId)
         ));

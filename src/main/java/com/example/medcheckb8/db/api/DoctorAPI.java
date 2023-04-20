@@ -17,17 +17,17 @@ import java.util.List;
 public class DoctorAPI {
     private final DoctorService doctorService;
 
-    @PostMapping("/save")
+    @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse save(@RequestParam Long departmentId,
                                @RequestBody @Valid DoctorRequest doctorRequest) {
         return doctorService.save(departmentId, doctorRequest);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/find")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public DoctorResponse findById(@PathVariable Long id) {
-        return doctorService.findById(id);
+    public DoctorResponse findById(@RequestParam Long doctorId) {
+        return doctorService.findById(doctorId);
     }
 
     @GetMapping("/findAll")
@@ -43,16 +43,16 @@ public class DoctorAPI {
         return doctorService.update(id, doctorRequest);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse delete(@PathVariable Long id) {
-        return doctorService.delete(id);
+    public SimpleResponse delete(@RequestParam Long doctorId) {
+        return doctorService.delete(doctorId);
     }
 
     @PostMapping("/isActive")
     public SimpleResponse isActive(@RequestParam(required = false) Boolean isActive,
                                    @RequestParam(required = false) Long doctorId) {
-        return doctorService.isActive(isActive, doctorId);
+        return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
 
 }
