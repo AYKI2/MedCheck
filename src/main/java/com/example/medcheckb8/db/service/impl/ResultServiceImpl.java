@@ -1,7 +1,6 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.ResultRequest;
-import com.example.medcheckb8.db.dto.response.ResultResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Result;
@@ -13,6 +12,8 @@ import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class ResultServiceImpl implements ResultService {
         Result result = Result.builder()
                 .department(department)
                 .dateOfIssue(request.dateOfIssue())
+                .orderNumber(generateOrderNumber())
                 .file(request.file())
                 .build();
 
@@ -43,5 +45,19 @@ public class ResultServiceImpl implements ResultService {
                 .message(String.format("Result with patient full name: %s successfully added.",
                         (user.getFirstName() + " " + user.getLastName())))
                 .build();
+    }
+
+    private String generateOrderNumber(){
+        Random random = new Random();
+        int length = 18;
+        String chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(chars.length());
+            sb.append(chars.charAt(index));
+        }
+
+        return sb.toString();
     }
 }

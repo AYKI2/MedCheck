@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api/results")
 public class ResultApi {
     private final ResultService resultService;
 
-    @PostMapping("/add/{patientId}")
+    @PostMapping
     public SimpleResponse addResult(@RequestBody ResultRequest request,
-                                    @PathVariable Long patientId){
+                                    @RequestParam Long patientId){
         return resultService.addResult(patientId, request);
     }
 }
