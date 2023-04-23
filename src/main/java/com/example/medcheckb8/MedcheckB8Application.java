@@ -12,8 +12,9 @@ public class MedcheckB8Application {
     }
 
     @GetMapping
-    String introduction(){
+    String introduction() {
         return "introduction";
     }
+
 
 }
