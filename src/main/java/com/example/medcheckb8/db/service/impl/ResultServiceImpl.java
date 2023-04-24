@@ -37,7 +37,7 @@ public class ResultServiceImpl implements ResultService {
         Result result = Result.builder()
                 .department(department)
                 .dateOfIssue(request.dateOfIssue())
-                .orderNumber(uniquenessCheck())
+                .orderNumber(uniquenessCheckOrderNumber())
                 .file(request.file())
                 .user(user)
                 .build();
@@ -65,7 +65,7 @@ public class ResultServiceImpl implements ResultService {
         return sb.toString();
     }
 
-    private String uniquenessCheck (){
+    private String uniquenessCheckOrderNumber (){
         StringBuilder sb = new StringBuilder();
         List<Result> all = resultRepository.findAll();
         String s = generateOrderNumber();
