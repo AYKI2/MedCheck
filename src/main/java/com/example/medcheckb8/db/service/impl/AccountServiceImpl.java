@@ -1,6 +1,10 @@
 package com.example.medcheckb8.db.service.impl;
 
+
 import com.example.medcheckb8.db.config.jwt.JwtService;
+import com.example.medcheckb8.db.dto.request.ChangePasswordRequest;
+import com.example.medcheckb8.db.dto.request.ForgotPasswordRequest;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.enums.Role;
@@ -15,10 +19,17 @@ import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.google.common.base.Strings;
+
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +39,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailServiceImpl emailService;
+
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
@@ -80,5 +93,48 @@ public class AccountServiceImpl implements AccountService {
                 .token(token)
                 .role(account.getRole().name())
                 .build();
+    }
+    private String getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
+    @Override
+    public SimpleResponse changePassword(ChangePasswordRequest request) {
+      try {
+          Account account = repository.findByEmail(getCurrentUser())
+                  .orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
+                if(account != null){
+                    if (account.getPassword().equals(request.oldPassword())) {
+                        account.setPassword(request.newPassword());
+                        repository.save(account);
+                        return SimpleResponse.builder().status(HttpStatus.OK)
+                                .message("Password updated successfully.").build();
+                    }
+                    return SimpleResponse.builder().status(HttpStatus.NOT_FOUND)
+                            .message("Wrong old password.").build();
+                }
+                return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).
+                        message("Something went wrong.").build();
+      }catch (Exception e){
+          e.printStackTrace();
+      }
+        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+    }
+
+    @Override
+    public SimpleResponse forgotPassword(ForgotPasswordRequest request) {
+        try {
+            Account account = repository.findByEmail(request.email()).
+                    orElseThrow(() -> new NotFountException("No such email ."));
+            if(!Objects.isNull(account) && !Strings.isNullOrEmpty(account.getEmail()))
+                emailService.forgotMail(account.getEmail(), "Authority of the Med Check management system ", account.getPassword());
+            return SimpleResponse.builder().status(HttpStatus.OK)
+                    .message("Check your email for credentials.").build();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).
+                message("Something went wrong.").build();
     }
 }
