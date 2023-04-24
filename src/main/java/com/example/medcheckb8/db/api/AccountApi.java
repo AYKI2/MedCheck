@@ -11,8 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -30,12 +28,12 @@ public class AccountApi {
     }
 
     @PostMapping("/changePassword")
-    SimpleResponse changePassword (@RequestBody ChangePasswordRequest request){
-      return service.changePassword (request);
+    SimpleResponse changePassword(@RequestBody ChangePasswordRequest request) {
+        return service.changePassword(request);
     }
 
-    @PostMapping ("/forgot_password")
-    SimpleResponse forgotPassword (@RequestBody ForgotPasswordRequest request){
-        return service.forgotPassword (request);
+    @PostMapping("/forgot_password")
+    SimpleResponse forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        return service.forgotPassword(request);
     }
 }

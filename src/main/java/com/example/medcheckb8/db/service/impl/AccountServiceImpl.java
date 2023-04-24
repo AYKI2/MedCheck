@@ -1,6 +1,5 @@
 package com.example.medcheckb8.db.service.impl;
 
-
 import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.dto.request.ChangePasswordRequest;
 import com.example.medcheckb8.db.dto.request.ForgotPasswordRequest;
@@ -28,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -40,7 +38,6 @@ public class AccountServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailServiceImpl emailService;
-
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
@@ -54,8 +51,7 @@ public class AccountServiceImpl implements AccountService {
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .phoneNumber(request.phoneNumber())
-                .account(Account.builder()
-                        .email(request.email())
+                .account(Account.builder().email(request.email())
                         .password(passwordEncoder.encode(request.password()))
                         .role(Role.PATIENT)
                         .build())
@@ -75,18 +71,11 @@ public class AccountServiceImpl implements AccountService {
         if (!repository.existsByEmail(request.email())) {
             throw new BadRequestException("User with email: " + request.email() + " doesn't exists!");
         }
-        Account account = repository.findByEmail(request.email())
-                .orElseThrow(() ->
-                        new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
+        Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
         if (!passwordEncoder.matches(request.password(), account.getPassword())) {
             throw new BadCredentialException("Invalid password!");
         }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())
@@ -94,47 +83,41 @@ public class AccountServiceImpl implements AccountService {
                 .role(account.getRole().name())
                 .build();
     }
-    private String getCurrentUser(){
+
+    private String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
     @Override
     public SimpleResponse changePassword(ChangePasswordRequest request) {
-      try {
-          Account account = repository.findByEmail(getCurrentUser())
-                  .orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
-                if(account != null){
-                    if (account.getPassword().equals(request.oldPassword())) {
-                        account.setPassword(request.newPassword());
-                        repository.save(account);
-                        return SimpleResponse.builder().status(HttpStatus.OK)
-                                .message("Password updated successfully.").build();
-                    }
-                    return SimpleResponse.builder().status(HttpStatus.NOT_FOUND)
-                            .message("Wrong old password.").build();
+        try {
+            Account account = repository.findByEmail(getCurrentUser()).orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
+            if (account != null) {
+                if (account.getPassword().equals(request.oldPassword())) {
+                    account.setPassword(request.newPassword());
+                    repository.save(account);
+                    return SimpleResponse.builder().status(HttpStatus.OK).message("Password updated successfully.").build();
                 }
-                return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).
-                        message("Something went wrong.").build();
-      }catch (Exception e){
-          e.printStackTrace();
-      }
+                return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message("Wrong old password.").build();
+            }
+            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
     }
 
     @Override
     public SimpleResponse forgotPassword(ForgotPasswordRequest request) {
         try {
-            Account account = repository.findByEmail(request.email()).
-                    orElseThrow(() -> new NotFountException("No such email ."));
-            if(!Objects.isNull(account) && !Strings.isNullOrEmpty(account.getEmail()))
+            Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException("No such email ."));
+            if (!Objects.isNull(account) && !Strings.isNullOrEmpty(account.getEmail()))
                 emailService.forgotMail(account.getEmail(), "Authority of the Med Check management system ", account.getPassword());
-            return SimpleResponse.builder().status(HttpStatus.OK)
-                    .message("Check your email for credentials.").build();
-        }catch (Exception e) {
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Check your email for credentials.").build();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).
-                message("Something went wrong.").build();
+        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
     }
 }
