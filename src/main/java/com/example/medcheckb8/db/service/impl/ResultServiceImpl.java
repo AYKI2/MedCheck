@@ -5,6 +5,7 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Result;
 import com.example.medcheckb8.db.entities.User;
+import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.ResultRepository;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -52,6 +54,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private String generateOrderNumber() {
+        List<Result> all = resultRepository.findAll();
         Random random = new Random();
         int length = 18;
         String chars = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -60,6 +63,11 @@ public class ResultServiceImpl implements ResultService {
         for (int i = 0; i < length; i++) {
             int index = random.nextInt(chars.length());
             sb.append(chars.charAt(index));
+        }
+
+        for (Result result : all) {
+            if (result.getOrderNumber().contentEquals(sb))
+                throw new AlreadyExistException("Number must be unique");
         }
 
         return sb.toString();
