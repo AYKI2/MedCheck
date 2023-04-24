@@ -26,7 +26,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new NotFountException("Email send failed!");
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NotFountException("Not found and returned null!");
         }
     }

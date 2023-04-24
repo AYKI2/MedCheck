@@ -54,10 +54,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         String resetPasswordLink = "http://localhost:2023/api/auth/signIn";
 
         Context context = new Context();
-        context.setVariable("title", "Здравствуйте "+ user.getFirstName()+"!");
+        context.setVariable("title", "Здравствуйте " + user.getFirstName() + "!");
         context.setVariable("message", String.format("Вы записались на прием к специалисту %s на %s, %d - %s, %d:%d",
-                doctor.getLastName() +" "+ doctor.getFirstName(), request.date().getDayOfWeek().name(),
-                request.date().getDayOfYear(),request.date().getMonth().name(),
+                doctor.getLastName() + " " + doctor.getFirstName(), request.date().getDayOfWeek().name(),
+                request.date().getDayOfYear(), request.date().getMonth().name(),
                 request.date().getHour(), request.date().getMinute()));
         context.setVariable("link", resetPasswordLink);
         context.setVariable("linkTitle", "Ваша запись");
