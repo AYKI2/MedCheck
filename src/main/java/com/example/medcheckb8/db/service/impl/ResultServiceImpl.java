@@ -66,15 +66,14 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private String uniquenessCheckOrderNumber (){
-        StringBuilder sb = new StringBuilder();
         List<Result> all = resultRepository.findAll();
         String s = generateOrderNumber();
         for (Result result : all) {
             if (s.equals(result.getOrderNumber()))
-                sb = new StringBuilder(generateOrderNumber());
+                s = generateOrderNumber();
             else
                 return s;
         }
-        return sb.toString();
+        return s;
     }
 }
