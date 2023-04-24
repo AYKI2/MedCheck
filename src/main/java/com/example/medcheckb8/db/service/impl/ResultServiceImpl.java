@@ -65,7 +65,7 @@ public class ResultServiceImpl implements ResultService {
         return sb.toString();
     }
 
-    private String uniquenessCheckOrderNumber (){
+    private String uniquenessCheckOrderNumber() {
         List<Result> all = resultRepository.findAll();
         String s = generateOrderNumber();
         for (Result result : all) {
