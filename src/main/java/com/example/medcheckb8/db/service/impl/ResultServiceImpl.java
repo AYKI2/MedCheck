@@ -5,7 +5,6 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Result;
 import com.example.medcheckb8.db.entities.User;
-import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.ResultRepository;
@@ -38,7 +37,7 @@ public class ResultServiceImpl implements ResultService {
         Result result = Result.builder()
                 .department(department)
                 .dateOfIssue(request.dateOfIssue())
-                .orderNumber(generateOrderNumber())
+                .orderNumber(uniquenessCheck())
                 .file(request.file())
                 .user(user)
                 .build();
@@ -54,7 +53,6 @@ public class ResultServiceImpl implements ResultService {
     }
 
     private String generateOrderNumber() {
-        List<Result> all = resultRepository.findAll();
         Random random = new Random();
         int length = 18;
         String chars = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -64,12 +62,19 @@ public class ResultServiceImpl implements ResultService {
             int index = random.nextInt(chars.length());
             sb.append(chars.charAt(index));
         }
+        return sb.toString();
+    }
 
+    private String uniquenessCheck (){
+        StringBuilder sb = new StringBuilder();
+        List<Result> all = resultRepository.findAll();
+        String s = generateOrderNumber();
         for (Result result : all) {
-            if (result.getOrderNumber().contentEquals(sb))
-                throw new AlreadyExistException("Number must be unique");
+            if (s.equals(result.getOrderNumber()))
+                sb = new StringBuilder(generateOrderNumber());
+            else
+                return s;
         }
-
         return sb.toString();
     }
 }
