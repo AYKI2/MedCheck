@@ -19,7 +19,7 @@ public class EmailServiceImpl {
         helper.setFrom("medcheck.service@gmail.com", senderName);
         helper.setTo(to);
         helper.setSubject(subject);
-        String htmlMsg = "<p><b>Your Login details for MedCheck System</b><br><b>Email: </b> " + to + " <br><b>Password: </b> " + password + "<br><a href=\"http://localhost:1010/\">Click here to login</a></p>";
+        String htmlMsg = "<p><b>Your Login details for MedCheck System</b><br><b>Email: </b> " + to + " <br><b>Password: </b> " + password + "<br><a href=\"http://localhost:2023/\">Click here to login</a></p>";
         message.setContent(htmlMsg, "text/html");
         javaMailSender.send(message);
 

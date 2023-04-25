@@ -36,3 +36,4 @@ src/main/resources/application-eliza.properties
 src/main/resources/application-local.properties
 src/main/resources/application-kuban.properties
 src/main/resources/application-uluk.properties
+src/main/resources/application-syimyk.properties
