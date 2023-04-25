@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.ProfileRequest;
+import com.example.medcheckb8.db.dto.response.ProfileResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.dto.response.UserResponse;
 import com.example.medcheckb8.db.entities.User;
@@ -27,13 +28,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SimpleResponse getUserProfileById(Long id, ProfileRequest request) {
+    public SimpleResponse getProfile(Long id, ProfileRequest request) {
         User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with email: %s not found!", id)));
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setPhoneNumber(request.phoneNumber());
         user.getAccount().setEmail(request.email());
         repository.save(user);
-        return  SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
+        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
+    }
+
+    @Override
+    public ProfileResponse getResult(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with email: %s not found!", id)));
+        ProfileResponse response = new ProfileResponse();
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setEmail(user.getAccount().getEmail());
+        return response;
     }
 }

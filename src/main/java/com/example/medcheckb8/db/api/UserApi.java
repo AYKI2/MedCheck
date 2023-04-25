@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,12 +23,16 @@ public class UserApi {
     public List<UserResponse> getAllPatients(@RequestParam(required = false) String word) {
         return service.getAllPatients(word);
     }
+
     @PutMapping("/profile")
-    public SimpleResponse getUserProfileById(@RequestParam Long id ,@Valid @RequestBody ProfileRequest request){
-        return service.getUserProfileById(id,request);
+    @PreAuthorize("hasAnyAuthority('PATIENT')")
+    public SimpleResponse getProfile(@RequestParam Long id, @Valid @RequestBody ProfileRequest request) {
+        return service.getProfile(id, request);
     }
-    @GetMapping
-    public ProfileResponse getResult(Long id){
-        return null;
+
+    @GetMapping("/get")
+    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
+    public ProfileResponse getResult(Long id) {
+        return service.getResult(id);
     }
 }
