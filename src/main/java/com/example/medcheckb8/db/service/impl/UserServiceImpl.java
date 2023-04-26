@@ -47,6 +47,6 @@ public class UserServiceImpl implements UserService {
         response.setLastName(user.getLastName());
         response.setPhoneNumber(user.getPhoneNumber());
         response.setEmail(user.getAccount().getEmail());
-        return response;
+        return repository.getResult(id);
     }
 }
