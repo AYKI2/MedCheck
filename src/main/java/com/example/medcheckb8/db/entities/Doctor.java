@@ -29,6 +29,6 @@ public class Doctor {
     private List<Appointment> appointments;
     @ManyToOne(cascade = {PERSIST, REFRESH, MERGE, DETACH})
     private Department department;
-    @OneToMany(mappedBy = "doctor", cascade = ALL)
-    private List<Schedule> schedules;
+    @OneToOne(mappedBy = "doctor", cascade = ALL)
+    private Schedule schedule;
 }
