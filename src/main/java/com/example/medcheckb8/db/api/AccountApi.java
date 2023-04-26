@@ -9,6 +9,7 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,12 +27,12 @@ public class AccountApi {
     public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request) {
         return service.authenticate(request);
     }
-
+    @PreAuthorize("hasAuthority('PATIENT')")
     @PostMapping("/changePassword")
     SimpleResponse changePassword(@RequestBody ChangePasswordRequest request) {
         return service.changePassword(request);
     }
-
+    @PreAuthorize("hasAuthority('PATIENT')")
     @PostMapping("/forgot_password")
     SimpleResponse forgotPassword(@RequestBody ForgotPasswordRequest request) {
         return service.forgotPassword(request);
