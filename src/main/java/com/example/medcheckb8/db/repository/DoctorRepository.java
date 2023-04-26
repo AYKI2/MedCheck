@@ -22,7 +22,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
 
     @Query("select new com.example.medcheckb8.db.dto.response.ExpertResponse(d.id,d.isActive, d.firstName, d.lastName, d.position," +
-            " d.image, d.description, d.department.name,s.dataOfFinish) " +
+            " d.image, d.department.name,s.dataOfFinish) " +
             "from Doctor d join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
             " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.isActive")
     List<ExpertResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord);
