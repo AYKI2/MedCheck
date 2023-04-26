@@ -4,6 +4,8 @@ import com.example.medcheckb8.db.dto.request.DoctorRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/doctors")
+@Tag(name = "Doctor", description = "API endpoints for managing doctors profile!")
 public class DoctorAPI {
     private final DoctorService doctorService;
 
@@ -55,7 +58,8 @@ public class DoctorAPI {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
     @GetMapping("/search")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'PATIENT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "The search method experts",description = "search for specialists in firstName,lastName,DepartmentName")
     List<DoctorResponse> search(@RequestParam String keyWord){
         return doctorService.searchByFirstNameOrLastNameOrDepartment(keyWord);
     }
