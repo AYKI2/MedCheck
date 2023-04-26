@@ -2,24 +2,35 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
+import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
+import com.example.medcheckb8.db.enums.Repeat;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
+import com.example.medcheckb8.db.repository.ScheduleDateAndTimeRepository;
 import com.example.medcheckb8.db.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DepartmentRepository departmentRepository;
+    private final ScheduleDateAndTimeRepository scheduleDateAndTimeRepository;
 
     @Override
     public SimpleResponse save(Long departmentId, DoctorRequest request) {
@@ -109,5 +120,52 @@ public class DoctorServiceImpl implements DoctorService {
                 .status(HttpStatus.OK)
                 .message(String.format("Doctor with id: %s is activated!", doctor.getId()))
                 .build();
+    }
+
+    @Override
+    public Boolean booked(Long doctorId, LocalDateTime localDateTime) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new NotFountException(String.format("Doctor with id: %d not found.", doctorId)));
+        String displayName = localDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
+        System.out.println(displayName);
+        if (!doctor.getIsActive() && !doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
+            throw new BadRequestException("This specialist is currently on vacation or not working.");
+        }
+        for (ScheduleDateAndTime dateAndTime : doctor.getSchedule().getDateAndTimes()) {
+            if (dateAndTime.getDate().equals(localDateTime.toLocalDate())
+                    && dateAndTime.getTimeFrom().equals(localDateTime.toLocalTime())) {
+                if(!dateAndTime.getIsBusy()) {
+                    dateAndTime.setIsBusy(true);
+                    return false;
+                }else {
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<ScheduleResponse> freeSpecialists(String department, LocalDate localDate) {
+        List<Doctor> freeDoctors = doctorRepository.findByDepartmentName(department);
+        List<ScheduleResponse> responses = new ArrayList<>();
+        if (freeDoctors.isEmpty()) {
+            throw new NotFountException("There are currently no employees in this department!");
+        }
+        String displayName = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()).toUpperCase();
+        for (Doctor doctor : freeDoctors) {
+            if (doctor.getIsActive() && doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
+                if (doctor.getSchedule().getDataOfStart().isBefore(localDate) && doctor.getSchedule().getDataOfFinish().isAfter(localDate)) {
+                    ScheduleResponse schedule = ScheduleResponse.builder()
+                            .fullName(doctor.getFirstName() + " " + doctor.getLastName())
+                            .image(doctor.getImage())
+                            .position(doctor.getPosition())
+                            .localDateTimes(scheduleDateAndTimeRepository.getAllByScheduleId(doctor.getSchedule().getId(), localDate))
+                            .build();
+                    responses.add(schedule);
+                }
+            }
+        }
+        return responses;
     }
 }

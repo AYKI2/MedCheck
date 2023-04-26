@@ -2,11 +2,48 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="import" href=""/>
     <title></title>
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            width: 55vw;
+            margin: 50px auto 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .card-image {
+            width: 50vw;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+            margin: 20px 0 30px 0;
+        }
+
+        h3 {
+            margin: 0;
+        }
+    </style>
 </head>
+
 <body>
 <h1 th:text="${title}">Заголовок</h1>
-<p th:text="${message}" style="color: red">Сообщение</p>
-<a th:href="${link}" th:text="${linkTitle}">Заголовок ссылки</a>
+<h3 th:text="${firstMessage}">Первое сообщение</h3>
+<h3 th:text="${secondMessage}">Второе сообщение</h3>
+<h3 th:text="${thirdMessage}">Третье сообщение</h3>
+<img class="card-image"
+     src="https://github.com/AYKI2/restaurant/blob/main/src/main/resources/templates/assets/images/emailImage.png?raw=true"
+     alt="Banner Image">
+<h3>Вы также можете посмотреть все свои записи, на этой странице:</h3>
+<a th:href="${link}">Ссылки</a>
+<h3>Контакная информация: 106452, г. Бишкек, Гражданская 119, +996550434204</h3>
 </body>
 </html>
