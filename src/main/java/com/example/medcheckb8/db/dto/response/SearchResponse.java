@@ -4,8 +4,11 @@ import lombok.Builder;
 
 @Builder
 public record SearchResponse(
+        Long doctorId,
+        Long departmentId,
         String doctorFirstName,
         String doctorLastName,
+        String doctorPosition,
         String departmentName
 ) {
 
