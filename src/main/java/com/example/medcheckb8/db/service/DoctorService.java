@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.service;
 
 import com.example.medcheckb8.db.dto.request.DoctorRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface DoctorService {
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 
-    List<DoctorResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord);
+    List<ExpertResponse> searchExperts(String keyWord);
 
 }

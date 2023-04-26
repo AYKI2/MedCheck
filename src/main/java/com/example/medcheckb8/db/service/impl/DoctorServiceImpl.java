@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -112,7 +113,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord) {
+    public List<ExpertResponse> searchExperts(String keyWord) {
         return doctorRepository.searchByFirstNameOrLastNameOrDepartment(keyWord);
     }
 }

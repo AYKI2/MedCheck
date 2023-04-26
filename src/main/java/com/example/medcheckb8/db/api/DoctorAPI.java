@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.DoctorRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,11 +58,12 @@ public class DoctorAPI {
                                    @RequestParam Long doctorId) {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
+
     @GetMapping("/search")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "The search method experts",description = "search for specialists in firstName,lastName,DepartmentName")
-    List<DoctorResponse> search(@RequestParam String keyWord){
-        return doctorService.searchByFirstNameOrLastNameOrDepartment(keyWord);
+    @Operation(summary = "The search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
+    List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
+        return doctorService.searchExperts(keyWord);
     }
 
 }
