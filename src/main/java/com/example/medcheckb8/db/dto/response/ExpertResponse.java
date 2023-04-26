@@ -11,7 +11,6 @@ public record ExpertResponse(
         String lastName,
         String position,
         String image,
-        String description,
         Detachment name,
         LocalDate dataOfFinish
 ) {

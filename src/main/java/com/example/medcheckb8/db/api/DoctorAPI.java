@@ -59,9 +59,9 @@ public class DoctorAPI {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
 
-    @GetMapping("/search")
+    @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "The search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
+    @Operation(summary = "The  search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
     List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
         return doctorService.searchExperts(keyWord);
     }
