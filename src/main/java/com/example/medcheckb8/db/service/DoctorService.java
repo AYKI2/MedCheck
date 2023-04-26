@@ -18,4 +18,7 @@ public interface DoctorService {
     SimpleResponse delete(Long id);
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
+
+    List<DoctorResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord);
+
 }

@@ -10,12 +10,22 @@ import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
-           " d.image, d.description, d.department.name) " +
-           "from Doctor d")
+            " d.image, d.description, d.department.name) " +
+            "from Doctor d")
     List<DoctorResponse> getAll();
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
-           " d.image, d.description, d.department.name) " +
-           "from Doctor d where d.id=?1")
+            " d.image, d.description, d.department.name) " +
+            "from Doctor d where d.id=?1")
     Optional<DoctorResponse> findByDoctorId(Long id);
+
+
+    @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
+            " d.image, d.description, d.department.name) " +
+            "from Doctor d where d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
+            " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%')or cast(d.department.name as string) ilike concat('%',:keyWord,'%')")
+    List<DoctorResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord);
+
+
 }
+

@@ -54,5 +54,10 @@ public class DoctorAPI {
                                    @RequestParam Long doctorId) {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'PATIENT')")
+    List<DoctorResponse> search(@RequestParam String keyWord){
+        return doctorService.searchByFirstNameOrLastNameOrDepartment(keyWord);
+    }
 
 }

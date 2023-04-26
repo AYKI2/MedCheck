@@ -110,4 +110,9 @@ public class DoctorServiceImpl implements DoctorService {
                 .message(String.format("Doctor with id: %s is activated!", doctor.getId()))
                 .build();
     }
+
+    @Override
+    public List<DoctorResponse> searchByFirstNameOrLastNameOrDepartment(String keyWord) {
+        return doctorRepository.searchByFirstNameOrLastNameOrDepartment(keyWord);
+    }
 }
