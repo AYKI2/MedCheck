@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
     private final DoctorRepository doctorRepository;
+
     @Override
     public List<SearchResponse> search(String word) {
         return doctorRepository.globalSearch(word);
