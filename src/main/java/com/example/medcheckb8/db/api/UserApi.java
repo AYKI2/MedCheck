@@ -32,14 +32,14 @@ public class UserApi {
     @Operation(
             summary = "The profile update method", description = "User profile which can see own information or changed"
     )
-    public SimpleResponse getProfile(@RequestParam Long id, @RequestBody @Valid ProfileRequest request) {
-        return service.getProfile(id, request);
+    public SimpleResponse getProfile(@RequestBody @Valid ProfileRequest request) {
+        return service.getProfile( request);
     }
 
     @GetMapping("/getResult")
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @Operation(summary = "The method to send information ", description = "Information for autocomplete")
-    public ProfileResponse getResult(Long id) {
-        return service.getResult(id);
+    public ProfileResponse getResult(String email) {
+        return service.getResult(email);
     }
 }
