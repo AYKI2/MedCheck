@@ -25,7 +25,7 @@ public class AppointmentApi {
     public AppointmentResponse addAppointment(@RequestBody @Valid AppointmentRequest request) {
         return service.save(request);
     }
-    @GetMapping()
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     public List<ScheduleResponse> getFreeSpecialists(@RequestBody @Valid FreeSpecialistRequest request) {
         return doctorService.freeSpecialists(request.department(), request.localDate());

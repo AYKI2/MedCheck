@@ -152,9 +152,10 @@ public class DoctorServiceImpl implements DoctorService {
         if (freeDoctors.isEmpty()) {
             throw new NotFountException("There are currently no employees in this department!");
         }
-        String displayName = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()).toUpperCase();
+        String displayName = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
+        System.out.println(displayName);
         for (Doctor doctor : freeDoctors) {
-            if (doctor.getIsActive() && doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
+            if (doctor.getIsActive() && doctor.getSchedule() != null && doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
                 if (doctor.getSchedule().getDataOfStart().isBefore(localDate) && doctor.getSchedule().getDataOfFinish().isAfter(localDate)) {
                     ScheduleResponse schedule = ScheduleResponse.builder()
                             .fullName(doctor.getFirstName() + " " + doctor.getLastName())
@@ -167,5 +168,6 @@ public class DoctorServiceImpl implements DoctorService {
             }
         }
         return responses;
+//        return doctorRepository.getAllByDepartmentName(department,localDate);
     }
 }
