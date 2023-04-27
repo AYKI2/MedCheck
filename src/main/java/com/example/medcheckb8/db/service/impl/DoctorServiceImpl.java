@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
-import com.example.medcheckb8.db.dto.request.DoctorRequest;
+import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
+import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -33,10 +34,10 @@ public class DoctorServiceImpl implements DoctorService {
     private final ScheduleDateAndTimeRepository scheduleDateAndTimeRepository;
 
     @Override
-    public SimpleResponse save(Long departmentId, DoctorRequest request) {
-        Department department = departmentRepository.findById(departmentId)
+    public SimpleResponse save(DoctorSaveRequest request) {
+        Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new NotFountException(
-                        String.format("Department with id: %d not found", departmentId)
+                        String.format("Department with id: %d not found", request.departmentId())
                 ));
 
         Doctor doctor = Doctor.builder()
@@ -72,9 +73,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public SimpleResponse update(Long id, DoctorRequest request) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFountException(
-                String.format("Doctor with id: %d not found.", id)
+    public SimpleResponse update(DoctorUpdateRequest request) {
+        Doctor doctor = doctorRepository.findById(request.doctorId()).orElseThrow(() -> new NotFountException(
+                String.format("Doctor with id: %d not found.", request.doctorId())
         ));
 
         doctor.setFirstName(request.firstName());

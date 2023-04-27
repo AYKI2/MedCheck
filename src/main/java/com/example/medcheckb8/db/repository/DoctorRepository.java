@@ -1,7 +1,11 @@
 package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+<<<<<<< HEAD
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+=======
+import com.example.medcheckb8.db.dto.response.SearchResponse;
+>>>>>>> main
 import com.example.medcheckb8.db.entities.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +25,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "from Doctor d where d.id=?1")
     Optional<DoctorResponse> findByDoctorId(Long id);
 
+<<<<<<< HEAD
     @Query("select d from Doctor d where lower(d.department.name) = lower(?1)")
     List<Doctor> findByDepartmentName(String department);
 
@@ -29,4 +34,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "FROM ScheduleDateAndTime s where s.schedule.id = d.schedule.id)) from Doctor d " +
             "where lower(d.department.name) = lower(:department) and d.schedule.dataOfStart <= :localDate and d.schedule.dataOfFinish >= :localDate")
     List<ScheduleResponse> getAllByDepartmentName(String department, LocalDate localDate);
+=======
+    @Query("select new com.example.medcheckb8.db.dto.response.SearchResponse(d.id, p.id, d.firstName, d.lastName, d.position, lower(p.name)) from Doctor d join d.department p" +
+           " where  d.firstName ilike %:word% or d.lastName ilike %:word% or lower(p.name) ilike lower(concat('%', :word, '%'))")
+    List<SearchResponse> globalSearch(String word);
+>>>>>>> main
 }
