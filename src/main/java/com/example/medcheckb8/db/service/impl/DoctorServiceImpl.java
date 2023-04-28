@@ -143,17 +143,20 @@ public class DoctorServiceImpl implements DoctorService {
                 }
             }
         }
+        if(responses.isEmpty()){
+            throw new NotFountException("There are no free specialists on this day!");
+        }
         return responses;
     }
 
     @Override
-    public Doctor findDoctorByDepartment(Detachment department, Long doctorId) {
+    public Boolean findDoctorByDepartment(Detachment department, Long doctorId) {
         List<Doctor> doctors = doctorRepository.getDoctorsByDepartmentName(department);
         for (Doctor doctor : doctors) {
             if(doctor.getId().equals(doctorId)){
-                return doctor;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 }
