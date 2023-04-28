@@ -35,9 +35,10 @@ public class DoctorAPI {
     }
 
     @GetMapping("/findAll")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'PATIENT')")
-    public List<DoctorResponse> findAll() {
-        return doctorService.getAll();
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "The  search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
+    List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
+        return doctorService.getAllWithSearchExperts(keyWord);
     }
 
     @PutMapping("/update/{id}")
@@ -59,11 +60,6 @@ public class DoctorAPI {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
 
-    @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "The  search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
-    List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
-        return doctorService.searchExperts(keyWord);
-    }
+
 
 }

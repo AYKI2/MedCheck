@@ -57,8 +57,8 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorResponse> getAll() {
-        return doctorRepository.getAll();
+    public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
+        return doctorRepository.getAllWithSearch(keyWord);
     }
 
     @Override
@@ -112,8 +112,5 @@ public class DoctorServiceImpl implements DoctorService {
                 .build();
     }
 
-    @Override
-    public List<ExpertResponse> searchExperts(String keyWord) {
-        return doctorRepository.searchByFirstNameOrLastNameOrDepartment(keyWord);
-    }
+
 }

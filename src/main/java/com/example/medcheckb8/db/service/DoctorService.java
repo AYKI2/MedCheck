@@ -12,14 +12,12 @@ public interface DoctorService {
 
     DoctorResponse findById(Long id);
 
-    List<DoctorResponse> getAll();
+    List<ExpertResponse> getAllWithSearchExperts(String keyWord);
 
     SimpleResponse update(Long id, DoctorRequest doctorRequest);
 
     SimpleResponse delete(Long id);
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
-
-    List<ExpertResponse> searchExperts(String keyWord);
 
 }
