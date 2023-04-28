@@ -1,8 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.config.jwt.JwtService;
-import com.example.medcheckb8.db.dto.request.ChangePasswordRequest;
-import com.example.medcheckb8.db.dto.request.ForgotPasswordRequest;
+import com.example.medcheckb8.db.dto.request.*;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
@@ -17,27 +16,32 @@ import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.google.common.base.Strings;
 
-import java.util.Objects;
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final EmailServiceImpl emailService;
+    private final JavaMailSender javaMailSender;
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
@@ -92,16 +96,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public SimpleResponse changePassword(ChangePasswordRequest request) {
         try {
-            Account account = repository.findByEmail(getCurrentUser()).orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
-            if (account != null) {
-                if (account.getPassword().equals(request.oldPassword())) {
-                    account.setPassword(request.newPassword());
-                    repository.save(account);
-                    return SimpleResponse.builder().status(HttpStatus.OK).message("Password updated successfully.").build();
-                }
+            Account account = repository.findByEmail(getCurrentUser()).
+                    orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
+            if (!passwordEncoder.matches(request.oldPassword(), account.getPassword())) {
                 return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message("Wrong old password.").build();
             }
-            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+            account.setPassword(passwordEncoder.encode(request.newPassword()));
+            repository.save(account);
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Password updated successfully.").build();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,14 +112,42 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public SimpleResponse forgotPassword(ForgotPasswordRequest request) {
+        Account account = repository.findByEmail(request.email()).
+                orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", request.email())));
+        String token = UUID.randomUUID().toString();
+        account.setResetToken(token);
+        repository.save(account);
         try {
-            Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException("No such email ."));
-            if (!Objects.isNull(account) && !Strings.isNullOrEmpty(account.getEmail()))
-                emailService.forgotMail(account.getEmail(), "Authority of the Med Check management system ", account.getPassword());
+            String senderName = "MedCheck user registration portal server";
+            String subject = "Here's the link to reset your password";
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("medcheck.service@gmail.com", senderName);
+            helper.setTo(request.email());
+            helper.setSubject(subject);
+            String htmlMsg = "<p>Hello,</p>" +
+                    "<p>You have requested to reset your password.</p>" +
+                    "<p>Click the link below to change your password:</p>" +
+                    "<p><b><a href=\"http://localhost:2023/processResetPassword=?" + token + "\">Change my password</a><b></p>" +
+                    "<p>Ignore this email if you do remember your password, or you have not made the request.</p>";
+
+            helper.setText(htmlMsg, true);
+            javaMailSender.send(message);
             return SimpleResponse.builder().status(HttpStatus.OK).message("Check your email for credentials.").build();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+    }
+
+    @Override
+    public SimpleResponse resetToken(NewPasswordRequest newPasswordRequest) {
+        Account account = repository.findByResetToken(newPasswordRequest.token()).
+                orElseThrow(() -> new NotFountException("Invalid token"));
+
+        account.setPassword(passwordEncoder.encode(newPasswordRequest.newPassword()));
+        account.setResetToken(null);
+        repository.save(account);
+        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully updated!").build();
     }
 }
