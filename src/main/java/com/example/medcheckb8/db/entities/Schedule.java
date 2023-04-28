@@ -30,7 +30,7 @@ public class Schedule {
     @ElementCollection
     @MapKeyEnumerated(EnumType.STRING)
     private Map<Repeat, Boolean> repeatDay;
-    @ManyToOne(cascade = ALL)
+    @OneToOne(cascade = ALL)
     private Doctor doctor;
     @ManyToOne(cascade = ALL)
     private Department department;

@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.dto.request.AuthenticationRequest;
 import com.example.medcheckb8.db.dto.request.RegisterRequest;
 import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.service.AccountService;
+import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,4 +24,10 @@ public class AccountApi {
     public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request) {
         return service.authenticate(request);
     }
+
+    @PostMapping("/auth-google")
+    public AuthenticationResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+        return service.authWithGoogle(tokenId);
+    }
+
 }
