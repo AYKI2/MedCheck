@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
-           " d.image, d.description, d.department.name) " +
-           "from Doctor d")
+            " d.image, d.description, d.department.name) " +
+            "from Doctor d")
     List<DoctorResponse> getAll();
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +

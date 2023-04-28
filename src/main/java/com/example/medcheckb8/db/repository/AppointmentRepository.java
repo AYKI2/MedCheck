@@ -9,11 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-
     @Query("select new com.example.medcheckb8.db.dto.response.AppointmentResponse(" +
-            "CONCAT_WS(' ', COALESCE(a.doctor.firstName, ''), COALESCE(a.doctor.lastName, '')), " +
+            "concat(a.doctor.firstName,' ', a.doctor.lastName), " +
             "a.doctor.image, a.doctor.position, a.dateOfVisit, a.status) " +
-            "from Appointment a")
-    List<AppointmentResponse> getAppointmentsByUserId(Long userId);
-
+            "from Appointment a where a.user.account.email=:email")
+    List<AppointmentResponse> getUserAppointments(String email);
 }
