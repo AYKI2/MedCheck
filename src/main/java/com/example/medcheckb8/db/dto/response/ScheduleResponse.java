@@ -3,16 +3,17 @@ package com.example.medcheckb8.db.dto.response;
 import com.example.medcheckb8.db.enums.Repeat;
 import lombok.Builder;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.Map;
 
 @Builder
 public record ScheduleResponse(Long id,
                                Repeat repeatDay,
-                               Map<LocalTime, LocalTime> times,
-                               LocalDate date,
+                               Month date,
                                String position,
                                String fullName,
-                               String image) {
+                               String image,
+                               Map<LocalTime, LocalTime> times
+) {
 }
