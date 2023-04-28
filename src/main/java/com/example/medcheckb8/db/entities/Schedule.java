@@ -29,7 +29,7 @@ public class Schedule {
     private int intervalOfHours;
     @ElementCollection
     private Map<Repeat, Boolean> repeatDay;
-    @ManyToOne(cascade = ALL)
+    @OneToOne(cascade = ALL)
     private Doctor doctor;
     @ManyToOne(cascade = ALL)
     private Department department;
