@@ -1,9 +1,6 @@
 package com.example.medcheckb8.db.api;
 
-import com.example.medcheckb8.db.dto.request.AuthenticationRequest;
-import com.example.medcheckb8.db.dto.request.ChangePasswordRequest;
-import com.example.medcheckb8.db.dto.request.ForgotPasswordRequest;
-import com.example.medcheckb8.db.dto.request.RegisterRequest;
+import com.example.medcheckb8.db.dto.request.*;
 import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
@@ -27,14 +24,24 @@ public class AccountApi {
     public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request) {
         return service.authenticate(request);
     }
+
     @PreAuthorize("hasAuthority('PATIENT')")
     @PostMapping("/changePassword")
-    SimpleResponse changePassword(@RequestBody ChangePasswordRequest request) {
+    SimpleResponse changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         return service.changePassword(request);
     }
+
     @PreAuthorize("hasAuthority('PATIENT')")
     @PostMapping("/forgot_password")
-    SimpleResponse forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    SimpleResponse forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
         return service.forgotPassword(request);
     }
+
+    @PreAuthorize("hasAuthority('PATIENT')")
+    @PostMapping("/reset_password")
+    public SimpleResponse resetPassword(@RequestBody @Valid NewPasswordRequest newPassword) {
+        return service.resetToken(newPassword);
+
+    }
 }
+
