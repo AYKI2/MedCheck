@@ -7,9 +7,8 @@ import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
-import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
+import com.example.medcheckb8.db.enums.Detachment;
 import com.example.medcheckb8.db.enums.Repeat;
-import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
@@ -20,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,29 +122,6 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Boolean booked(Long doctorId, LocalDateTime localDateTime) {
-        Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new NotFountException(String.format("Doctor with id: %d not found.", doctorId)));
-        String displayName = localDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
-        System.out.println(displayName);
-        if (!doctor.getIsActive() && !doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
-            throw new BadRequestException("This specialist is currently on vacation or not working.");
-        }
-        for (ScheduleDateAndTime dateAndTime : doctor.getSchedule().getDateAndTimes()) {
-            if (dateAndTime.getDate().equals(localDateTime.toLocalDate())
-                    && dateAndTime.getTimeFrom().equals(localDateTime.toLocalTime())) {
-                if(!dateAndTime.getIsBusy()) {
-                    dateAndTime.setIsBusy(true);
-                    return false;
-                }else {
-                    return true;
-                }
-            }
-        }
-        return true;
-    }
-
-    @Override
     public List<ScheduleResponse> freeSpecialists(String department, LocalDate localDate) {
         List<Doctor> freeDoctors = doctorRepository.findByDepartmentName(department);
         List<ScheduleResponse> responses = new ArrayList<>();
@@ -154,11 +129,11 @@ public class DoctorServiceImpl implements DoctorService {
             throw new NotFountException("There are currently no employees in this department!");
         }
         String displayName = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
-        System.out.println(displayName);
         for (Doctor doctor : freeDoctors) {
             if (doctor.getIsActive() && doctor.getSchedule() != null && doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
                 if (doctor.getSchedule().getDataOfStart().isBefore(localDate) && doctor.getSchedule().getDataOfFinish().isAfter(localDate)) {
                     ScheduleResponse schedule = ScheduleResponse.builder()
+                            .id(doctor.getId())
                             .fullName(doctor.getFirstName() + " " + doctor.getLastName())
                             .image(doctor.getImage())
                             .position(doctor.getPosition())
@@ -169,6 +144,16 @@ public class DoctorServiceImpl implements DoctorService {
             }
         }
         return responses;
-//        return doctorRepository.getAllByDepartmentName(department,localDate);
+    }
+
+    @Override
+    public Doctor findDoctorByDepartment(Detachment department, Long doctorId) {
+        List<Doctor> doctors = doctorRepository.getDoctorsByDepartmentName(department);
+        for (Doctor doctor : doctors) {
+            if(doctor.getId().equals(doctorId)){
+                return doctor;
+            }
+        }
+        return null;
     }
 }

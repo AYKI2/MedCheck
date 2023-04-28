@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.api;
 import com.example.medcheckb8.db.dto.request.AppointmentRequest;
 import com.example.medcheckb8.db.dto.request.FreeSpecialistRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.DoctorService;
@@ -29,5 +30,10 @@ public class AppointmentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     public List<ScheduleResponse> getFreeSpecialists(@RequestBody @Valid FreeSpecialistRequest request) {
         return doctorService.freeSpecialists(request.department(), request.localDate());
+    }
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public List<GetAllAppointmentResponse> getAll(){
+        return service.getAll();
     }
 }

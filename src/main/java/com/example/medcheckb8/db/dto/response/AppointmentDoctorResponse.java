@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record AppointmentDoctorResponse(
+        Long id,
         String fullName,
         String image,
         String position

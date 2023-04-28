@@ -7,20 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-<<<<<<< HEAD
 import java.util.Optional;
-=======
 import java.util.List;
-
->>>>>>> main
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByPhoneNumber(String phoneNumber);
 
-<<<<<<< HEAD
     Optional<User> findByAccountId(Long id);
-=======
+
     @Query("select new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email, r.dateOfIssue) from User u join Result r where r.user.id = u.id")
     List<UserResponse> getAllPatients();
 
@@ -31,5 +26,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select  new com.example.medcheckb8.db.dto.response.ProfileResponse(u.id,u.firstName,u.lastName,u.phoneNumber,u.account.email) from  User u where u.account.email=:email")
     ProfileResponse getResult(String email);
->>>>>>> main
 }
