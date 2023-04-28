@@ -16,8 +16,17 @@ import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +37,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 import java.util.UUID;
 
@@ -83,6 +94,49 @@ public class AccountServiceImpl implements AccountService {
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())
+                .token(token)
+                .role(account.getRole().name())
+                .build();
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            GoogleCredentials googleCredentials = GoogleCredentials.
+                    fromStream(new ClassPathResource("medcheck-firebase.json").getInputStream());
+            FirebaseOptions firebaseOptions = FirebaseOptions.builder()
+                    .setCredentials(googleCredentials)
+                    .build();
+            log.info("Successfully worked the init method");
+            FirebaseApp firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
+        } catch (IOException e) {
+            log.error("IOException");
+        }
+    }
+
+    @Override
+    public AuthenticationResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+        FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+        if (!repository.existsByEmail(firebaseToken.getEmail())){
+            User newUser = new User();
+            String[] name = firebaseToken.getName().split(" ");
+            newUser.setFirstName(name[0]);
+            newUser.setLastName(name[1]);
+            newUser.getAccount().setEmail(firebaseToken.getEmail());
+            newUser.getAccount().setPassword(firebaseToken.getEmail());
+            newUser.getAccount().setRole(Role.PATIENT);
+            userRepository.save(newUser);
+        }
+        Account account = repository.findByEmail(firebaseToken.getEmail()).orElseThrow(()->{
+            log.error(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
+            return new NotFountException(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
+        });
+
+        String token = jwtService.generateToken(account);
+        log.info("Successfully worked the authorization with Google");
+
+        return  AuthenticationResponse.builder()
+                .email(firebaseToken.getEmail())
                 .token(token)
                 .role(account.getRole().name())
                 .build();

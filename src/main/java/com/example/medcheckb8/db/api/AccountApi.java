@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.dto.request.*;
 import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
+import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,11 @@ public class AccountApi {
     @PostMapping("/signIn")
     public AuthenticationResponse signIn(@RequestBody @Valid AuthenticationRequest request) {
         return service.authenticate(request);
+    }
+
+    @PostMapping("/auth-google")
+    public AuthenticationResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+        return service.authWithGoogle(tokenId);
     }
 
     @PreAuthorize("hasAuthority('PATIENT')")
