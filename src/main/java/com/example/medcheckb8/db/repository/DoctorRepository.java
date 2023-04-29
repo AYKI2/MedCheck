@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SearchResponse;
 import com.example.medcheckb8.db.entities.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
