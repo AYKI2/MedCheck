@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.api;
 
-import com.example.medcheckb8.db.dto.request.DoctorRequest;
+import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
+import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -23,9 +24,8 @@ public class DoctorAPI {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse save(@RequestParam Long departmentId,
-                               @RequestBody @Valid DoctorRequest doctorRequest) {
-        return doctorService.save(departmentId, doctorRequest);
+    public SimpleResponse save(@RequestBody @Valid DoctorSaveRequest doctorRequest) {
+        return doctorService.save(doctorRequest);
     }
 
     @GetMapping("/find")
@@ -41,11 +41,10 @@ public class DoctorAPI {
         return doctorService.getAllWithSearchExperts(keyWord);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse update(@PathVariable Long id,
-                                 @RequestBody @Valid DoctorRequest doctorRequest) {
-        return doctorService.update(id, doctorRequest);
+    public SimpleResponse update(@RequestBody @Valid DoctorUpdateRequest doctorRequest) {
+        return doctorService.update(doctorRequest);
     }
 
     @DeleteMapping
