@@ -5,7 +5,6 @@ import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
-import com.example.medcheckb8.db.entities.Doctor;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
