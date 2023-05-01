@@ -14,7 +14,8 @@ public class ScheduleApi {
     private final ScheduleService service;
 
     @GetMapping
-    public List<ScheduleResponse> getAll(@RequestParam(required = false) String word) {
+    public List<ScheduleResponse> getAll(@RequestParam(required = false)
+                                             String word) {
         return service.getAllSchedule(word);
     }
 }

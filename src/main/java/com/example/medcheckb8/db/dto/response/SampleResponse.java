@@ -7,5 +7,8 @@ import java.util.Map;
 
 @Builder
 public record SampleResponse(
-        Map<LocalTime, LocalTime> times) {
+        Long scheduleId,
+        Long doctorId,
+        Map<LocalTime, LocalTime> times
+      ) {
 }
