@@ -3,12 +3,12 @@ package com.example.medcheckb8.db.service.impl;
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ScheduleDateAndTimeResponse;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
-import com.example.medcheckb8.db.enums.Detachment;
-import com.example.medcheckb8.db.enums.Repeat;
+import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
@@ -18,11 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.TextStyle;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -122,41 +120,46 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<ScheduleResponse> freeSpecialists(String department, LocalDate localDate) {
-        List<Doctor> freeDoctors = doctorRepository.findByDepartmentName(department);
+    public List<ScheduleResponse> findDoctorByDate(String department, ZonedDateTime zonedDateTime) {
+        LocalDateTime now = ZonedDateTime.of(zonedDateTime.toLocalDate(), zonedDateTime.toLocalTime(), zonedDateTime.getZone()).toLocalDateTime();
         List<ScheduleResponse> responses = new ArrayList<>();
-        if (freeDoctors.isEmpty()) {
-            throw new NotFountException("There are currently no employees in this department!");
-        }
-        String displayName = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
-        for (Doctor doctor : freeDoctors) {
-            if (doctor.getIsActive() && doctor.getSchedule() != null && doctor.getSchedule().getRepeatDay().get(Repeat.valueOf(displayName))) {
-                if (doctor.getSchedule().getDataOfStart().isBefore(localDate) && doctor.getSchedule().getDataOfFinish().isAfter(localDate)) {
-                    ScheduleResponse schedule = ScheduleResponse.builder()
-                            .id(doctor.getId())
-                            .fullName(doctor.getFirstName() + " " + doctor.getLastName())
-                            .image(doctor.getImage())
-                            .position(doctor.getPosition())
-                            .localDateTimes(scheduleDateAndTimeRepository.getAllByScheduleId(doctor.getSchedule().getId(), localDate))
-                            .build();
-                    responses.add(schedule);
+        List<Doctor> doctors = doctorRepository.findByDepartmentName(department);
+        for (Doctor doctor : doctors) {
+            List<ScheduleDateAndTime> availableDates =
+                    scheduleDateAndTimeRepository.findAvailableDatesByDepartmentAndDate(doctor.getId());
+            if (!availableDates.isEmpty()) {
+                List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
+                LocalDateTime closestDate = LocalDateTime.of(availableDates.get(availableDates.size() - 1).getDate(), now.toLocalTime());
+                for (ScheduleDateAndTime date : availableDates) {
+                    if (Duration.between(now, date.getDate().atTime(date.getTimeFrom())).toDays() <= Duration.between(now, closestDate).toDays()) {
+                        if (now.toLocalTime().getHour() < date.getTimeFrom().getHour()) {
+                            closestDate = LocalDateTime.of(date.getDate(), now.toLocalTime());
+                            ScheduleDateAndTimeResponse timeResponse = ScheduleDateAndTimeResponse.builder()
+                                    .id(date.getId())
+                                    .date(date.getDate())
+                                    .timeFrom(date.getTimeFrom())
+                                    .timeTo(date.getTimeTo())
+                                    .isBusy(date.getIsBusy())
+                                    .build();
+                            scheduleDateAndTimeResponses.add(timeResponse);
+                        }
+                    }else {
+                        closestDate = LocalDateTime.of(availableDates.get(availableDates.size() - 1).getDate(), now.toLocalTime());
+                    }
                 }
+                ScheduleResponse build = ScheduleResponse.builder()
+                        .id(doctor.getId())
+                        .fullName(doctor.getLastName() + " " + doctor.getFirstName())
+                        .image(doctor.getImage())
+                        .position(doctor.getPosition())
+                        .localDateTimes(scheduleDateAndTimeResponses)
+                        .build();
+                responses.add(build);
             }
         }
-        if(responses.isEmpty()){
-            throw new NotFountException("There are no free specialists on this day!");
+        if (responses.isEmpty()) {
+            throw new NotFountException("There are no free doctors in this department!");
         }
         return responses;
-    }
-
-    @Override
-    public Boolean findDoctorByDepartment(Detachment department, Long doctorId) {
-        List<Doctor> doctors = doctorRepository.getDoctorsByDepartmentName(department);
-        for (Doctor doctor : doctors) {
-            if(doctor.getId().equals(doctorId)){
-                return true;
-            }
-        }
-        return false;
     }
 }

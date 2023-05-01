@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface AppointmentService {
     AppointmentResponse save(AppointmentRequest request);
+
     List<GetAllAppointmentResponse> getAll();
 }

@@ -12,7 +12,6 @@ import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
-import com.example.medcheckb8.db.service.DoctorService;
 import com.example.medcheckb8.db.service.EmailSenderService;
 import org.thymeleaf.TemplateEngine;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final EmailSenderService emailSenderService;
     private final TemplateEngine templateEngine;
     private final AppointmentRepository repository;
-    private final DoctorService doctorService;
 
     @Override
     public AppointmentResponse save(AppointmentRequest request) {
@@ -46,14 +44,14 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
         Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
                 .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
-        if(!doctorService.findDoctorByDepartment(department.getName(), request.doctorId())){
+        if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new NotFountException("This specialist does not work in this department.");
         }
         Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date().toLocalDate(), request.date().toLocalTime());
         if (booked != null && booked) {
             throw new AlreadyExistException("This time is busy!");
         } else if (booked == null) {
-            throw new NotFountException("This specialist is not working on this day("+doctor.getSchedule().getDataOfStart()+"-"+doctor.getSchedule().getDataOfFinish()+
+            throw new NotFountException("This specialist is not working on this day(" + doctor.getSchedule().getDataOfStart() + "-" + doctor.getSchedule().getDataOfFinish() +
                     ") or time");
         }
         Appointment appointment = Appointment.builder()
@@ -102,9 +100,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<GetAllAppointmentResponse> response = new ArrayList<>();
         boolean status = false;
         for (Appointment appointment : all) {
-            if(appointment.getStatus().equals(Status.CONFIRMED)){
+            if (appointment.getStatus().equals(Status.CONFIRMED)) {
                 status = false;
-            }else if(appointment.getStatus().equals(Status.COMPLETED)){
+            } else if (appointment.getStatus().equals(Status.COMPLETED)) {
                 status = true;
             }
             response.add(GetAllAppointmentResponse.builder()
@@ -114,7 +112,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
                     .department(appointment.getDepartment().getName().name())
-                    .specialist(appointment.getDoctor().getLastName()+" "+appointment.getDoctor().getFirstName())
+                    .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
                     .localDateTime(appointment.getDateOfVisit())
                     .status(status)
                     .build());

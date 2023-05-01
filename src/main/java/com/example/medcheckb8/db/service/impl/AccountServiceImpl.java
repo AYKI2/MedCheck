@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AuthenticationResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
         FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
-        if (!repository.existsByEmail(firebaseToken.getEmail())){
+        if (!repository.existsByEmail(firebaseToken.getEmail())) {
             User newUser = new User();
             String[] name = firebaseToken.getName().split(" ");
             newUser.setFirstName(name[0]);
@@ -122,7 +122,7 @@ public class AccountServiceImpl implements AccountService {
             newUser.getAccount().setRole(Role.PATIENT);
             userRepository.save(newUser);
         }
-        Account account = repository.findByEmail(firebaseToken.getEmail()).orElseThrow(()->{
+        Account account = repository.findByEmail(firebaseToken.getEmail()).orElseThrow(() -> {
             log.error(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
             return new NotFountException(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
         });
@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
         String token = jwtService.generateToken(account);
         log.info("Successfully worked the authorization with Google");
 
-        return  AuthenticationResponse.builder()
+        return AuthenticationResponse.builder()
                 .email(firebaseToken.getEmail())
                 .token(token)
                 .role(account.getRole().name())

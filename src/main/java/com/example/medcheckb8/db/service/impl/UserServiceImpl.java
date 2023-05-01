@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SimpleResponse getProfile( ProfileRequest request) {
+    public SimpleResponse getProfile(ProfileRequest request) {
         User user = repository.findById(request.userId()).orElseThrow(() -> new NotFountException(String.format("User with email: %s not found!", request.userId())));
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());

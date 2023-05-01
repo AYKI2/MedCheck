@@ -26,14 +26,16 @@ public class AppointmentApi {
     public AppointmentResponse addAppointment(@RequestBody @Valid AppointmentRequest request) {
         return service.save(request);
     }
-    @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
-    public List<ScheduleResponse> getFreeSpecialists(@RequestBody @Valid FreeSpecialistRequest request) {
-        return doctorService.freeSpecialists(request.department(), request.localDate());
-    }
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public List<GetAllAppointmentResponse> getAll(){
+    public List<GetAllAppointmentResponse> getAll() {
         return service.getAll();
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
+    public List<ScheduleResponse> GetTheNearestFreeDoctors(@RequestBody @Valid FreeSpecialistRequest request) {
+        return doctorService.findDoctorByDate(request.department(), request.zonedDateTime());
     }
 }
