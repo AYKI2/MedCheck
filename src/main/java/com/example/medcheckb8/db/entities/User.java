@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -28,4 +29,11 @@ public class User {
     private List<Appointment> appointments;
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Result> results;
+
+    public void addResult(Result result) {
+        if (result == null){
+            results = new ArrayList<>();
+        }
+        results.add(result);
+    }
 }

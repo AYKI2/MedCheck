@@ -1,12 +1,13 @@
 package com.example.medcheckb8.db.api;
 
-import com.example.medcheckb8.db.dto.request.AuthenticationRequest;
-import com.example.medcheckb8.db.dto.request.RegisterRequest;
+import com.example.medcheckb8.db.dto.request.*;
 import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
 import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,4 +31,23 @@ public class AccountApi {
         return service.authWithGoogle(tokenId);
     }
 
+    @PreAuthorize("hasAuthority('PATIENT')")
+    @PostMapping("/changePassword")
+    SimpleResponse changePassword(@RequestBody @Valid ChangePasswordRequest request) {
+        return service.changePassword(request);
+    }
+
+    @PreAuthorize("hasAuthority('PATIENT')")
+    @PostMapping("/forgot_password")
+    SimpleResponse forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        return service.forgotPassword(request);
+    }
+
+    @PreAuthorize("hasAuthority('PATIENT')")
+    @PostMapping("/reset_password")
+    public SimpleResponse resetPassword(@RequestBody @Valid NewPasswordRequest newPassword) {
+        return service.resetToken(newPassword);
+
+    }
 }
+

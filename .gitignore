@@ -37,3 +37,4 @@ src/main/resources/application-local.properties
 src/main/resources/application-kuban.properties
 src/main/resources/application-burulai.properties
 src/main/resources/application-uluk.properties
+src/main/resources/application-syimyk.properties
