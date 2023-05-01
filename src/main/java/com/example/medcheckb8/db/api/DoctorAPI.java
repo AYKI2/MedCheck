@@ -61,6 +61,7 @@ public class DoctorAPI {
     }
 
     @PostMapping("/isActive")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "The expert activate and deactivate method.",
             description = "This method should be used to activate and deactivate the Expert.")
     public SimpleResponse isActive(@RequestParam Boolean isActive,
