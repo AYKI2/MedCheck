@@ -29,7 +29,6 @@ import java.util.Map;
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DepartmentRepository departmentRepository;
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
