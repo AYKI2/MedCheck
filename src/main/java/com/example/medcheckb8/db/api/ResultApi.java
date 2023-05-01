@@ -19,9 +19,8 @@ public class ResultApi {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    @Operation(summary = "The add result method", description = "This method should be used to add the Result")
-    public SimpleResponse addResult(@RequestBody ResultRequest request,
-                                    @RequestParam Long patientId){
-        return resultService.addResult(patientId, request);
+    @Operation(summary = "The add result method", description = "This method should be used to add a patient result")
+    public SimpleResponse addResult(@RequestBody ResultRequest request){
+        return resultService.addResult(request);
     }
 }
