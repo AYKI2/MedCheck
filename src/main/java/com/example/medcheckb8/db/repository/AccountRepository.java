@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.entities.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,4 +12,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    @Query("from Account a where a.resetToken = ?1")
+    Optional<Account> findByResetToken(String resetToken);
 }
