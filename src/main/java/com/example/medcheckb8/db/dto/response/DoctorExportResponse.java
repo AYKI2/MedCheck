@@ -15,6 +15,7 @@ public record DoctorExportResponse(
         LocalDate dateOfStart,
         LocalDate dateOfFinish,
         LocalDate date,
-        Map<LocalTime, LocalTime> timeFromAndTimeTo
+        Map<LocalTime, LocalTime> timeFromAndTimeTo,
+        Boolean isBusy
 ) {
 }

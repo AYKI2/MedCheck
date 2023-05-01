@@ -5,6 +5,8 @@ import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/doctors")
+@Tag(name = "doctor", description = "Expert API Endpoints")
 public class DoctorAPI {
     private final DoctorService doctorService;
 
@@ -57,6 +60,9 @@ public class DoctorAPI {
     }
 
     @GetMapping("/export-to-excel")
+    @Operation(
+            summary = "The Export to Excel method",
+            description = "Using the method, export dataBase doctors values to Excel values.")
     public void exportToExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";

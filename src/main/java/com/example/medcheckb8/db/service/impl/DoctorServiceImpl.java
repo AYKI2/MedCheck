@@ -133,7 +133,8 @@ public class DoctorServiceImpl implements DoctorService {
                 sh.data_of_finish as dataOfFinish,
                 sdt.date as data,
                 sdt.time_from as timeFrom,
-                sdt.time_to as timeTo
+                sdt.time_to as timeTo,
+                sdt.is_busy as isBusy
                 FROM doctors d
                 JOIN schedules sh ON d.id = sh.doctor_id
                 JOIN schedule_date_and_times sdt ON sh.id = sdt.schedule_id
@@ -152,7 +153,8 @@ public class DoctorServiceImpl implements DoctorService {
                     resultSet.getDate("dataOfStart").toLocalDate(),
                     resultSet.getDate("dataOfFinish").toLocalDate(),
                     resultSet.getDate("data").toLocalDate(),
-                    times);
+                    times,
+                    resultSet.getBoolean("isBusy"));
         });
         ExportToExcel exportToExcel = new ExportToExcel(doctors);
         exportToExcel.exportDataToExcel(response);

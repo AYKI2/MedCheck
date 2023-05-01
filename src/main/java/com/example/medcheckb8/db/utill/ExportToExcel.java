@@ -73,6 +73,7 @@ public class ExportToExcel {
         createCells(row, 6, "Date", style);
         createCells(row, 7, "Time From", style);
         createCells(row, 8, "Time To", style);
+        createCells(row, 9, "Is Busy", style);
 
     }
 
@@ -95,11 +96,11 @@ public class ExportToExcel {
             createCells(row, columnCount++, doctor.date().toString(), style);
 
             Map<LocalTime, LocalTime> timeMap = doctor.timeFromAndTimeTo();
-            int timeRow = 8;
             for (Map.Entry<LocalTime, LocalTime> timeEntry : timeMap.entrySet()) {
-                createCells(row, timeRow++, timeEntry.getKey().toString(), style);
-                createCells(row, timeRow++, timeEntry.getValue().toString(), style);
+                createCells(row, columnCount++, timeEntry.getKey().toString(), style);
+                createCells(row, columnCount++, timeEntry.getValue().toString(), style);
             }
+            createCells(row, columnCount++, doctor.isBusy(), style);
         }
     }
 
