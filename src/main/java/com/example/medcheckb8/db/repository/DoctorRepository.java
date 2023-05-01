@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.repository;
 
+import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.SearchResponse;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -23,4 +24,10 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.SearchResponse(d.id, p.id, d.firstName, d.lastName, d.position, lower(p.name)) from Doctor d join d.department p" +
            " where  d.firstName ilike %:word% or d.lastName ilike %:word% or lower(p.name) ilike lower(concat('%', :word, '%'))")
     List<SearchResponse> globalSearch(String word);
+
+//    @Query("select new com.example.medcheckb8.db.dto.response.DoctorExportResponse(d.id, d.firstName, d.lastName, d.position, " +
+//           "s.dataOfStart, s.dataOfFinish, )" +
+//           "from Doctor d join d.schedule s join s.dateAndTimes l")
+//    List<DoctorExportResponse> findAllDoctors();
+
 }
