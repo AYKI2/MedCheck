@@ -45,8 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileResponse getResult(String email) {
-        Account account1 = service.getAccountInToken();
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new NotFountException(String.format("dswve")));
+        Account account = service.getAccountInToken();
         ProfileResponse response = new ProfileResponse();
         response.setId(account.getId());
         response.setFirstName(account.getUser().getFirstName());
