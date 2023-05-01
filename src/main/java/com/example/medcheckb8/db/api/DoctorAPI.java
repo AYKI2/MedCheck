@@ -59,10 +59,11 @@ public class DoctorAPI {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/export-to-excel")
-    @Operation(
-            summary = "The Export to Excel method",
-            description = "Using the method, export dataBase doctors values to Excel values.")
+    @Operation(summary = "The Export to Excel method",
+            description = "Using the method, export dataBase doctors values to Excel values."
+    )
     public void exportToExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
