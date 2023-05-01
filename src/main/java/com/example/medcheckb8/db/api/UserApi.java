@@ -18,17 +18,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/patients")
 @Tag(name = "User", description = "API endpoints for managing users profile3")
+@CrossOrigin
 public class UserApi {
     private final UserService service;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping
+    @Operation(summary = "To receive all patients.",
+            description = "With this method, the admin can get all the patients. Only for admin.")
     public List<UserResponse> getAllPatients(@RequestParam(required = false) String word) {
         return service.getAllPatients(word);
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT','ADMIN')")
     @Operation(
             summary = "The profile update method", description = "User profile which can see own information or changed"
     )
