@@ -22,8 +22,4 @@ public class ScheduleApi {
                                          @RequestParam(required = false)LocalDate endDate) {
         return service.getAllSchedule(word,startDate,endDate);
     }
-    @PostMapping
-    public SimpleResponse saveSample(SampleRequest request){
-        return service.saveSample(request);
-    }
 }
