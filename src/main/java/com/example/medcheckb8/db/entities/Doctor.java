@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -31,4 +32,10 @@ public class Doctor {
     private Department department;
     @OneToOne(mappedBy = "doctor", cascade = ALL)
     private Schedule schedule;
+    void getAppointment(Appointment appointment){
+        if (appointments == null){
+            appointments= new ArrayList<>();
+        }
+        appointments.add(appointment);
+    }
 }

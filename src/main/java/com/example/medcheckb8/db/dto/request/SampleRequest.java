@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.dto.request;
 
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
 
@@ -9,5 +10,5 @@ import java.util.Map;
 public record SampleRequest(
         Long appointmentId,
         Long doctorId,
-        Map<LocalTime,LocalTime>times) {
+        Map<LocalDate,Map<LocalTime,LocalTime>>times) {
 }

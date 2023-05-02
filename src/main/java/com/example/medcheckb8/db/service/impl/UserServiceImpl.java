@@ -8,20 +8,22 @@ import com.example.medcheckb8.db.dto.response.UserResponse;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.exceptions.NotFountException;
-import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final AccountRepository accountRepository;
     private final JwtService service;
 
     @Override
@@ -33,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SimpleResponse getProfile( ProfileRequest request) {
+    public SimpleResponse getProfile(ProfileRequest request) {
         User user = repository.findById(request.userId()).orElseThrow(() -> new NotFountException(String.format("User with email: %s not found!", request.userId())));
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
@@ -45,8 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileResponse getResult(String email) {
-        Account account1 = service.getAccountInToken();
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new NotFountException(String.format("dswve")));
+        Account account = service.getAccountInToken();
         ProfileResponse response = new ProfileResponse();
         response.setId(account.getId());
         response.setFirstName(account.getUser().getFirstName());
