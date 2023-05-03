@@ -16,7 +16,7 @@ public class ScheduleApi {
     private final ScheduleService service;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public List<ScheduleResponse> getAll(@RequestParam(required = false) String word,
                                          @RequestParam(required = false) LocalDate startDate,
                                          @RequestParam(required = false) LocalDate endDate) {

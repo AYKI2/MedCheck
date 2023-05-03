@@ -54,8 +54,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         }
 
         sql = String.format(sql, keyWordCondition, dateCondition);
+
         return template.query(sql, (resultSet, i) -> {
-            Map<LocalTime, LocalTime> times = new HashMap<>();
+            Map<LocalTime,LocalTime> times = new HashMap<>();
             times.put(resultSet.getTime("timeFrom").toLocalTime(),
                     resultSet.getTime("timeTo").toLocalTime());
             return new ScheduleResponse(
