@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.api;
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,15 +41,16 @@ public class DoctorAPI {
         return doctorService.findById(doctorId);
     }
 
-    @GetMapping("/findAll")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'PATIENT')")
-    @Operation(summary = "The find all experts method.",
-            description = "This method should be used to find all Experts")
-    public List<DoctorResponse> findAll() {
-        return doctorService.getAll();
+    @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "The  search method experts", description = "Using the method, you can find" +
+            " a doctor by name and surname," +
+            " you can find a department")
+    List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
+        return doctorService.getAllWithSearchExperts(keyWord);
     }
 
-    @PutMapping("/update")
+    @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "The expert update method.",
             description = "This method should be used to update the Expert")

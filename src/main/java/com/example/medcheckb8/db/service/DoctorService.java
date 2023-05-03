@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -15,7 +16,7 @@ public interface DoctorService {
 
     DoctorResponse findById(Long id);
 
-    List<DoctorResponse> getAll();
+    List<ExpertResponse> getAllWithSearchExperts(String keyWord);
 
     SimpleResponse update(DoctorUpdateRequest doctorRequest);
 
