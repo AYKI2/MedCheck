@@ -90,10 +90,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public SimpleResponse delete(Long id) {
-        if (!doctorRepository.existsById(id)) {
-            throw new NotFountException(String.format("Doctor with id: %d doesnt exist.", id));
-        }
-        doctorRepository.deleteById(id);
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFountException(
+                String.format("Doctor with id: %d not found.", id)
+        ));
+        doctorRepository.delete(doctor);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message(String.format("Doctor with id: %d Successfully deleted.", id))
