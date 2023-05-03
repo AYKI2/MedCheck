@@ -6,6 +6,7 @@ import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,14 +37,16 @@ public class DoctorAPI {
         return doctorService.findById(doctorId);
     }
 
-    @GetMapping("/findAll")
+    @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "The  search method experts", description = "search for specialists in firstName,lastName,DepartmentName")
+    @Operation(summary = "The  search method experts", description = "Using the method, you can find" +
+            " a doctor by name and surname," +
+            " you can find a department")
     List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
         return doctorService.getAllWithSearchExperts(keyWord);
     }
 
-    @PutMapping("/update")
+    @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "The expert update method.",
             description = "This method should be used to update the Expert")
