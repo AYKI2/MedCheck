@@ -25,7 +25,7 @@ public class ResultApi {
         return resultService.addResult(request);
     }
 
-    @PreAuthorize("hasAnyAuthority(PATIENT)")
+    @PreAuthorize("hasAnyAuthority('PATIENT')")
     @GetMapping
     @Operation(summary = "Get result method", description = "You can get result by order number")
     public ResultResponse getResult(@RequestParam(required = false) String orderNumber){
