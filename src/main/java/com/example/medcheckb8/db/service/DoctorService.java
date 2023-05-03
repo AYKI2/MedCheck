@@ -16,7 +16,7 @@ public interface DoctorService {
 
     DoctorResponse findById(Long id);
 
-    List<DoctorResponse> getAll();
+    List<ExpertResponse> getAllWithSearchExperts(String keyWord);
 
     SimpleResponse update(DoctorUpdateRequest doctorRequest);
 
