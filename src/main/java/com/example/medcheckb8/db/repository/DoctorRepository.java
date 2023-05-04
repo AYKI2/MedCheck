@@ -21,7 +21,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "from Doctor d where d.id=?1")
     Optional<DoctorResponse> findByDoctorId(Long id);
 
-    @Query("select d from Doctor d where lower(d.department.name) = lower(?1)")
+    @Query("select d from Doctor d where lower(d.department.name) = lower(?1) and d.schedule != null")
     List<Doctor> findByDepartmentName(String department);
 
     @Query("select new com.example.medcheckb8.db.dto.response.SearchResponse(d.id, p.id, d.firstName, d.lastName, d.position, lower(p.name)) from Doctor d join d.department p" +

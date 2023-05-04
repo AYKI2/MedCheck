@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record GetAllAppointmentResponse(
         Long appointmentId,
         Long patientId,
+        Long doctorId,
         String fullName,
         String phoneNumber,
         String email,

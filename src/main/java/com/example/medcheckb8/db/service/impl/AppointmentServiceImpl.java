@@ -5,14 +5,18 @@ import com.example.medcheckb8.db.dto.request.AppointmentRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentDoctorResponse;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.GetAllAppointmentResponse;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.*;
 import com.example.medcheckb8.db.enums.Detachment;
+import com.example.medcheckb8.db.enums.Role;
 import com.example.medcheckb8.db.enums.Status;
 import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.EmailSenderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,12 +68,13 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .doctor(doctor)
                 .department(department)
                 .build();
+        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date().toLocalDate(), request.date().toLocalTime());
+        dateAndTime.setIsBusy(true);
         doctor.getAppointments().add(appointment);
         user.getAppointments().add(appointment);
         repository.save(appointment);
 
         String subject = "Medcheck : Оповещение о записи";
-
         Context context = new Context();
         context.setVariable("title", "MEDCHECK");
         context.setVariable("firstMessage", String.format("Здравствуйте %s!", request.fullName()));
@@ -86,6 +91,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return AppointmentResponse.builder()
                 .response(AppointmentDoctorResponse.builder()
                         .id(doctor.getId())
+                        .appointmentId(appointment.getId())
                         .fullName(doctor.getLastName() + " " + doctor.getFirstName())
                         .image(doctor.getImage())
                         .position(doctor.getPosition())
@@ -107,7 +113,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
             response.add(GetAllAppointmentResponse.builder()
                     .appointmentId(appointment.getId())
-                    .patientId(appointment.getDoctor().getId())
+                    .patientId(appointment.getUser().getId())
+                    .doctorId(appointment.getDoctor().getId())
                     .fullName(appointment.getFullName())
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
@@ -118,5 +125,55 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .build());
         }
         return response;
+    }
+
+    @Transactional
+    @Override
+    public SimpleResponse canceled(Long id) {
+        User user = userRepository.findByAccountId(jwtService.getAccountInToken().getId())
+                .orElseThrow(() -> new NotFountException("User not found!"));
+        Appointment appointment = repository.findById(id).orElseThrow(() ->
+                new NotFountException("Appointment with id: " + id + " not found!"));
+        if (appointment.getUser().getId().equals(user.getId())) {
+            ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(appointment.getDoctor().getId(),
+                    appointment.getDateOfVisit().toLocalDate(),
+                    appointment.getDateOfVisit().toLocalTime());
+            dateAndTime.setIsBusy(false);
+            appointment.setStatus(Status.CANCELED);
+            return SimpleResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Successfully canceled!")
+                    .build();
+        } else {
+            return SimpleResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("Request not completed!")
+                    .build();
+        }
+    }
+
+    @Transactional
+    @Override
+    public SimpleResponse delete(List<Long> appointments) {
+        User user = userRepository.findByAccountId(jwtService.getAccountInToken().getId())
+                .orElseThrow(() -> new NotFountException("User not found!"));
+        if (appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
+            repository.deleteAll(user.getAppointments());
+            user.getAppointments().clear();
+            return SimpleResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Successfully cleared!")
+                    .build();
+        } else {
+            for (Long appointment : appointments) {
+                repository.deleteById(appointment);
+                user.getAppointments().remove(repository.findById(appointment)
+                        .orElseThrow(() -> new NotFountException("Appointment not found!")));
+            }
+            return SimpleResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Successfully deleted!")
+                    .build();
+        }
     }
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record AppointmentDoctorResponse(
         Long id,
+        Long appointmentId,
         String fullName,
         String image,
         String position

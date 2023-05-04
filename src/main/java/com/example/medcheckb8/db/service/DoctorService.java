@@ -22,5 +22,5 @@ public interface DoctorService {
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 
-    List<ScheduleResponse> findDoctorByDate(String department, ZonedDateTime zonedDateTime);
+    List<ScheduleResponse> findDoctorsByDate(String department, ZonedDateTime zonedDateTime);
 }
