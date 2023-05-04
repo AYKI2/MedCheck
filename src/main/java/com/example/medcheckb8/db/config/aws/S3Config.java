@@ -1,30 +1,32 @@
 package com.example.medcheckb8.db.config.aws;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 public class S3Config {
 
-    @Value("${accessKey}")
-    private String accessKey;
-    @Value("${secret}")
-    private String secret;
+    @Value("${AWS_ACCESS_KEY}")
+    private String AWS_ACCESS_KEY;
+    @Value("${AWS_SECRET_KEY}")
+    private String AWS_SECRET_KEY;
 
-    @Value("${region}")
-    private String region;
+    @Value("${AWS_REGION}")
+    private String REGION;
+
 
     @Bean
-    public AmazonS3 s3(){
-        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secret);
-
-
-        return AmazonS3ClientBuilder.standard().withRegion(region).withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).build();
+    S3Client s3Client() {
+        Region region = Region.of(REGION);
+        final AwsBasicCredentials credentials = AwsBasicCredentials.create(AWS_ACCESS_KEY, AWS_SECRET_KEY);
+        return S3Client.builder()
+                .region(region)
+                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .build();
     }
 }

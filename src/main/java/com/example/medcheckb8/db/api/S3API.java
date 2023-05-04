@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,23 +18,8 @@ public class S3API {
     private final S3FileService service;
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file){
-        return service.saveFile(file);
-    }
-
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<byte[]> download(@PathVariable String fileName){
-        return service.downloadFile(fileName);
-    }
-
-    @DeleteMapping("/{fileName}")
-    public String deleteFile(@PathVariable String fileName){
-        return service.deleteFile(fileName);
-    }
-
-    @GetMapping
-    public List<String> getAllFiles(){
-        return service.listAllFile();
+    Map<String, String> upload(@RequestParam("file") MultipartFile file) throws IOException {
+        return service.upload(file);
     }
 
 
