@@ -164,6 +164,14 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .status(HttpStatus.OK)
                     .message("Successfully cleared!")
                     .build();
+        } else if (user.getAccount().getRole() == Role.ADMIN && appointments.size() == repository.count()) {
+            //надо проверить правильно ли все работает
+            //если админ удалит все записи удалятся ли они у пациентов
+            repository.deleteAll();
+            return SimpleResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Successfully cleared!")
+                    .build();
         } else {
             for (Long appointment : appointments) {
                 repository.deleteById(appointment);
