@@ -8,7 +8,6 @@ import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
-import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
@@ -120,45 +119,62 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<ScheduleResponse> findDoctorByDate(String department, ZonedDateTime zonedDateTime) {
+    public List<ScheduleResponse> findDoctorsByDate(String department, ZonedDateTime zonedDateTime) {
         LocalDateTime now = ZonedDateTime.of(zonedDateTime.toLocalDate(), zonedDateTime.toLocalTime(), zonedDateTime.getZone()).toLocalDateTime();
         List<ScheduleResponse> responses = new ArrayList<>();
         List<Doctor> doctors = doctorRepository.findByDepartmentName(department);
+        List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
+        LocalDate currentDate = null;
+        boolean isNext = true;
+        boolean isCurrent = true;
+        int everyoneIsBusy = -1;
+        long i = 0;
+        LocalTime nextTime = now.toLocalTime();
         for (Doctor doctor : doctors) {
-            List<ScheduleDateAndTime> availableDates =
-                    scheduleDateAndTimeRepository.findAvailableDatesByDepartmentAndDate(doctor.getId());
-            if (!availableDates.isEmpty()) {
-                List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
-                LocalDateTime closestDate = LocalDateTime.of(availableDates.get(availableDates.size() - 1).getDate(), now.toLocalTime());
-                for (ScheduleDateAndTime date : availableDates) {
-                    if (Duration.between(now, date.getDate().atTime(date.getTimeFrom())).toDays() <= Duration.between(now, closestDate).toDays()) {
-                        if (now.toLocalTime().getHour() < date.getTimeFrom().getHour()) {
-                            closestDate = LocalDateTime.of(date.getDate(), now.toLocalTime());
-                            ScheduleDateAndTimeResponse timeResponse = ScheduleDateAndTimeResponse.builder()
-                                    .id(date.getId())
-                                    .date(date.getDate())
-                                    .timeFrom(date.getTimeFrom())
-                                    .timeTo(date.getTimeTo())
-                                    .isBusy(date.getIsBusy())
-                                    .build();
-                            scheduleDateAndTimeResponses.add(timeResponse);
-                        }
-                    }else {
-                        closestDate = LocalDateTime.of(availableDates.get(availableDates.size() - 1).getDate(), now.toLocalTime());
+            List<ScheduleDateAndTimeResponse> dateAndTimes = scheduleDateAndTimeRepository.findScheduleDateAndTimesByScheduleId(doctor.getId(), now.toLocalDate());
+            for (ScheduleDateAndTimeResponse dateAndTime : dateAndTimes) {
+                if (isCurrent) {
+                    if (currentDate == null) {
+                        currentDate = dateAndTime.date();
                     }
+                    everyoneIsBusy = scheduleDateAndTimeRepository.everyoneIsBusy(doctor.getId(), currentDate);
+                    isCurrent = false;
+                    if (!dateAndTime.isBusy() && dateAndTime.timeFrom().isAfter(now.toLocalTime())) {
+                        scheduleDateAndTimeResponses.add(dateAndTime);
+                    }
+                } else if (everyoneIsBusy == 0) {
+                    everyoneIsBusy = -1;
+                    i = currentDate.getDayOfMonth();
+                    isNext = true;
+                    scheduleDateAndTimeResponses.clear();
+                } else if (dateAndTime.date().getDayOfMonth() > i
+                        && currentDate.getDayOfMonth() == dateAndTime.date().getDayOfMonth()
+                ) {
+                    if (dateAndTime.timeFrom().isAfter(nextTime)) {
+                        List<ScheduleDateAndTimeResponse> dates = scheduleDateAndTimeRepository.findDatesByDoctorIdAndDate(doctor.getId(), currentDate);
+                        if (now.toLocalTime().isBefore(dateAndTime.timeFrom())
+                                && dateAndTime.isBusy()) {
+                            continue;
+                        }
+                        scheduleDateAndTimeResponses.addAll(dates);
+                        isNext = true;
+                        break;
+                    }
+                } else if (isNext && scheduleDateAndTimeResponses.isEmpty()) {
+                    currentDate = currentDate.plusDays(1L);
+                    nextTime = LocalTime.MIN;
+                    isNext = false;
+                    isCurrent = true;
                 }
-                ScheduleResponse build = ScheduleResponse.builder()
-                        .id(doctor.getId())
-                        .fullName(doctor.getLastName() + " " + doctor.getFirstName())
-                        .image(doctor.getImage())
-                        .position(doctor.getPosition())
-                        .localDateTimes(scheduleDateAndTimeResponses)
-                        .build();
-                responses.add(build);
             }
-        }
-        if (responses.isEmpty()) {
-            throw new NotFountException("There are no free doctors in this department!");
+            ScheduleResponse build = ScheduleResponse.builder()
+                    .id(doctor.getId())
+                    .fullName(doctor.getLastName() + " " + doctor.getFirstName())
+                    .image(doctor.getImage())
+                    .position(doctor.getPosition())
+                    .localDateTimes(scheduleDateAndTimeResponses)
+                    .build();
+            responses.add(build);
         }
         return responses;
     }
