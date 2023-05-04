@@ -1,7 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.config.jwt.JwtService;
-import com.example.medcheckb8.db.dto.request.AppointmentRequest;
+import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentDoctorResponse;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.GetAllAppointmentResponse;
@@ -40,7 +40,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository repository;
 
     @Override
-    public AppointmentResponse save(AppointmentRequest request) {
+    public AppointmentResponse save(AddAppointmentRequest request) {
         Account currentUser = jwtService.getAccountInToken();
         User user = userRepository.findByAccountId(currentUser.getId())
                 .orElseThrow(() -> new NotFountException("User not found!"));

@@ -1,4 +1,4 @@
-package com.example.medcheckb8.db.dto.request;
+package com.example.medcheckb8.db.dto.request.appointment;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;

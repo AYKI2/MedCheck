@@ -1,7 +1,7 @@
 package com.example.medcheckb8.db.api;
 
-import com.example.medcheckb8.db.dto.request.AppointmentRequest;
-import com.example.medcheckb8.db.dto.request.FreeSpecialistRequest;
+import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
+import com.example.medcheckb8.db.dto.request.appointment.FreeSpecialistRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
@@ -27,7 +27,7 @@ public class AppointmentApi {
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     @Operation(summary = "Method for adding a new entry.",
             description = "Using this method, the patient can make an appointment with a doctor.Only for patients.")
-    public AppointmentResponse addAppointment(@RequestBody @Valid AppointmentRequest request) {
+    public AppointmentResponse addAppointment(@RequestBody @Valid AddAppointmentRequest request) {
         return service.save(request);
     }
 
