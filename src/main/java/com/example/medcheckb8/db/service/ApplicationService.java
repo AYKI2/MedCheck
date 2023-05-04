@@ -10,4 +10,10 @@ public interface ApplicationService {
     SimpleResponse addApplication(ApplicationRequest request);
 
     List<ApplicationResponse> getAllApplication(String word);
+
+    SimpleResponse deleteByIdApplication(Long id);
+
+    ApplicationResponse findById(Long id);
+
+    SimpleResponse deleteAll();
 }

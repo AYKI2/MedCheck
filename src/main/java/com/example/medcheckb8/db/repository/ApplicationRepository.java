@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
@@ -17,4 +18,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             "from  Application a  where a.name  ilike  concat('%' ,:word, '%') ")
     List<ApplicationResponse> globalSearch(String word);
 
+    @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date,a.phoneNumber)from Application a where a.id = ?1")
+    Optional<ApplicationResponse> findByIdApplication(Long id);
 }
