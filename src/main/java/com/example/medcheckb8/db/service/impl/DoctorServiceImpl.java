@@ -2,7 +2,9 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
+import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -10,17 +12,25 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
 import com.example.medcheckb8.db.service.DoctorService;
+import com.example.medcheckb8.db.utill.ExportToExcel;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DepartmentRepository departmentRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public SimpleResponse save(DoctorSaveRequest request) {
@@ -57,8 +67,8 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorResponse> getAll() {
-        return doctorRepository.getAll();
+    public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
+        return doctorRepository.getAllWithSearch(keyWord);
     }
 
     @Override
@@ -81,10 +91,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public SimpleResponse delete(Long id) {
-        if (!doctorRepository.existsById(id)) {
-            throw new NotFountException(String.format("Doctor with id: %d doesnt exist.", id));
-        }
-        doctorRepository.deleteById(id);
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFountException(
+                String.format("Doctor with id: %d not found.", id)
+        ));
+        doctorRepository.delete(doctor);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message(String.format("Doctor with id: %d Successfully deleted.", id))
@@ -111,4 +121,45 @@ public class DoctorServiceImpl implements DoctorService {
                 .message(String.format("Doctor with id: %s is activated!", doctor.getId()))
                 .build();
     }
+
+    @Override
+    public List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException {
+        String sql = """
+                SELECT d.id as doctorId,
+                d.first_name as firstName,
+                d.last_name as lastName,
+                d.position as position,
+                sh.data_of_start as dataOfStart,
+                sh.data_of_finish as dataOfFinish,
+                sdt.date as data,
+                sdt.time_from as timeFrom,
+                sdt.time_to as timeTo,
+                sdt.is_busy as isBusy
+                FROM doctors d
+                JOIN schedules sh ON d.id = sh.doctor_id
+                JOIN schedule_date_and_times sdt ON sh.id = sdt.schedule_id
+                """;
+
+        List<DoctorExportResponse> doctors = jdbcTemplate.query(sql, (resultSet, i) -> {
+            Map<LocalTime, LocalTime> times = new HashMap<>();
+            times.put(resultSet.getTime("timeFrom").toLocalTime(),
+                    resultSet.getTime("timeTo").toLocalTime());
+
+            return new DoctorExportResponse(
+                    resultSet.getLong("doctorId"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
+                    resultSet.getString("position"),
+                    resultSet.getDate("dataOfStart").toLocalDate(),
+                    resultSet.getDate("dataOfFinish").toLocalDate(),
+                    resultSet.getDate("data").toLocalDate(),
+                    times,
+                    resultSet.getBoolean("isBusy"));
+        });
+        ExportToExcel exportToExcel = new ExportToExcel(doctors);
+        exportToExcel.exportDataToExcel(response);
+        return doctors;
+    }
+
+
 }

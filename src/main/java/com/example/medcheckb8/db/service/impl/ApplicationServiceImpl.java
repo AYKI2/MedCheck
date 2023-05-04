@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
 import com.example.medcheckb8.db.entities.Application;
+import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.service.ApplicationService;
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -38,4 +39,23 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
         return repository.globalSearch(word);
     }
+
+    @Override
+    public SimpleResponse deleteByIdApplication(Long id) {
+        repository.findById(id).orElseThrow(() -> new NotFountException(String.format("Application with ID : %s not found!", id)));
+        repository.deleteById(id);
+        return SimpleResponse.builder().status(HttpStatus.OK).message(String.format("Application with ID: %s successfully delete !", id)).build();
+    }
+
+    @Override
+    public ApplicationResponse findById(Long id) {
+        return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Application with ID : %s not found!", id)));
+    }
+
+    @Override
+    public SimpleResponse deleteAll() {
+        repository.deleteAll();
+        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully all delete!").build();
+    }
+
 }

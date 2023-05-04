@@ -1,10 +1,7 @@
 package com.example.medcheckb8.db.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +9,7 @@ import static jakarta.persistence.CascadeType.*;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "results")
 @NoArgsConstructor
@@ -24,7 +22,7 @@ public class Result {
     private LocalDateTime dateOfIssue;
     private String orderNumber;
     private String file;
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private User user;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
