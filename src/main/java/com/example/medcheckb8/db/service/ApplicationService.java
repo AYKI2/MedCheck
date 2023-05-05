@@ -16,4 +16,5 @@ public interface ApplicationService {
     ApplicationResponse findById(Long id);
 
     SimpleResponse deleteAll();
+    ApplicationResponse checkApplication(Long id);
 }

@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.service.impl;
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
 import com.example.medcheckb8.db.entities.Application;
 import com.example.medcheckb8.db.exceptions.NotFountException;
+import com.example.medcheckb8.db.repository.custom.ApplicationRepo;
 import com.example.medcheckb8.db.service.ApplicationService;
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -20,6 +21,7 @@ import java.util.List;
 @Transactional
 public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository repository;
+    private final ApplicationRepo repo;
 
     @Override
     public SimpleResponse addApplication(ApplicationRequest request) {
@@ -56,6 +58,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     public SimpleResponse deleteAll() {
         repository.deleteAll();
         return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully all delete!").build();
+    }
+
+    @Override
+    public ApplicationResponse checkApplication(Long id) {
+        Application application = repository.findById(id).orElseThrow(() -> new NotFountException("Application with this id not exists!"));
+        repository.save(repo.update(application));
+        return repo.viewApplication(application);
     }
 
 }

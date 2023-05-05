@@ -57,5 +57,12 @@ public class ApplicationAPI {
     public SimpleResponse deleteAll() {
         return service.deleteAll();
     }
+    @Operation(summary = "edit the Application status", description = "You must enter application's id which you want change status," +
+            "when you used this method: if before status was false,now it be true, else be false!")
+    @PutMapping("/")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ApplicationResponse checkApplication(@RequestParam Long id) {
+        return service.checkApplication(id);
+    }
 
 }
