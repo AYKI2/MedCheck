@@ -46,16 +46,7 @@ public class ApplicationAPI {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "Way to receive delete by id applications",
             description = "With this method , the admin can delete by id the abandoned applications. Only for admin.")
-    public SimpleResponse deleteById(@RequestParam Long id) {
+    public SimpleResponse deleteById(@RequestBody List<Long> id) {
         return service.deleteByIdApplication(id);
     }
-
-    @DeleteMapping("/delete-all")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Way to receive delete all applications",
-            description = "With this method , the admin can delete all the abandoned applications. Only for admin.")
-    public SimpleResponse deleteAll() {
-        return service.deleteAll();
-    }
-
 }

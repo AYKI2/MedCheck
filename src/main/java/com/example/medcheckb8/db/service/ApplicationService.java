@@ -11,9 +11,8 @@ public interface ApplicationService {
 
     List<ApplicationResponse> getAllApplication(String word);
 
-    SimpleResponse deleteByIdApplication(Long id);
+    SimpleResponse deleteByIdApplication(List<Long> id);
 
     ApplicationResponse findById(Long id);
 
-    SimpleResponse deleteAll();
 }

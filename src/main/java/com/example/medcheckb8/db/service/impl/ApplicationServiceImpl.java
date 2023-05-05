@@ -7,6 +7,7 @@ import com.example.medcheckb8.db.service.ApplicationService;
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.repository.ApplicationRepository;
+import com.google.api.gax.rpc.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,10 +42,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public SimpleResponse deleteByIdApplication(Long id) {
-        repository.findById(id).orElseThrow(() -> new NotFountException(String.format("Application with ID : %s not found!", id)));
-        repository.deleteById(id);
-        return SimpleResponse.builder().status(HttpStatus.OK).message(String.format("Application with ID: %s successfully delete !", id)).build();
+    public SimpleResponse deleteByIdApplication(List<Long> id) {
+        for (Long aLong : id) {
+            if (repository.findById(aLong).isEmpty()){
+                throw new NotFountException("Application not found with ID: " + id);
+
+            }
+        }
+        repository.deleteApplications(id);
+        return SimpleResponse.builder().status(HttpStatus.OK)
+                .message(String.format("Application with ID: %s successfully delete !", id)).build();
     }
 
     @Override
@@ -52,10 +59,5 @@ public class ApplicationServiceImpl implements ApplicationService {
         return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Application with ID : %s not found!", id)));
     }
 
-    @Override
-    public SimpleResponse deleteAll() {
-        repository.deleteAll();
-        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully all delete!").build();
-    }
 
 }
