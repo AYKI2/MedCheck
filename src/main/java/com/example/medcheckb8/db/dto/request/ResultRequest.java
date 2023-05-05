@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Builder
 public record ResultRequest(
         Long departmentId,
+        Long patientId,
         LocalDateTime dateOfIssue,
         String file
 ) {

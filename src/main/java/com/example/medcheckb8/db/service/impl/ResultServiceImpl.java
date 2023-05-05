@@ -25,10 +25,10 @@ public class ResultServiceImpl implements ResultService {
     private final UserRepository userRepository;
 
     @Override
-    public SimpleResponse addResult(Long patientId, ResultRequest request) {
-        User user = userRepository.findById(patientId)
+    public SimpleResponse addResult(ResultRequest request) {
+        User user = userRepository.findById(request.patientId())
                 .orElseThrow(() -> new NotFountException(
-                        String.format("Patient with id: %d doesn't exist.", patientId)));
+                        String.format("Patient with id: %d doesn't exist.", request.patientId())));
 
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new NotFountException(

@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/search")
+@CrossOrigin
 @Tag(name = "GlobalSearch", description = "Expert Search API Endpoints")
 public class GlobalSearchAPI {
 
