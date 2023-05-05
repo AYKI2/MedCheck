@@ -19,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
-    private final com.example.medcheckb8.db.repository.ScheduleRepository scheduleRepository;
-
 
     @Override
     public List<ScheduleResponse> getAllSchedule(String word, LocalDate startDate, LocalDate endDate) {
