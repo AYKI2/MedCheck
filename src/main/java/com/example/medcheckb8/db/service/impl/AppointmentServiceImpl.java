@@ -15,6 +15,9 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.EmailSenderService;
+import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.entities.Account;
+import com.example.medcheckb8.db.repository.AppointmentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -38,6 +41,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final EmailSenderService emailSenderService;
     private final TemplateEngine templateEngine;
     private final AppointmentRepository repository;
+    private final AppointmentRepository appointmentRepository;
 
     @Override
     public AppointmentResponse save(AddAppointmentRequest request) {
@@ -183,5 +187,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .message("Successfully deleted!")
                     .build();
         }
+    }
+        
+    @Override
+    public List<AppointmentResponse> getUserAppointments() {
+        Account account = jwtService.getAccountInToken();
+        return appointmentRepository.getUserAppointments(account.getEmail());
     }
 }

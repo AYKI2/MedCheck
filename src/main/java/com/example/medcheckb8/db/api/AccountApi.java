@@ -43,7 +43,7 @@ public class AccountApi {
     @PreAuthorize("hasAuthority('PATIENT')")
     @PostMapping("/changePassword")
     @Operation(summary = "Method for changing the user's password.",
-            description = "A way to change the password of the current user through his profile.Only for Patient.")
+            description = "A way to change the password of the current user through his profile.Only for patient.")
     SimpleResponse changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         return service.changePassword(request);
     }
