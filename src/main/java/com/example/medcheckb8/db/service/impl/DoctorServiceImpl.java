@@ -4,7 +4,7 @@ import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ScheduleDateAndTimeResponse;
-import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;

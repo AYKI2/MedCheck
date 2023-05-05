@@ -3,7 +3,7 @@ package com.example.medcheckb8.db.service;
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
-import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 
 import java.time.ZonedDateTime;
@@ -23,4 +23,5 @@ public interface DoctorService {
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 
     List<ScheduleResponse> findDoctorsByDate(String department, ZonedDateTime zonedDateTime);
+
 }

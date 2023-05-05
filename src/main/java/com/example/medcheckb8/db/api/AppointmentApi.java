@@ -2,9 +2,9 @@ package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.request.appointment.FreeSpecialistRequest;
-import com.example.medcheckb8.db.dto.response.AppointmentResponse;
-import com.example.medcheckb8.db.dto.response.GetAllAppointmentResponse;
-import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+import com.example.medcheckb8.db.dto.response.appointment.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
+import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.DoctorService;

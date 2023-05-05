@@ -1,4 +1,4 @@
-package com.example.medcheckb8.db.dto.response;
+package com.example.medcheckb8.db.dto.response.appointment;
 
 import lombok.Builder;
 
