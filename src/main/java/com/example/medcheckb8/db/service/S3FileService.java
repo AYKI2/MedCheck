@@ -8,5 +8,6 @@ import java.util.Map;
 public interface S3FileService {
 
     Map<String, String> upload(MultipartFile file) throws IOException;
-    String deleteFile(String fileName);
+
+    Map<String, String> delete(String fileLink);
 }
