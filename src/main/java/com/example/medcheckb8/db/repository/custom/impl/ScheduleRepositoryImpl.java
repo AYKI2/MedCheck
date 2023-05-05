@@ -1,16 +1,12 @@
 package com.example.medcheckb8.db.repository.custom.impl;
 
 
-import com.example.medcheckb8.db.dto.request.SampleRequest;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
-import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
 import com.example.medcheckb8.db.enums.Repeat;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +22,7 @@ import java.util.Map;
 @Transactional
 public class ScheduleRepositoryImpl implements ScheduleRepository {
     private final JdbcTemplate template;
-private final com.example.medcheckb8.db.repository.ScheduleRepository repository;
+
     @Override
     public List<ScheduleResponse> getAll(String word, LocalDate start, LocalDate end) {
         String sql = "SELECT s.id as scheduleId, " +
@@ -60,7 +56,7 @@ private final com.example.medcheckb8.db.repository.ScheduleRepository repository
         sql = String.format(sql, keyWordCondition, dateCondition);
 
         return template.query(sql, (resultSet, i) -> {
-            Map<LocalTime,LocalTime> times = new HashMap<>();
+            Map<LocalTime, LocalTime> times = new HashMap<>();
             times.put(resultSet.getTime("timeFrom").toLocalTime(),
                     resultSet.getTime("timeTo").toLocalTime());
             return new ScheduleResponse(
@@ -73,7 +69,6 @@ private final com.example.medcheckb8.db.repository.ScheduleRepository repository
                     times);
         });
     }
-
 
 
     @Override

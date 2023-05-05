@@ -8,5 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleService {
-    List<ScheduleResponse> getAllSchedule(String word, LocalDate startDate, LocalDate endDate);
+    List<ScheduleResponse> getAllSchedule(String word,
+                                          LocalDate startDate,
+                                          LocalDate endDate);
 }

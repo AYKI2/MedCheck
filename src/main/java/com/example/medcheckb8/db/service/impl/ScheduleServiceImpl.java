@@ -1,10 +1,8 @@
 package com.example.medcheckb8.db.service.impl;
 
-import com.example.medcheckb8.db.dto.request.SampleRequest;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 
 
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
 
     @Override
-    public List<ScheduleResponse> getAllSchedule(String word, LocalDate startDate, LocalDate endDate) {
+    public List<ScheduleResponse> getAllSchedule(String word,
+                                                 LocalDate startDate,
+                                                 LocalDate endDate) {
         return repository.getAll(word, startDate, endDate);
     }
 }
