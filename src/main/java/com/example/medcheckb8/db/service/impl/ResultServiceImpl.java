@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.ResultRequest;
+import com.example.medcheckb8.db.dto.response.ResultResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Result;
@@ -50,6 +51,14 @@ public class ResultServiceImpl implements ResultService {
                 .message(String.format("Result with patient full name: %s successfully added.",
                         (user.getFirstName() + " " + user.getLastName())))
                 .build();
+    }
+
+    @Override
+    public ResultResponse getResult(String orderNumber) {
+        return resultRepository.getResultByOrderNumber(orderNumber)
+                .orElseThrow(()-> new NotFountException(
+                        String.format("Result with order number: %s doesn't exist.",orderNumber)
+                ));
     }
 
     private String generateOrderNumber() {
