@@ -222,10 +222,10 @@ public class AccountServiceImpl implements AccountService {
             account.setPassword(passwordEncoder.encode(newPasswordRequest.newPassword()));
             account.setResetToken(null);
             repository.save(account);
-            logger.info("Password reset successful for token: {}"+ newPasswordRequest.token());
+            logger.info("Password reset successful for token: {}" + newPasswordRequest.token());
             return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully updated!").build();
         } catch (NotFountException e) {
-            logger.severe("Error resetting password for token: {}"+ newPasswordRequest.token());
+            logger.severe("Error resetting password for token: {}" + newPasswordRequest.token());
             return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
         }
     }

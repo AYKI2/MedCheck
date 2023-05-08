@@ -7,7 +7,6 @@ import com.example.medcheckb8.db.service.ApplicationService;
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.repository.ApplicationRepository;
-import com.google.api.gax.rpc.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,7 +40,8 @@ public class ApplicationServiceImpl implements ApplicationService {
             String errorMessage = "Error while saving application: " + e.getMessage();
             logger.severe(errorMessage);
             return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
-        }    }
+        }
+    }
 
     @Override
     public List<ApplicationResponse> getAllApplication(String word) {
@@ -56,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public SimpleResponse deleteByIdApplication(List<Long> id) {
         for (Long aLong : id) {
-            if (repository.findById(aLong).isEmpty()){
+            if (repository.findById(aLong).isEmpty()) {
                 logger.warning("Application not found with ID: " + id);
                 throw new NotFountException("Application not found with ID: " + id);
 
