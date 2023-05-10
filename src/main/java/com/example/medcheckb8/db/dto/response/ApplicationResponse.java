@@ -8,5 +8,6 @@ import java.time.LocalDate;
 public record ApplicationResponse(Long id,
                                   String name,
                                   LocalDate date,
-                                  String phoneNumber) {
+                                  String phoneNumber,
+                                  Boolean processed) {
 }
