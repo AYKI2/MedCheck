@@ -58,16 +58,24 @@ public class UserServiceImpl implements UserService {
         response.setLastName(account.getUser().getLastName());
         response.setPhoneNumber(account.getUser().getPhoneNumber());
         response.setEmail(account.getEmail());
+        logger.info("Returning profile response: " + response.toString());
         return repository.getResult();
     }
 
     @Override
     public SimpleResponse deleteById(Long id) {
-        if (id == 1) {
-            throw new BadRequestException("Cannot delete id \"1\" because this id belongs to the Admin");
+        try {
+            if (id == 1) {
+                throw new BadRequestException("Cannot delete id \"1\" because this id belongs to the Admin");
+            }
+            User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with Id : %s not found", id)));
+            repository.delete(user);
+            logger.info("User with Id " + id + " deleted successfully");
+            return SimpleResponse.builder().status(HttpStatus.OK).message("The user removed").build();
+        } catch (BadRequestException e) {
+            logger.warning("Error while deleting user with Id " + id + ": " + e.getMessage());
+            throw new RuntimeException(e);
+
         }
-        User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with Id : %s not found", id)));
-        repository.delete(user);
-        return SimpleResponse.builder().status(HttpStatus.OK).message("The user removed").build();
     }
 }
