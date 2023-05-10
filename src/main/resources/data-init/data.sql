@@ -510,9 +510,9 @@ values (1, '2023-07-01','file','88888888888', 4, 2),
 
 insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)
 values (1, false, 0),
-       (7, true, 1),
+       (1, true, 1),
        (1, false, 2),
-       (7, true, 3),
+       (1, true, 3),
        (1, true, 4),
        (1, false, 5),
        (1, false, 6),

@@ -36,13 +36,20 @@ public class UserApi {
             summary = "The profile update method", description = "User profile which can see own information or changed"
     )
     public SimpleResponse getProfile(@RequestBody @Valid ProfileRequest request) {
-        return service.getProfile( request);
+        return service.getProfile(request);
     }
 
     @GetMapping("/getResult")
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @Operation(summary = "The method to send information ", description = "Information for autocomplete")
-    public ProfileResponse getResult(String email) {
-        return service.getResult(email);
+    public ProfileResponse getResult() {
+        return service.getResult();
+    }
+
+    @DeleteMapping("/")
+    @Operation(summary = "The patient delete method.",
+            description = "This method should be used to delete the Patient")
+    public SimpleResponse deleteById(@RequestParam Long id) {
+        return service.deleteById(id);
     }
 }
