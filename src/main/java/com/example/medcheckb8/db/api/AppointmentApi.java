@@ -2,7 +2,8 @@ package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.request.appointment.FreeSpecialistRequest;
-import com.example.medcheckb8.db.dto.response.appointment.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -11,10 +12,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +33,7 @@ public class AppointmentApi {
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     @Operation(summary = "Method for adding a new entry.",
             description = "Using this method, the patient can make an appointment with a doctor.Only for patients.")
-    public AppointmentResponse addAppointment(@RequestBody @Valid AddAppointmentRequest request) {
+    public AddAppointmentResponse addAppointment(@RequestBody @Valid AddAppointmentRequest request) {
         return service.save(request);
     }
 

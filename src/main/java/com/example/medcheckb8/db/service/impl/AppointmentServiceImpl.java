@@ -2,8 +2,9 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
+import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.AppointmentDoctorResponse;
-import com.example.medcheckb8.db.dto.response.appointment.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.*;
@@ -15,7 +16,6 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.EmailSenderService;
-import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import org.springframework.http.HttpStatus;
@@ -44,7 +44,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
 
     @Override
-    public AppointmentResponse save(AddAppointmentRequest request) {
+    public AddAppointmentResponse save(AddAppointmentRequest request) {
         Account currentUser = jwtService.getAccountInToken();
         User user = userRepository.findByAccountId(currentUser.getId())
                 .orElseThrow(() -> new NotFountException("User not found!"));
@@ -92,7 +92,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         String htmlContent = templateEngine.process("emailMessage.html", context);
         emailSenderService.sendEmail(request.email(), subject, htmlContent);
 
-        return AppointmentResponse.builder()
+        return AddAppointmentResponse.builder()
                 .response(AppointmentDoctorResponse.builder()
                         .id(doctor.getId())
                         .appointmentId(appointment.getId())

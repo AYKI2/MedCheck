@@ -1,15 +1,15 @@
 package com.example.medcheckb8.db.service;
 
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
-import com.example.medcheckb8.db.dto.response.appointment.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
-import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 
 import java.util.List;
 
 public interface AppointmentService {
-    AppointmentResponse save(AddAppointmentRequest request);
+    AddAppointmentResponse save(AddAppointmentRequest request);
 
     List<GetAllAppointmentResponse> getAll();
 
