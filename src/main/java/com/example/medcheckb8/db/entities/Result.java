@@ -22,7 +22,7 @@ public class Result {
     private LocalDateTime dateOfIssue;
     private String orderNumber;
     private String file;
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private User user;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.*;
 
 @Getter
 @Setter
@@ -29,9 +29,9 @@ public class Schedule {
     private int intervalOfHours;
     @ElementCollection
     private Map<Repeat, Boolean> repeatDay;
-    @OneToOne(cascade = ALL)
+    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Doctor doctor;
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
     @OneToMany(cascade = ALL, mappedBy = "schedule")
     List<ScheduleDateAndTime> dateAndTimes;

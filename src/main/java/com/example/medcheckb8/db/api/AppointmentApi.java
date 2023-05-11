@@ -6,13 +6,19 @@ import com.example.medcheckb8.db.dto.response.appointment.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
-import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.service.AppointmentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/appointments")
 public class AppointmentApi {
+    private final AppointmentService appointmentService;
     private final AppointmentService service;
     private final DoctorService doctorService;
 
@@ -63,5 +70,11 @@ public class AppointmentApi {
                     " delete them one by one or all.")
     public SimpleResponse delete(@RequestParam(required = false) List<Long> appointments) {
         return service.delete(appointments);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('PATIENT')")
+    public List<AppointmentResponse> myAppointments(){
+        return appointmentService.getUserAppointments();
     }
 }

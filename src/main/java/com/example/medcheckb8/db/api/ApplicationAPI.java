@@ -33,4 +33,20 @@ public class ApplicationAPI {
     public List<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word) {
         return service.getAllApplication(word);
     }
+
+    @GetMapping("/find")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "Way to receive find by id applications",
+            description = "With this method , the admin can find by id the abandoned applications. Only for admin. ")
+    public ApplicationResponse findById(@RequestParam Long id) {
+        return service.findById(id);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "Way to receive delete by id applications",
+            description = "With this method , the admin can delete by id the abandoned applications. Only for admin.")
+    public SimpleResponse deleteById(@RequestBody List<Long> id) {
+        return service.deleteByIdApplication(id);
+    }
 }
