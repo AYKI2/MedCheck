@@ -23,7 +23,7 @@ public class AppointmentApi {
     private final AppointmentService service;
     private final DoctorService doctorService;
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     @Operation(summary = "Method for adding a new entry.",
             description = "Using this method, the patient can make an appointment with a doctor.Only for patients.")
@@ -39,7 +39,7 @@ public class AppointmentApi {
         return service.getAll();
     }
 
-    @PostMapping
+    @PostMapping("/free")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     @Operation(summary = "To get the closest free time.",
             description = "Using this method, the patient can get the nearest free time.Only for patients.")
