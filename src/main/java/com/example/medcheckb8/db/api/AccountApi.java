@@ -6,9 +6,9 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
 import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,7 +40,7 @@ public class AccountApi {
         return service.authWithGoogle(tokenId);
     }
 
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PermitAll
     @PostMapping("/changePassword")
     @Operation(summary = "Method for changing the user's password.",
             description = "A way to change the password of the current user through his profile.Only for patient.")
@@ -48,7 +48,7 @@ public class AccountApi {
         return service.changePassword(request);
     }
 
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PermitAll
     @PostMapping("/forgot_password")
     @Operation(summary = "Method for password recovery.",
             description = "A way to change a user's password if it is lost. The method is only available to the user.Only for Patient.")
@@ -56,7 +56,7 @@ public class AccountApi {
         return service.forgotPassword(request);
     }
 
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PermitAll
     @PostMapping("/reset_password")
     @Operation(summary = "Password reset method.",
             description = "Method for resetting a user's password. The method is only available to the user.Only for Patient.")
