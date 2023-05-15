@@ -7,6 +7,7 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.dto.response.UserResponse;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
@@ -49,17 +50,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileResponse getResult(String email) {
-        logger.info("Getting profile for email: " + email);
-        Account account1 = service.getAccountInToken();
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new NotFountException(String.format("dswve")));
+    public ProfileResponse getResult() {
+        Account account = service.getAccountInToken();
         ProfileResponse response = new ProfileResponse();
         response.setId(account.getId());
         response.setFirstName(account.getUser().getFirstName());
         response.setLastName(account.getUser().getLastName());
         response.setPhoneNumber(account.getUser().getPhoneNumber());
         response.setEmail(account.getEmail());
-        logger.info("Returning profile for email: " + email);
-        return response;
+        logger.info("Returning profile response: " + response.toString());
+        return repository.getResult();
+    }
+
+    @Override
+    public SimpleResponse deleteById(Long id) {
+        try {
+            if (id == 1) {
+                throw new BadRequestException("Cannot delete id \"1\" because this id belongs to the Admin");
+            }
+            User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with Id : %s not found", id)));
+            repository.delete(user);
+            logger.info("User with Id " + id + " deleted successfully");
+            return SimpleResponse.builder().status(HttpStatus.OK).message("The user removed").build();
+        } catch (BadRequestException e) {
+            logger.warning("Error while deleting user with Id " + id + ": " + e.getMessage());
+            throw new RuntimeException(e);
+
+        }
     }
 }

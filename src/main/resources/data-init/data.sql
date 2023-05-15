@@ -1,7 +1,7 @@
 insert into accounts (id, email, password, role)
 VALUES (1, 'admin@gmail.com', '$2a$12$448IReue43rqpYW27HWLQO5JJmvYSyjDvpVlwijFQq.FotkxRepBm', 'ADMIN'),
        (2, 'kuban@gmail.com', '$2a$12$edF8P1CF93xkBX.WsT.NAOqJ6CGJVLke45MXKcMNKJ3uaQrT7bvk6', 'PATIENT'),
-       (3, 'eliza@gmail.com', '$2a$12$d8O64rMuOp/PgiAr0zf42eN1xn1G4mH7xxNYeUnCWIIFdb.NnYRbq', 'PATIENT'),
+       (3, 'elizashyrbaeva@gmail.com', '$2a$12$ZvV/fI8Tz8pcvaUt86ooa.x4ctJHmvch5mkpqRjdUKmfdFyiVVk1S', 'PATIENT'),
        (4, 'isxak@gmail.com', '$2a$12$dYWxM1tOa.mMqFCVJ/rikeZxYxF0qck9pr1ioSijJN2k5/vCUcCs2', 'PATIENT'),
        (5, 'uluk@gmail.com', '$2a$12$QBzhWSs8erQeKuqfz.ZxEO.thonK92aJz6cqnYff8zatE7MZMOdyu', 'PATIENT');
 
@@ -9,7 +9,7 @@ VALUES (1, 'admin@gmail.com', '$2a$12$448IReue43rqpYW27HWLQO5JJmvYSyjDvpVlwijFQq
 insert into users (id, first_name, last_name, phone_number, account_id)
 values (1, 'Админ', 'Админов', '+996708281123', 1),
        (2, 'Кубан', 'Келсинбеков', '+996708281456', 2),
-       (3, 'Элиза', 'Аширалиева', '+996708281789', 3),
+       (3, 'Элиза', 'Ашырбаева', '+996708281789', 3),
        (4, 'Исхак', 'Абдухамидов', '+996708281312', 4),
        (5, 'Улук', 'Исманов', '+996708281334', 5);
 
@@ -510,9 +510,9 @@ values (1, '2023-07-01','file','88888888888', 4, 2),
 
 insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)
 values (1, false, 0),
-       (7, true, 1),
+       (1, true, 1),
        (1, false, 2),
-       (7, true, 3),
+       (1, true, 3),
        (1, true, 4),
        (1, false, 5),
        (1, false, 6),
