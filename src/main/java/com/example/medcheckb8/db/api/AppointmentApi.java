@@ -71,7 +71,7 @@ public class AppointmentApi {
         return service.delete(appointments);
     }
 
-    @GetMapping
+    @GetMapping("/myAppointments")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     public List<AppointmentResponse> myAppointments(){
         return appointmentService.getUserAppointments();
