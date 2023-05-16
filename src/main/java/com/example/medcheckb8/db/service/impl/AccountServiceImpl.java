@@ -40,7 +40,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 import java.util.UUID;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -52,13 +53,17 @@ public class AccountServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final JavaMailSender javaMailSender;
+    private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
+        logger.info("Registering user: " + request.email());
         if (repository.existsByEmail(request.email())) {
+            logger.warning("Email already exists: " + request.email());
             throw new AlreadyExistException("This email already exists!");
         }
         if (userRepository.existsByPhoneNumber(request.phoneNumber())) {
+            logger.warning("Phone number already in use: " + request.phoneNumber());
             throw new AlreadyExistException("This number is already in use!");
         }
         User user = User.builder()
@@ -71,6 +76,7 @@ public class AccountServiceImpl implements AccountService {
                         .build())
                 .build();
         userRepository.save(user);
+        logger.info("User registered successfully: " + user.getAccount().getEmail());
 
         String jwt = jwtService.generateToken(user.getAccount());
         return AuthenticationResponse.builder()
@@ -82,14 +88,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        logger.info("Authenticating user: " + request.email());
         if (!repository.existsByEmail(request.email())) {
+            logger.warning("User not found: " + request.email());
             throw new BadRequestException("User with email: " + request.email() + " doesn't exists!");
         }
         Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
         if (!passwordEncoder.matches(request.password(), account.getPassword())) {
+            logger.warning("Invalid password for user: " + request.email());
             throw new BadCredentialException("Invalid password!");
         }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        logger.info("User authenticated successfully: " + request.email());
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())
@@ -108,8 +118,9 @@ public class AccountServiceImpl implements AccountService {
                     .build();
             log.info("Successfully worked the init method");
             FirebaseApp firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
+            logger.info("Firebase app initialized successfully.");
         } catch (IOException e) {
-            log.error("IOException");
+            logger.severe("IOException occurred while initializing Firebase app: " + e.getMessage());
         }
     }
 
@@ -143,7 +154,9 @@ public class AccountServiceImpl implements AccountService {
 
     private String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+        String username = authentication.getName();
+        logger.info("Getting current user: " + username);
+        return username;
     }
 
     @Override
@@ -152,13 +165,15 @@ public class AccountServiceImpl implements AccountService {
             Account account = repository.findByEmail(getCurrentUser()).
                     orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
             if (!passwordEncoder.matches(request.oldPassword(), account.getPassword())) {
+                logger.log(Level.WARNING, "Wrong old password for user " + getCurrentUser());
                 return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message("Wrong old password.").build();
             }
             account.setPassword(passwordEncoder.encode(request.newPassword()));
             repository.save(account);
+            logger.log(Level.INFO, "Password updated successfully for user " + getCurrentUser());
             return SimpleResponse.builder().status(HttpStatus.OK).message("Password updated successfully.").build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Exception occurred while changing password for user " + getCurrentUser(), e);
         }
         return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
     }
@@ -186,21 +201,31 @@ public class AccountServiceImpl implements AccountService {
 
             helper.setText(htmlMsg, true);
             javaMailSender.send(message);
+
+            log.info(String.format("Password reset link sent to email %s for account with id %d", request.email(), account.getId()));
             return SimpleResponse.builder().status(HttpStatus.OK).message("Check your email for credentials.").build();
+
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message(e.getMessage()).build();
         }
-        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
     }
 
     @Override
     public SimpleResponse resetToken(NewPasswordRequest newPasswordRequest) {
-        Account account = repository.findByResetToken(newPasswordRequest.token()).
-                orElseThrow(() -> new NotFountException("Invalid token"));
+        logger.info("Resetting password for token: {}" + newPasswordRequest.token());
+        try {
+            Account account = repository.findByResetToken(newPasswordRequest.token()).
+                    orElseThrow(() -> new NotFountException("Invalid token"));
 
-        account.setPassword(passwordEncoder.encode(newPasswordRequest.newPassword()));
-        account.setResetToken(null);
-        repository.save(account);
-        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully updated!").build();
+            account.setPassword(passwordEncoder.encode(newPasswordRequest.newPassword()));
+            account.setResetToken(null);
+            repository.save(account);
+            logger.info("Password reset successful for token: {}" + newPasswordRequest.token());
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully updated!").build();
+        } catch (NotFountException e) {
+            logger.severe("Error resetting password for token: {}" + newPasswordRequest.token());
+            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+        }
     }
 }

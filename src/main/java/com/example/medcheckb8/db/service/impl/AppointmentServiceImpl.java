@@ -17,6 +17,7 @@ import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
 import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.entities.Account;
+import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final TemplateEngine templateEngine;
     private final AppointmentRepository repository;
     private final AppointmentRepository appointmentRepository;
+    private static final Logger logger = Logger.getLogger(Appointment.class.getName());
 
     @Override
     public AddAppointmentResponse save(AddAppointmentRequest request) {
@@ -192,6 +195,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<AppointmentResponse> getUserAppointments() {
         Account account = jwtService.getAccountInToken();
-        return appointmentRepository.getUserAppointments(account.getEmail());
+        logger.info("Retrieving appointments for user with email: {}" + account.getEmail());
+        List<AppointmentResponse> appointments = appointmentRepository.getUserAppointments(account.getEmail());
+        logger.severe("Retrieved {} appointments for user with email: {}" + appointments.size() + account.getEmail());
+        return appointments;
     }
 }

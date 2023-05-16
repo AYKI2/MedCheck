@@ -37,14 +37,6 @@ public class GlobalExceptionHandler {
                 BadRequestException.class.getSimpleName());
     }
 
-    @ExceptionHandler(ForbiddenException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionResponse handlerForbidden(ForbiddenException e) {
-        return new ExceptionResponse(HttpStatus.FORBIDDEN,
-                e.getMessage(),
-                ForbiddenException.class.getSimpleName());
-    }
-
     @ExceptionHandler(BadCredentialException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerBadCredential(BadCredentialException e) {

@@ -8,7 +8,6 @@ import lombok.Builder;
 
 @Builder
 public record ApplicationRequest(
-        Long id,
         @Size(min = 2, max = 30, message = "First name must contain between 2 and 30 characters.")
         @NotBlank(message = "First name cannot be empty!")
         @NotNull(message = "First name cannot be null!")

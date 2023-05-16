@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.ResultRequest;
+import com.example.medcheckb8.db.dto.response.ResultResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ResultService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,5 +23,12 @@ public class ResultApi {
     @Operation(summary = "The add result method", description = "This method should be used to add a patient result")
     public SimpleResponse addResult(@RequestBody ResultRequest request){
         return resultService.addResult(request);
+    }
+
+    @PreAuthorize("hasAnyAuthority('PATIENT')")
+    @GetMapping
+    @Operation(summary = "Get result method", description = "You can get result by order number")
+    public ResultResponse getResult(@RequestParam(required = false) String orderNumber){
+        return resultService.getResult(orderNumber);
     }
 }

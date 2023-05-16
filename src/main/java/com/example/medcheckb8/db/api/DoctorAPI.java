@@ -58,6 +58,7 @@ public class DoctorAPI {
         return doctorService.update(doctorRequest);
     }
 
+
     @DeleteMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "The expert delete method.",

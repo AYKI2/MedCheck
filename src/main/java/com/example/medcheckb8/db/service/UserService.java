@@ -12,5 +12,8 @@ public interface UserService {
 
     SimpleResponse getProfile(ProfileRequest request);
 
-    ProfileResponse getResult(String email);
+    ProfileResponse getResult();
+
+    SimpleResponse deleteById(Long id);
+
 }
