@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AppointmentResponse(
+        Long appointmentId,
+        Long doctorId,
         String doctorFullName,
         String doctorImage,
         String doctorPosition,
-
         LocalDateTime dateTime,
         Status status
 ) {
