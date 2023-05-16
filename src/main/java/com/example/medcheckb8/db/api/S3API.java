@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/s3")
+@RequestMapping("/api/s3")
 @CrossOrigin
 @Tag(name = "AWS S3", description = "Bucket control API Endpoints")
 public class S3API {
