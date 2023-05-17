@@ -73,6 +73,8 @@ public class AppointmentApi {
 
     @GetMapping("/myAppointments")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
+    @Operation(summary = "To get your appointments.",
+            description = "Using this method, the patient can retrieve all of their appointments. For patients only.")
     public List<AppointmentResponse> myAppointments(){
         return appointmentService.getUserAppointments();
     }
