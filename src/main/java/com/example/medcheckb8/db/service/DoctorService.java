@@ -9,7 +9,6 @@ import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.time.ZonedDateTime;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public interface DoctorService {
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 
-    List<ScheduleResponse> findDoctorsByDate(String department, ZonedDateTime zonedDateTime);
+    List<ScheduleResponse> findDoctorsByDate(String department, String timeZone);
     
     List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException;
 }

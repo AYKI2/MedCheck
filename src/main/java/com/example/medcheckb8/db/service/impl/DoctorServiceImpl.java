@@ -150,8 +150,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<ScheduleResponse> findDoctorsByDate(String department, ZonedDateTime zonedDateTime) {
-        LocalDateTime now = ZonedDateTime.of(zonedDateTime.toLocalDate(), zonedDateTime.toLocalTime(), zonedDateTime.getZone()).toLocalDateTime();
+    public List<ScheduleResponse> findDoctorsByDate(String department, String timeZone) {
+        ZoneId zoneId = ZoneId.of(timeZone);
+        LocalDateTime currentTime = LocalDateTime.now(zoneId);
         List<ScheduleResponse> responses = new ArrayList<>();
         List<Doctor> doctors = doctorRepository.findByDepartmentName(department);
         List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
@@ -160,9 +161,9 @@ public class DoctorServiceImpl implements DoctorService {
         boolean isCurrent = true;
         int everyoneIsBusy = -1;
         long i = 0;
-        LocalTime nextTime = now.toLocalTime();
+        LocalTime nextTime = currentTime.toLocalTime();
         for (Doctor doctor : doctors) {
-            List<ScheduleDateAndTimeResponse> dateAndTimes = scheduleDateAndTimeRepository.findScheduleDateAndTimesByScheduleId(doctor.getId(), now.toLocalDate());
+            List<ScheduleDateAndTimeResponse> dateAndTimes = scheduleDateAndTimeRepository.findScheduleDateAndTimesByScheduleId(doctor.getId(), currentTime.toLocalDate());
             for (ScheduleDateAndTimeResponse dateAndTime : dateAndTimes) {
                 if (isCurrent) {
                     if (currentDate == null) {
@@ -170,7 +171,7 @@ public class DoctorServiceImpl implements DoctorService {
                     }
                     everyoneIsBusy = scheduleDateAndTimeRepository.everyoneIsBusy(doctor.getId(), currentDate);
                     isCurrent = false;
-                    if (!dateAndTime.isBusy() && dateAndTime.timeFrom().isAfter(now.toLocalTime())) {
+                    if (!dateAndTime.isBusy() && dateAndTime.timeFrom().isAfter(currentTime.toLocalTime())) {
                         scheduleDateAndTimeResponses.add(dateAndTime);
                     }
                 } else if (everyoneIsBusy == 0) {
@@ -183,7 +184,7 @@ public class DoctorServiceImpl implements DoctorService {
                 ) {
                     if (dateAndTime.timeFrom().isAfter(nextTime)) {
                         List<ScheduleDateAndTimeResponse> dates = scheduleDateAndTimeRepository.findDatesByDoctorIdAndDate(doctor.getId(), currentDate);
-                        if (now.toLocalTime().isBefore(dateAndTime.timeFrom())
+                        if (currentTime.toLocalTime().isBefore(dateAndTime.timeFrom())
                                 && dateAndTime.isBusy()) {
                             continue;
                         }

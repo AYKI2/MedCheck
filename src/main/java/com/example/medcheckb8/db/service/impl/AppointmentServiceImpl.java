@@ -12,6 +12,7 @@ import com.example.medcheckb8.db.enums.Detachment;
 import com.example.medcheckb8.db.enums.Role;
 import com.example.medcheckb8.db.enums.Status;
 import com.example.medcheckb8.db.exceptions.AlreadyExistException;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.*;
 import com.example.medcheckb8.db.service.AppointmentService;
@@ -56,14 +57,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
                 .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
-            throw new NotFountException("This specialist does not work in this department.");
+            throw new BadRequestException("This specialist does not work in this department.");
         }
         Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date().toLocalDate(), request.date().toLocalTime());
         if (booked != null && booked) {
             throw new AlreadyExistException("This time is busy!");
         } else if (booked == null) {
-            throw new NotFountException("This specialist is not working on this day(" + doctor.getSchedule().getDataOfStart() + "-" + doctor.getSchedule().getDataOfFinish() +
-                    ") or time");
+            throw new BadRequestException("This specialist is not working on this day or time! Working dates: from " + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())

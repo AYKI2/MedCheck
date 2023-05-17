@@ -50,7 +50,7 @@ public class AppointmentApi {
     @Operation(summary = "To get the closest free time.",
             description = "Using this method, the patient can get the nearest free time.Only for patients.")
     public List<ScheduleResponse> getTheNearestFreeDoctors(@RequestBody @Valid FreeSpecialistRequest request) {
-        return doctorService.findDoctorsByDate(request.department(), request.zonedDateTime());
+        return doctorService.findDoctorsByDate(request.department(), request.timeZone());
     }
 
     @PostMapping("/canceled")
