@@ -40,7 +40,6 @@ public class AccountApi {
         return service.authWithGoogle(tokenId);
     }
 
-    @PermitAll
     @PostMapping("/changePassword")
     @Operation(summary = "Method for changing the user's password.",
             description = "A way to change the password of the current user through his profile.Only for patient.")
@@ -48,15 +47,13 @@ public class AccountApi {
         return service.changePassword(request);
     }
 
-    @PermitAll
     @PostMapping("/forgot_password")
     @Operation(summary = "Method for password recovery.",
             description = "A way to change a user's password if it is lost. The method is only available to the user.Only for Patient.")
-    SimpleResponse forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
-        return service.forgotPassword(request);
+    SimpleResponse forgotPassword(@RequestParam String email,@RequestParam String link) {
+        return service.forgotPassword(email,link);
     }
 
-    @PermitAll
     @PostMapping("/reset_password")
     @Operation(summary = "Password reset method.",
             description = "Method for resetting a user's password. The method is only available to the user.Only for Patient.")
