@@ -6,7 +6,6 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.AccountService;
 import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +49,8 @@ public class AccountApi {
     @PostMapping("/forgot_password")
     @Operation(summary = "Method for password recovery.",
             description = "A way to change a user's password if it is lost. The method is only available to the user.Only for Patient.")
-    SimpleResponse forgotPassword(@RequestParam String email,@RequestParam String link) {
-        return service.forgotPassword(email,link);
+    SimpleResponse forgotPassword(@RequestParam String email, @RequestParam String link) {
+        return service.forgotPassword(email, link);
     }
 
     @PostMapping("/reset_password")
