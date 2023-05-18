@@ -12,10 +12,9 @@ public interface AccountService {
 
     AuthenticationResponse authWithGoogle(String tokenId) throws FirebaseAuthException;
 
-
     SimpleResponse changePassword(ChangePasswordRequest request);
 
-    SimpleResponse forgotPassword(ForgotPasswordRequest request);
+    SimpleResponse forgotPassword(String email, String link);
 
     SimpleResponse resetToken(NewPasswordRequest newPasswordRequest);
 }

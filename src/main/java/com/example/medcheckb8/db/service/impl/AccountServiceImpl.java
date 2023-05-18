@@ -16,6 +16,7 @@ import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
+import com.example.medcheckb8.db.service.EmailService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -23,19 +24,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.annotation.PostConstruct;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.io.IOException;
 
@@ -53,7 +53,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final JavaMailSender javaMailSender;
+    private final TemplateEngine templateEngine;
+    private final EmailService emailService;
     private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     @Override
@@ -180,36 +181,36 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public SimpleResponse forgotPassword(ForgotPasswordRequest request) {
-        Account account = repository.findByEmail(request.email()).
-                orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", request.email())));
+    public SimpleResponse forgotPassword(String email, String link) {
+        Account account = repository.findByEmail(email).
+                orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", email)));
         String token = UUID.randomUUID().toString();
         account.setResetToken(token);
         repository.save(account);
         try {
-            String senderName = "MedCheck user registration portal server";
+            String resetPasswordLink = link + "/" + token;
             String subject = "Here's the link to reset your password";
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("medcheck.service@gmail.com", senderName);
-            helper.setTo(request.email());
-            helper.setSubject(subject);
-            String htmlMsg = "<p>Hello,</p>" +
-                    "<p>You have requested to reset your password.</p>" +
-                    "<p>Click the link below to change your password:</p>" +
-                    "<p><b><a href=\"http://localhost:2023/processResetPassword=?" + token + "\">Change my password</a><b></p>" +
-                    "<p>Ignore this email if you do remember your password, or you have not made the request.</p>";
-
-            helper.setText(htmlMsg, true);
-            javaMailSender.send(message);
-
-            log.info(String.format("Password reset link sent to email %s for account with id %d", request.email(), account.getId()));
-            return SimpleResponse.builder().status(HttpStatus.OK).message("Check your email for credentials.").build();
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message(e.getMessage()).build();
+            Context context = new Context();
+            context.setVariable("title", "Password Reset");
+            context.setVariable("message", "Hello " + account.getUsername() + "" +
+                    " Click the link below to reset your password:");
+            context.setVariable("link", resetPasswordLink);
+            context.setVariable("tokenTitle", "Reset Password");
+            String htmlContent = templateEngine.process("reset-password-template.html", context);
+            emailService.sendEmail(email, subject, htmlContent);
+            log.info("Password reset email sent to: {}", email);
+        } catch (NotFountException ex) {
+            log.error("User not found while updating reset password token for email: {}", email);
+            return SimpleResponse.builder().
+                    status(HttpStatus.OK).
+                    message("Please check your email inbox for password reset instructions.")
+                    .build();
         }
+        log.info("Reset password token updated for email: {}", email);
+        return SimpleResponse.builder().
+                status(HttpStatus.OK).
+                message("Please check your email inbox for password reset instructions.")
+                .build();
     }
 
     @Override
