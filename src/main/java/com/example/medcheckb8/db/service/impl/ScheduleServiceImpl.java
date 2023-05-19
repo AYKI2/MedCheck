@@ -103,7 +103,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
             date = date.plusDays(1L);
         }
-        //почему добавляется только один день
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
         scheduleRepository.save(schedule);
 
