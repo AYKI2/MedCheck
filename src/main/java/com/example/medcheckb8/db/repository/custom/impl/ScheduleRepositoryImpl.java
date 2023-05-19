@@ -1,6 +1,5 @@
 package com.example.medcheckb8.db.repository.custom.impl;
 
-
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 
 import com.example.medcheckb8.db.enums.Repeat;
@@ -15,7 +14,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Repository
 @RequiredArgsConstructor
