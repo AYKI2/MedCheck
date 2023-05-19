@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.dto.request;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -9,7 +10,9 @@ import java.util.Map;
 public record DoctorScheduleRequest(
         Long departmentId,
         Long doctorId,
+        @FutureOrPresent
         LocalDate startDate,
+        @FutureOrPresent
         LocalDate endDate,
         String startTime,
         String endTime,
