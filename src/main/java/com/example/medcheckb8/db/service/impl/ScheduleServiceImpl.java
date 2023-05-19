@@ -60,8 +60,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleDateAndTime> dateAndTimes = new ArrayList<>();
         ScheduleDateAndTime build;
         LocalDate date = request.startDate();
-        LocalTime start = LocalTime.parse(request.startTime());
-        LocalTime end = LocalTime.parse(request.startTime()).plusMinutes(request.interval());
 
         Schedule schedule = Schedule.builder()
                 .dataOfStart(request.startDate())
@@ -74,10 +72,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         doctor.setSchedule(schedule);
 
         while (request.endDate().isAfter(date) || request.endDate().isEqual(date)) {
+            LocalTime start = LocalTime.parse(request.startTime());
+            LocalTime end = LocalTime.parse(request.startTime()).plusMinutes(request.interval());
             String name = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
             Boolean aBoolean = repeatDays.get(Repeat.valueOf(name));
             if(aBoolean) {
-                while (!end.equals(LocalTime.parse(request.endTime()))) {
+                while (!start.equals(LocalTime.parse(request.endTime()))) {
                     if (!start.equals(LocalTime.parse(request.startBreak())) && !end.equals(LocalTime.parse(request.endBreak()))) {
                         build = ScheduleDateAndTime.builder()
                                 .date(date)
@@ -104,6 +104,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
             date = date.plusDays(1L);
         }
+        //почему добавляется только один день
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
         scheduleRepository.save(schedule);
 

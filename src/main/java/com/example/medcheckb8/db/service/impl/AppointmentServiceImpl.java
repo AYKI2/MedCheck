@@ -164,7 +164,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public SimpleResponse delete(List<Long> appointments) {
         User user = userRepository.findByAccountId(jwtService.getAccountInToken().getId())
                 .orElseThrow(() -> new NotFountException("User not found!"));
-        if (appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
+        if (appointments == null || appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
             repository.deleteAll(user.getAppointments());
             user.getAppointments().clear();
             return SimpleResponse.builder()
