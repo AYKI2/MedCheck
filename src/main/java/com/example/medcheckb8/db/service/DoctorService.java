@@ -4,6 +4,7 @@ import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,5 +25,7 @@ public interface DoctorService {
 
     SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId);
 
+    List<ScheduleResponse> findDoctorsByDate(String department, String timeZone);
+    
     List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException;
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
-
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {

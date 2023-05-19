@@ -90,13 +90,11 @@
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>9.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -114,7 +112,6 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.12.429</version>
         </dependency>
-
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -126,19 +123,12 @@
             <artifactId>flyway-core</artifactId>
             <version>9.15.0</version>
         </dependency>
-
         <dependency>
             <groupId>io.logz.logback</groupId>
             <artifactId>logzio-logback-appender</artifactId>
             <version>1.0.28</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.15.0</version>
-        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
