@@ -2,10 +2,7 @@ package com.example.medcheckb8.db.entities;
 
 import com.example.medcheckb8.db.enums.Repeat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +16,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "schedules")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_gen")

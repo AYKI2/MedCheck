@@ -1,6 +1,8 @@
 package com.example.medcheckb8.db.api;
 
+import com.example.medcheckb8.db.dto.request.DoctorScheduleRequest;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,5 +28,13 @@ public class ScheduleApi {
                                          @RequestParam(required = false) LocalDate startDate,
                                          @RequestParam(required = false) LocalDate endDate) {
         return service.getAllSchedule(word, startDate, endDate);
+    }
+
+    @PostMapping("/save")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "Add doctor's schedule",
+            description = "With this method, you can add a doctor's schedule. Available for admin only.")
+    public SimpleResponse save(@RequestBody DoctorScheduleRequest request) {
+        return service.save(request);
     }
 }
