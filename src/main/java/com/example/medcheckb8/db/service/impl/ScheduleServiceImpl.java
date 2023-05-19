@@ -40,23 +40,22 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public SimpleResponse save(DoctorScheduleRequest request) {
         Department department = departmentRepository.findById(request.departmentId())
-                .orElseThrow(() -> new NotFountException("Department with id: " + request.departmentId()+" not found!"));
+                .orElseThrow(() -> new NotFountException("Department with id: " + request.departmentId() + " not found!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
 
-        Map<Repeat,Boolean> repeatDays = new HashMap<>();
+        Map<Repeat, Boolean> repeatDays = new HashMap<>();
         for (String day : request.repeatDays().keySet()) {
-            switch (day){
-                case "пн" -> repeatDays.put(Repeat.MONDAY,request.repeatDays().get(day));
-                case "вт" -> repeatDays.put(Repeat.TUESDAY,request.repeatDays().get(day));
-                case "ср" -> repeatDays.put(Repeat.WEDNESDAY,request.repeatDays().get(day));
-                case "чт" -> repeatDays.put(Repeat.THURSDAY,request.repeatDays().get(day));
-                case "пт" -> repeatDays.put(Repeat.FRIDAY,request.repeatDays().get(day));
-                case "сб" -> repeatDays.put(Repeat.SATURDAY,request.repeatDays().get(day));
-                case "вс" -> repeatDays.put(Repeat.SUNDAY,request.repeatDays().get(day));
+            switch (day) {
+                case "пн" -> repeatDays.put(Repeat.MONDAY, request.repeatDays().get(day));
+                case "вт" -> repeatDays.put(Repeat.TUESDAY, request.repeatDays().get(day));
+                case "ср" -> repeatDays.put(Repeat.WEDNESDAY, request.repeatDays().get(day));
+                case "чт" -> repeatDays.put(Repeat.THURSDAY, request.repeatDays().get(day));
+                case "пт" -> repeatDays.put(Repeat.FRIDAY, request.repeatDays().get(day));
+                case "сб" -> repeatDays.put(Repeat.SATURDAY, request.repeatDays().get(day));
+                case "вс" -> repeatDays.put(Repeat.SUNDAY, request.repeatDays().get(day));
             }
         }
-
         List<ScheduleDateAndTime> dateAndTimes = new ArrayList<>();
         ScheduleDateAndTime build;
         LocalDate date = request.startDate();
@@ -76,7 +75,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             LocalTime end = LocalTime.parse(request.startTime()).plusMinutes(request.interval());
             String name = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
             Boolean aBoolean = repeatDays.get(Repeat.valueOf(name));
-            if(aBoolean) {
+            if (aBoolean) {
                 while (!start.equals(LocalTime.parse(request.endTime()))) {
                     if (!start.equals(LocalTime.parse(request.startBreak())) && !end.equals(LocalTime.parse(request.endBreak()))) {
                         build = ScheduleDateAndTime.builder()
