@@ -72,11 +72,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         while (request.endDate().isAfter(date) || request.endDate().isEqual(date)) {
             LocalTime start = LocalTime.parse(request.startTime());
-            LocalTime end = LocalTime.parse(request.startTime()).plusMinutes(request.interval());
+            int interval = request.interval();
+            int hour = 0;
+            while(interval >= 60){
+                interval -= 60;
+                hour++;
+            }
+            LocalTime end = LocalTime.parse(request.startTime()).plusHours(hour).plusMinutes(interval);
+            LocalTime endTime = LocalTime.parse(request.endTime());
             String name = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
             Boolean aBoolean = repeatDays.get(Repeat.valueOf(name));
             if (aBoolean) {
-                while (!start.equals(LocalTime.parse(request.endTime()))) {
+
+                while (!start.equals(endTime)) {
+                    if(start.isAfter(endTime))break;
+                    else if (end.isAfter(endTime))end = endTime;
                     if (!start.equals(LocalTime.parse(request.startBreak())) && !end.equals(LocalTime.parse(request.endBreak()))) {
                         build = ScheduleDateAndTime.builder()
                                 .date(date)
@@ -86,7 +96,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                 .schedule(doctor.getSchedule())
                                 .build();
                         start = end;
-                        end = end.plusMinutes(request.interval());
+                        end = end.plusHours(hour).plusMinutes(interval);
                     } else {
                         build = ScheduleDateAndTime.builder()
                                 .date(date)
@@ -96,7 +106,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                 .schedule(doctor.getSchedule())
                                 .build();
                         start = LocalTime.parse(request.endBreak());
-                        end = LocalTime.parse(request.endBreak()).plusMinutes(request.interval());
+                        end = LocalTime.parse(request.endBreak()).plusHours(hour).plusMinutes(interval);
                     }
                     dateAndTimes.add(build);
                 }
