@@ -1,48 +1,105 @@
-<!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <link rel="import" href=""/>
-    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Java Techie Mail</title>
     <style>
+        .main {
+            margin: 20px 30px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid #048741;
+            border-radius: 6px;
+            min-height: auto;
+            width: 600px;
 
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-            width: 55vw;
-            margin: 50px auto 0 auto;
-            padding: 20px;
         }
 
-        header {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+        .image-holder {
+            width: 600px;
+            height: 150px;
+            font-size: 48px;
+            border-bottom: 1px solid #048741;
+            background-color: #FFFFFF;
+            border-radius: 6px 6px 0 0;
         }
 
-        .card-image {
-            width: 50vw;
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-            margin: 20px 0 30px 0;
+        .image {
+            width: 290px;
+            height: 90px;
+            padding: 35px 140px;
         }
 
-        h3 {
-            margin: 0;
+        .container {
+            padding: 10px 45px;
         }
+
+        .text-header {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 120%;
+            color: black;
+        }
+
+        .header-text {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 150%;
+            color: #34453C;
+            padding-right: 50px;
+        }
+
+        .description {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 150%;
+            color: #384255;
+
+        }
+
     </style>
 </head>
 
-<body>
-<h1 th:text="${title}">Заголовок</h1>
-<h3 th:text="${firstMessage}">Первое сообщение</h3>
-<h3 th:text="${secondMessage}">Второе сообщение</h3>
-<h3 th:text="${thirdMessage}">Третье сообщение</h3>
-<img class="card-image"
-     src="https://github.com/AYKI2/restaurant/blob/main/src/main/resources/templates/assets/images/emailImage.png?raw=true"
-     alt="Banner Image">
-<h3>Более подробная информация по номеру: +996550434204</h3>
-<h3>Наш адрес: 106452, г. Бишкек, Гражданская 119</h3>
+<body style="padding: 0; margin: 0; color: black">
+<div class="main">
+    <div class="image-holder">
+        <img  src="https://medcheckbucket.s3.eu-central-1.amazonaws.com/1684761283789img.png"
+              alt="" class="image">
+    </div>
+    <div class="container">
+        <div class="text-header">
+            <p th:text="${title}" style="color: green;">Заголовок!</p>
+            <span style="color: #34453C"> Вы успешно записались на прием к специалисту.</span>
+        </div>
+        <div>
+            <div>
+                <p class="description"><span class="date-header">Отделение: </span> <span class="header-text" th:text="${department}"></span></p>
+                <p class="description"><span class="date-header">Специалист: </span> <span class="header-text" th:text="${doctor}"></span></p>
+                <p class="description"><span class="date-header">Дата приема: </span> <span class="header-text" th:text="${date}"></span></p>
+                <p class="description"><span class="date-header">Время приема: </span> <span class="header-text" th:text="${time}"></span></p>
+                <p class="description"><span class="date-header">Адрес: </span> 106452, г. Бишкек, Гражданская 119</p>
+            </div>
+               <hr>
+            <br>
+            <div>
+                <p class="description" style="color: green; font-weight: bold"><span class="date-header">Статус записи: </span> <span class="header-text" th:text="${status}"></span></p>
+                <p class="description"><span class="date-header">Дата заявки: </span> <span class="header-text" th:text="${now}"></span></p>
+                <p class="description"><span class="date-header">Ваши данные: </span> <span class="header-text" th:text="${patient}"></span></p>
+                <p class="description"><span class="date-header">Телефон: </span> <span class="header-text" th:text="${phoneNumber}"></span></p>
+            </div>
+            <hr>
+            <br>
+            <p class="description" style="color: #34453C">Посмотреть все свои записи вы можете в своем <a class="link" th:href="${link}">личном кабинете.</a></p>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
 </body>
 </html>

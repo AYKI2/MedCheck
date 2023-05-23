@@ -130,4 +130,5 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .message("Schedule successfully saved!")
                 .build();
     }
+
 }

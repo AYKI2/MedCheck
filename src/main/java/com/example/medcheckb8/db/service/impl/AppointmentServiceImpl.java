@@ -20,6 +20,7 @@ import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
+import com.example.medcheckb8.db.utill.TranslateUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -27,7 +28,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final TemplateEngine templateEngine;
     private final AppointmentRepository repository;
     private final AppointmentRepository appointmentRepository;
+    private final TranslateUtil translate;
     private static final Logger logger = Logger.getLogger(Appointment.class.getName());
 
     @Override
@@ -81,16 +85,24 @@ public class AppointmentServiceImpl implements AppointmentService {
         user.getAppointments().add(appointment);
         repository.save(appointment);
 
+        String date = appointment.getDateOfVisit().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")) +", "
+                +appointment.getDateOfVisit().getDayOfMonth() +" - "
+                +appointment.getDateOfVisit().getMonth().getDisplayName(TextStyle.FULL,new Locale("ru"));
+
         String subject = "Medcheck : Оповещение о записи";
         Context context = new Context();
-        context.setVariable("title", "MEDCHECK");
-        context.setVariable("firstMessage", String.format("Здравствуйте %s!", request.fullName()));
-        context.setVariable("secondMessage", String.format("Вы успешно записались на прием к специалисту %s.", doctor.getLastName() + " " + doctor.getFirstName()));
-        context.setVariable("thirdMessage", String.format("Ждем вас в %s, %d - %s, %d:%d",
-                request.date().format(DateTimeFormatter.ofPattern("EEEE", new Locale("ru"))),
-                request.date().getDayOfMonth(),
-                request.date().format(DateTimeFormatter.ofPattern("MMMM", new Locale("ru"))),
-                request.date().getHour(), request.date().getMinute()));
+        context.setVariable("title", String.format("Здравствуйте, %s!", appointment.getUser().getFirstName()));
+        context.setVariable("department", translate.translateMethod(department.getName().name().toLowerCase()));
+        context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
+        context.setVariable("date", date);
+        context.setVariable("time", appointment.getDateOfVisit().toLocalTime());
+
+        context.setVariable("status", translate.translateMethod(appointment.getStatus().name().toLowerCase()));
+        context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
+        context.setVariable("patient", appointment.getUser().getFirstName() + " " + appointment.getUser().getLastName());
+        context.setVariable("phoneNumber", appointment.getUser().getPhoneNumber());
+
+        context.setVariable("link", request.link());
 
         String htmlContent = templateEngine.process("emailMessage.html", context);
         emailSenderService.sendEmail(request.email(), subject, htmlContent);
