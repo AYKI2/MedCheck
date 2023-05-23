@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/departments")
 @Tag(name = "Department CRUD", description = "API endpoints for departments")
+@CrossOrigin
 public class DepartmentApi {
     private final DepartmentService departmentService;
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
