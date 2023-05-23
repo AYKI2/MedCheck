@@ -63,7 +63,7 @@ jobs:
             ssh -o "StrictHostKeyChecking=no" -i ./privateKey.pem ubuntu@$HOST '
             if [[ -e ./docker-compose.yml ]]; then
                 if [[ $(sudo docker-compose -f ./docker-compose.yml ps -q) ]]; then
-                    sudo docker-compose down --rmi="all"
+                    sudo docker-compose down --rmi="all" --volumes
                 fi
                 sudo rm docker-compose.yml
             fi'

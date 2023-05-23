@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")
 @Tag(name = "Schedule API ")
+@CrossOrigin
 public class ScheduleApi {
     private final ScheduleService service;
 

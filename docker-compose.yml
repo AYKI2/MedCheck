@@ -3,6 +3,7 @@ services:
   backend:
     image: '#image'
     container_name: medcheck
+    restart: always
     ports:
       - "80:2023"
     environment:
@@ -12,7 +13,7 @@ services:
       POSTGRES_USER: medcheckdbuser
       POSTGRES_PASSWORD: medcheckdb2023
   database:
-    image: postgres:latest
+    image: postgres:15
     restart: always
     container_name: database
     ports:
