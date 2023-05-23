@@ -15,4 +15,13 @@ public class TranslateUtil {
                 Translate.TranslateOption.sourceLanguage(sourceLang));
         return translation.getTranslatedText();
     }
+    public String reTranslate(String request){
+        String targetLang = "en"; // for Russian
+        String sourceLang = "ru"; // for Russian
+        Translate translate = TranslateOptions.newBuilder().setApiKey(API_KEY).build().getService();
+        Translation translation = translate.translate(request,
+                Translate.TranslateOption.targetLanguage(targetLang),
+                Translate.TranslateOption.sourceLanguage(sourceLang));
+        return translation.getTranslatedText();
+    }
 }
