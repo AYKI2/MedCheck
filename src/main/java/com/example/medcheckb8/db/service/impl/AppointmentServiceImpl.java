@@ -58,7 +58,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new NotFountException("User not found!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
-        Department department = departmentRepository.findByName(Detachment.valueOf(translate.reTranslate(request.department()).toUpperCase()))
+        Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
                 .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new BadRequestException("This specialist does not work in this department.");
@@ -92,12 +92,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         String subject = "Medcheck : Оповещение о записи";
         Context context = new Context();
         context.setVariable("title", String.format("Здравствуйте, %s!", appointment.getUser().getFirstName()));
-        context.setVariable("department", translate.translateMethod(department.getName().name().toLowerCase()));
+        context.setVariable("department", translate.translateMethod(department.getName().name().toLowerCase(),"ru","en"));
         context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
         context.setVariable("date", date);
         context.setVariable("time", appointment.getDateOfVisit().toLocalTime());
 
-        context.setVariable("status", translate.translateMethod(appointment.getStatus().name().toLowerCase()));
+        context.setVariable("status", translate.translateMethod(appointment.getStatus().name().toLowerCase(),"ru","en"));
         context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
         context.setVariable("patient", appointment.getUser().getFirstName() + " " + appointment.getUser().getLastName());
         context.setVariable("phoneNumber", appointment.getUser().getPhoneNumber());
@@ -120,8 +120,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<GetAllAppointmentResponse> getAll() {
-        List<Appointment> all = repository.findAll();
+    public List<GetAllAppointmentResponse> getAll(String keyWord) {
+        List<Appointment> all;
+        if(keyWord != null) all = repository.findAll(keyWord);
+        else all = repository.findAll();
         List<GetAllAppointmentResponse> response = new ArrayList<>();
         boolean status = false;
         for (Appointment appointment : all) {
@@ -137,9 +139,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .fullName(appointment.getFullName())
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
-                    .department(appointment.getDepartment().getName().name())
+                    .department(translate.translateMethod(appointment.getDepartment().getName().name().toLowerCase(),"ru","en"))
                     .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
-                    .localDateTime(appointment.getDateOfVisit())
+                    .localDate(appointment.getDateOfVisit().toLocalDate())
+                    .localTime(appointment.getDateOfVisit().toLocalTime())
                     .status(status)
                     .build());
         }
