@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ public class Schedule {
     private LocalDate dataOfStart;
     private LocalDate dataOfFinish;
     private int intervalOfHours;
+    private LocalTime startBreak;
+    private LocalTime endBreak;
     @ElementCollection
     @MapKeyEnumerated(EnumType.STRING)
     private Map<Repeat, Boolean> repeatDay;

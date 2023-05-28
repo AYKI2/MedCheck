@@ -27,7 +27,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
-    private final com.example.medcheckb8.db.repository.ScheduleRepository scheduleRepository;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
 
@@ -60,18 +59,30 @@ public class ScheduleServiceImpl implements ScheduleService {
                 case "вс" -> repeatDays.put(Repeat.SUNDAY, request.repeatDays().get(day));
             }
         }
-        Schedule schedule = Schedule.builder()
-                .dataOfStart(request.startDate())
-                .dataOfFinish(request.endDate())
-                .intervalOfHours(request.interval())
-                .repeatDay(repeatDays)
-                .doctor(doctor)
-                .department(department)
-                .build();
-        doctor.setSchedule(schedule);
+        if(doctor.getSchedule() == null) {
+            Schedule schedule = Schedule.builder()
+                    .dataOfStart(request.startDate())
+                    .dataOfFinish(request.endDate())
+                    .intervalOfHours(request.interval())
+                    .startBreak(LocalTime.parse(request.startBreak()))
+                    .endBreak(LocalTime.parse(request.endBreak()))
+                    .repeatDay(repeatDays)
+                    .doctor(doctor)
+                    .department(department)
+                    .build();
+            doctor.setSchedule(schedule);
+        }else {
+            Schedule schedule = doctor.getSchedule();
+            schedule.setDataOfStart(request.startDate());
+            schedule.setDataOfFinish(request.endDate());
+            schedule.setIntervalOfHours(request.interval());
+            schedule.setStartBreak(LocalTime.parse(request.startBreak()));
+            schedule.setEndBreak(LocalTime.parse(request.endBreak()));
+            schedule.setRepeatDay(repeatDays);
+        }
 
         List<ScheduleDateAndTime> dateAndTimes = new ArrayList<>();
-        ScheduleDateAndTime build;
+        ScheduleDateAndTime build = new ScheduleDateAndTime();
         LocalDate date = request.startDate();
 
         while (request.endDate().isAfter(date) || request.endDate().isEqual(date)) {
@@ -84,15 +95,13 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
             LocalTime end = start.plusHours(hour).plusMinutes(interval);
             LocalTime endTime = LocalTime.parse(request.endTime());
-            LocalTime startBreak = LocalTime.parse(request.startBreak());
-            LocalTime endBreak = LocalTime.parse(request.endBreak());
             String name = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
             Boolean aBoolean = repeatDays.get(Repeat.valueOf(name));
             boolean isBefore = true;
             if (aBoolean) {
                 while (!start.equals(endTime) && !start.isAfter(endTime)) {
                     if (end.isAfter(endTime)) end = endTime;
-                    if (!start.equals(startBreak) && !end.equals(endBreak)) {
+                    if(!start.equals(doctor.getSchedule().getStartBreak())) {
                         build = ScheduleDateAndTime.builder()
                                 .date(date)
                                 .timeFrom(start)
@@ -102,20 +111,20 @@ public class ScheduleServiceImpl implements ScheduleService {
                                 .build();
                         start = end;
                         end = end.plusHours(hour).plusMinutes(interval);
-                        if(end.isAfter(startBreak) && isBefore) {
+                        if(end.isAfter(doctor.getSchedule().getStartBreak()) && isBefore) {
+                            dateAndTimes.add(build);
                             isBefore = false;
-                            end = endBreak;
+                            LocalTime scheduleEnd = doctor.getSchedule().getEndBreak().plusHours(hour).plusMinutes(interval);
+                            build = ScheduleDateAndTime.builder()
+                                    .date(date)
+                                    .timeFrom(doctor.getSchedule().getEndBreak())
+                                    .timeTo(scheduleEnd)
+                                    .isBusy(false)
+                                    .schedule(doctor.getSchedule())
+                                    .build();
+                            start = scheduleEnd;
+                            end = start.plusHours(hour).plusMinutes(interval);
                         }
-                    } else {
-                        build = ScheduleDateAndTime.builder()
-                                .date(date)
-                                .timeFrom(startBreak)
-                                .timeTo(endBreak)
-                                .isBusy(true)
-                                .schedule(doctor.getSchedule())
-                                .build();
-                        start = endBreak;
-                        end = endBreak.plusHours(hour).plusMinutes(interval);
                     }
                     dateAndTimes.add(build);
                 }
@@ -123,7 +132,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             date = date.plusDays(1L);
         }
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
-        scheduleRepository.save(schedule);
+        doctorRepository.save(doctor);
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)

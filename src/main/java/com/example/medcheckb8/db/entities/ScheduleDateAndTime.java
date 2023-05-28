@@ -18,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class ScheduleDateAndTime {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_date_and_time_gen")
-    @SequenceGenerator(name = "schedule_date_and_time_gen", sequenceName = "schedule_date_time_day_seq", allocationSize = 1, initialValue = 351)
+    @SequenceGenerator(name = "schedule_date_and_time_gen", sequenceName = "schedule_date_time_day_seq", allocationSize = 1, initialValue = 328)
     private Long id;
     private LocalDate date;
     private LocalTime timeFrom;
