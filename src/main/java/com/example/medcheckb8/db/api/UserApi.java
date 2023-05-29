@@ -35,8 +35,8 @@ public class UserApi {
     @Operation(
             summary = "The profile update method", description = "User profile which can see own information or changed"
     )
-    public SimpleResponse getProfile(@RequestBody @Valid ProfileRequest request) {
-        return service.getProfile(request);
+    public SimpleResponse update(@RequestParam Long id, @RequestBody @Valid ProfileRequest request) {
+        return service.getProfile(id, request);
     }
 
     @GetMapping("/getResult")
