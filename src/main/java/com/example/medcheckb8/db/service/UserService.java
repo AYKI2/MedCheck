@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService {
     List<UserResponse> getAllPatients(String word);
 
-    SimpleResponse getProfile(ProfileRequest request);
+    SimpleResponse getProfile(Long id,ProfileRequest request);
 
     ProfileResponse getResult();
 
