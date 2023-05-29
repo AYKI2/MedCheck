@@ -24,6 +24,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "(u.firstName like %:word% or u.lastName like %:word%  or u.account.email like %:word%) ")
     List<UserResponse> getAllPatients(String word);
 
-    @Query("select  new com.example.medcheckb8.db.dto.response.ProfileResponse(u.id,u.firstName,u.lastName,u.phoneNumber,u.account.email) from  User u ")
-    ProfileResponse getResult();
 }
