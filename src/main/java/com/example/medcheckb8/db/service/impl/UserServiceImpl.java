@@ -9,7 +9,6 @@ import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
-import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +35,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SimpleResponse getProfile(Long id,ProfileRequest request) {
-        User user = repository.findById(id).orElseThrow(() -> new NotFountException(
-                String.format("User with email: %s not found!", id)));
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.getAccount().setEmail(request.email());
-        user.setPhoneNumber(request.phoneNumber());
-        repository.save(user);
+    public SimpleResponse getProfile(ProfileRequest request) {
+        Account account = service.getAccountInToken();
+        account.getUser().setFirstName(request.firstName());
+        account.getUser().setLastName(request.lastName());
+        account.setEmail(request.email());
+        account.getUser().setPhoneNumber(request.phoneNumber());
+        repository.save(account.getUser());
         return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
 
     }
