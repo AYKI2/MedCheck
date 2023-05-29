@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public class Schedule {
     private Long id;
     private LocalDate dataOfStart;
     private LocalDate dataOfFinish;
+    private LocalTime startBreak;
+    private LocalTime endBreak;
     private int intervalOfHours;
     @ElementCollection
     @MapKeyEnumerated(EnumType.STRING)

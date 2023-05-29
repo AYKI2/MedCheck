@@ -8,7 +8,6 @@ import java.time.LocalDate;
 public record InstallByTemplate(
         Long fromId,
         Long toId,
-        int interval,
         String startBreak,
         String endBreak,
         LocalDate date

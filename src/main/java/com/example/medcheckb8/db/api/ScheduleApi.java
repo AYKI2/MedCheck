@@ -1,6 +1,8 @@
 package com.example.medcheckb8.db.api;
 
+import com.example.medcheckb8.db.dto.request.appointment.InstallByTemplate;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,5 +29,13 @@ public class ScheduleApi {
                                          @RequestParam(required = false) LocalDate startDate,
                                          @RequestParam(required = false) LocalDate endDate) {
         return service.getAllSchedule(word, startDate, endDate);
+    }
+
+    @PostMapping("/template")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Install by template",
+            description = "With this method, you can set one doctor's schedule for other doctors.Only for admin.")
+    public SimpleResponse installByTemplate(@RequestBody InstallByTemplate request){
+        return service.installByTemplate(request);
     }
 }
