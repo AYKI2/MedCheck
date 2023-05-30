@@ -8,6 +8,7 @@ import com.example.medcheckb8.db.entities.Doctor;
 import com.example.medcheckb8.db.entities.Schedule;
 import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
 import com.example.medcheckb8.db.enums.Repeat;
+import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
@@ -46,6 +47,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         boolean contains = department.getDoctors().contains(doctor);
         if(!contains) throw new BadRequestException("Doctor with " +request.doctorId()+ " id does not work in this department.");
+        if(doctor.getSchedule() != null) {throw new AlreadyExistException("Doctor with id: "+ request.doctorId() +" already has a schedule.");}
 
         Map<Repeat, Boolean> repeatDays = new HashMap<>();
         for (String day : request.repeatDays().keySet()) {
@@ -59,7 +61,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 case "вс" -> repeatDays.put(Repeat.SUNDAY, request.repeatDays().get(day));
             }
         }
-        if(doctor.getSchedule() == null) {
             Schedule schedule = Schedule.builder()
                     .dataOfStart(request.startDate())
                     .dataOfFinish(request.endDate())
@@ -71,15 +72,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .department(department)
                     .build();
             doctor.setSchedule(schedule);
-        }else {
-            Schedule schedule = doctor.getSchedule();
-            schedule.setDataOfStart(request.startDate());
-            schedule.setDataOfFinish(request.endDate());
-            schedule.setIntervalOfHours(request.interval());
-            schedule.setStartBreak(LocalTime.parse(request.startBreak()));
-            schedule.setEndBreak(LocalTime.parse(request.endBreak()));
-            schedule.setRepeatDay(repeatDays);
-        }
 
         List<ScheduleDateAndTime> dateAndTimes = new ArrayList<>();
         ScheduleDateAndTime build = new ScheduleDateAndTime();
