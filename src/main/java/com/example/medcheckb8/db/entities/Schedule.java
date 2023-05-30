@@ -2,10 +2,7 @@ package com.example.medcheckb8.db.entities;
 
 import com.example.medcheckb8.db.enums.Repeat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,6 +17,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "schedules")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_gen")
@@ -30,6 +28,8 @@ public class Schedule {
     private LocalTime startBreak;
     private LocalTime endBreak;
     private int intervalOfHours;
+    private LocalTime startBreak;
+    private LocalTime endBreak;
     @ElementCollection
     @MapKeyEnumerated(EnumType.STRING)
     private Map<Repeat, Boolean> repeatDay;

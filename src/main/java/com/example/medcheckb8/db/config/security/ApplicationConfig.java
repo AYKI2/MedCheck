@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.config.security;
 
 import com.example.medcheckb8.db.repository.AccountRepository;
+import com.example.medcheckb8.db.utill.TranslateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,4 +42,6 @@ public class ApplicationConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+    @Bean
+    public TranslateUtil translateUtil(){return new TranslateUtil();}
 }

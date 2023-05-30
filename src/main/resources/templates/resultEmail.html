@@ -74,23 +74,13 @@
     <div class="container">
         <div class="text-header">
             <p th:text="${title}" style="color: green;">Заголовок!</p>
-            <span style="color: #34453C"> Вы успешно записались на прием к специалисту.</span>
+            <span style="color: #34453C"> Ваш результат готов.</span>
         </div>
         <div>
-            <div>
-                <p class="description"><span class="date-header">Отделение: </span> <span class="header-text" th:text="${department}"></span></p>
-                <p class="description"><span class="date-header">Специалист: </span> <span class="header-text" th:text="${doctor}"></span></p>
-                <p class="description"><span class="date-header">Дата приема: </span> <span class="header-text" th:text="${date}"></span></p>
-                <p class="description"><span class="date-header">Время приема: </span> <span class="header-text" th:text="${time}"></span></p>
-                <p class="description"><span class="date-header">Адрес: </span> 106452, г. Бишкек, Гражданская 119</p>
-            </div>
-               <hr>
+            <hr>
             <br>
             <div>
-                <p class="description" style="color: green; font-weight: bold"><span class="date-header">Статус записи: </span> <span class="header-text" th:text="${status}"></span></p>
-                <p class="description"><span class="date-header">Дата заявки: </span> <span class="header-text" th:text="${now}"></span></p>
-                <p class="description"><span class="date-header">Ваши данные: </span> <span class="header-text" th:text="${patient}"></span></p>
-                <p class="description"><span class="date-header">Телефон: </span> <span class="header-text" th:text="${phoneNumber}"></span></p>
+                <p class="description" style="color: green; font-weight: bold"><span class="date-header">Номер результата: </span> <span class="header-text" th:text="${secondMessage}"></span></p>
             </div>
             <hr>
             <br>

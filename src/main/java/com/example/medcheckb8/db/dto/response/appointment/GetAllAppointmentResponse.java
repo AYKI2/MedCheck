@@ -2,7 +2,8 @@ package com.example.medcheckb8.db.dto.response.appointment;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 public record GetAllAppointmentResponse(
@@ -14,7 +15,8 @@ public record GetAllAppointmentResponse(
         String email,
         String department,
         String specialist,
-        LocalDateTime localDateTime,
+        LocalDate localDate,
+        LocalTime localTime,
         boolean status
 ) {
 }

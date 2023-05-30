@@ -11,7 +11,7 @@ import java.util.List;
 public interface AppointmentService {
     AddAppointmentResponse save(AddAppointmentRequest request);
 
-    List<GetAllAppointmentResponse> getAll();
+    List<GetAllAppointmentResponse> getAll(String keyWord);
 
     SimpleResponse canceled(Long id);
 
