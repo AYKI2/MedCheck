@@ -10,11 +10,16 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.ResultRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
+import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -26,6 +31,8 @@ public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
+    private final TemplateEngine templateEngine;
+    private final EmailSenderService emailSenderService;
     private static final Logger logger = Logger.getLogger(Result.class.getName());
 
     @Override
@@ -39,10 +46,12 @@ public class ResultServiceImpl implements ResultService {
                     .orElseThrow(() -> new NotFountException(
                             String.format("Department with id: %d doesn't exist.", request.departmentId())));
 
+            String ordNum = uniquenessCheckOrderNumber();
+
             Result result = Result.builder()
                     .department(department)
                     .dateOfIssue(request.dateOfIssue())
-                    .orderNumber(uniquenessCheckOrderNumber())
+                    .orderNumber(ordNum)
                     .file(request.file())
                     .user(user)
                     .build();
@@ -51,6 +60,14 @@ public class ResultServiceImpl implements ResultService {
             resultRepository.save(result);
             logger.log(Level.INFO, String.format("Result with patient full name: %s successfully added.",
                     (user.getFirstName() + " " + user.getLastName())));
+
+            String subject = "Medcheck : Оповещение о результате";
+            Context context = new Context();
+            context.setVariable("title", String.format("Здравствуйте, %s %s!", user.getFirstName(), user.getLastName()));
+            context.setVariable("secondMessage", String.format("Ваш номер результата: %s", ordNum));
+
+            String html  = templateEngine.process("resultEmail.html", context);
+            emailSenderService.sendEmail(user.getAccount().getEmail(), subject, html);
 
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)

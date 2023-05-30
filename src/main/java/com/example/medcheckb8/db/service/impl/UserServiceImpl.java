@@ -9,7 +9,6 @@ import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
-import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final AccountRepository accountRepository;
     private final JwtService service;
     private static final Logger logger = Logger.getLogger(User.class.getName());
 
@@ -38,15 +36,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SimpleResponse getProfile(ProfileRequest request) {
-        logger.info(String.format("Updating user profile for user with id %s", request.userId()));
-        User user = repository.findById(request.userId()).orElseThrow(() -> new NotFountException(String.format("User with email: %s not found!", request.userId())));
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setPhoneNumber(request.phoneNumber());
-        user.getAccount().setEmail(request.email());
-        repository.save(user);
-        logger.info(String.format("User profile updated for user with id %s", request.userId()));
+        Account account = service.getAccountInToken();
+        account.getUser().setFirstName(request.firstName());
+        account.getUser().setLastName(request.lastName());
+        account.setEmail(request.email());
+        account.getUser().setPhoneNumber(request.phoneNumber());
+        repository.save(account.getUser());
         return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
+
     }
 
     @Override
@@ -58,8 +55,7 @@ public class UserServiceImpl implements UserService {
         response.setLastName(account.getUser().getLastName());
         response.setPhoneNumber(account.getUser().getPhoneNumber());
         response.setEmail(account.getEmail());
-        logger.info("Returning profile response: " + response.toString());
-        return repository.getResult();
+        return response;
     }
 
     @Override

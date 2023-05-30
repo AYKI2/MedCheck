@@ -35,7 +35,7 @@ public class UserApi {
     @Operation(
             summary = "The profile update method", description = "User profile which can see own information or changed"
     )
-    public SimpleResponse getProfile(@RequestBody @Valid ProfileRequest request) {
+    public SimpleResponse update(@RequestBody @Valid ProfileRequest request) {
         return service.getProfile(request);
     }
 
