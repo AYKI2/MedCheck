@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -59,12 +61,10 @@ public class ResultServiceImpl implements ResultService {
             logger.log(Level.INFO, String.format("Result with patient full name: %s successfully added.",
                     (user.getFirstName() + " " + user.getLastName())));
 
-            String subject = "Medcheck : Оповещение о результате.";
+            String subject = "Medcheck : Оповещение о результате";
             Context context = new Context();
-            context.setVariable("title", "MEDCHECK");
-            context.setVariable("firstMessage", String.format("Здравствуйте %s %s!", user.getFirstName(), user.getLastName()));
+            context.setVariable("title", String.format("Здравствуйте, %s %s!", user.getFirstName(), user.getLastName()));
             context.setVariable("secondMessage", String.format("Ваш номер результата: %s", ordNum));
-            context.setVariable("thirdMessage","Вы можете проверить свои результаты на сайте.");
 
             String html  = templateEngine.process("resultEmail.html", context);
             emailSenderService.sendEmail(user.getAccount().getEmail(), subject, html);
