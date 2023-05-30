@@ -25,8 +25,6 @@ public class Schedule {
     private Long id;
     private LocalDate dataOfStart;
     private LocalDate dataOfFinish;
-    private LocalTime startBreak;
-    private LocalTime endBreak;
     private int intervalOfHours;
     private LocalTime startBreak;
     private LocalTime endBreak;
