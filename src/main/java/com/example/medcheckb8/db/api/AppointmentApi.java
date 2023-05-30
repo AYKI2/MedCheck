@@ -42,8 +42,8 @@ public class AppointmentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "Get all appointments.",
             description = "Using this method, the admin can see all appointments.Only for admin.")
-    public List<GetAllAppointmentResponse> getAll() {
-        return service.getAll();
+    public List<GetAllAppointmentResponse> getAll(@RequestParam(required = false) String keyWord) {
+        return service.getAll(keyWord);
     }
 
     @PostMapping("/free")
@@ -68,7 +68,7 @@ public class AppointmentApi {
             description = "This method can be used by both the admin and the patient. When using the method as a patient," +
                     "you don't have to give an 'id', since the patient can only delete all appointments, while the admin can" +
                     " delete them one by one or all.")
-    public SimpleResponse delete(@RequestParam(required = false) List<Long> appointments) {
+    public SimpleResponse delete(@RequestBody(required = false) List<Long> appointments) {
         return service.delete(appointments);
     }
 
