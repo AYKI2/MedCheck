@@ -41,6 +41,7 @@ public class S3FileServiceImpl implements S3FileService {
                 .contentType("ogg")
                 .contentType("m4a")
                 .contentType("oga")
+                .contentType("pdf")
                 .contentLength(file.getSize())
                 .key(key)
                 .build();
