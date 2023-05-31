@@ -195,7 +195,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .status(HttpStatus.OK)
                     .message("Successfully cleared!")
                     .build();
-        } else {
+        } else if(user.getAccount().getRole() == Role.ADMIN) {
             for (Long appointment : appointments) {
                 repository.deleteById(appointment);
             }
@@ -204,6 +204,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .message("Successfully deleted!")
                     .build();
         }
+        return SimpleResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Deletion failure!")
+                .build();
     }
         
     @Override
