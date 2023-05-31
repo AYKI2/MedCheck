@@ -44,7 +44,6 @@ public class ResultServiceImpl implements ResultService {
                     .orElseThrow(()->new NotFountException(String.format("Department with id: %d not found!",request.departmentId())));
 
             String ordNum = uniquenessCheckOrderNumber();
-
             LocalDate date = LocalDate.from(request.date());
             LocalTime time = LocalTime.parse(LocalTime.from(request.date()).format(DateTimeFormatter.ofPattern("HH:mm")));
 
