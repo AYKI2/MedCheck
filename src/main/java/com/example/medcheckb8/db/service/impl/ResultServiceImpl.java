@@ -75,7 +75,7 @@ public class ResultServiceImpl implements ResultService {
             return UserResultResponse.builder()
                     .resultId(result.getId())
                     .patientId(user.getId())
-                    .name(department.getName())
+                    .name(department.getName().name().toLowerCase())
                     .date(date)
                     .time(time)
                     .orderNumber(ordNum)
