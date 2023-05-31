@@ -26,7 +26,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         logger.info("Getting all departments");
         List<DepartmentResponse> departments = departmentRepository.getAllDepartments();
         logger.info("Retrieved {} departments" + departments.size());
-        return departments;    }
+        return departments;}
 
     @Override
     public DepartmentResponse findById(Long departmentId) {

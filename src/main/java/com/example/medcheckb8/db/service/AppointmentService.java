@@ -18,4 +18,5 @@ public interface AppointmentService {
     SimpleResponse delete(List<Long> appointments);
     
     List<AppointmentResponse> getUserAppointments();
+
 }

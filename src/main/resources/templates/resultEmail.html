@@ -1,0 +1,95 @@
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Java Techie Mail</title>
+    <style>
+        .main {
+            margin: 20px 30px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid #048741;
+            border-radius: 6px;
+            min-height: auto;
+            width: 600px;
+
+        }
+
+        .image-holder {
+            width: 600px;
+            height: 150px;
+            font-size: 48px;
+            border-bottom: 1px solid #048741;
+            background-color: #FFFFFF;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .image {
+            width: 290px;
+            height: 90px;
+            padding: 35px 140px;
+        }
+
+        .container {
+            padding: 10px 45px;
+        }
+
+        .text-header {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 120%;
+            color: black;
+        }
+
+        .header-text {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 150%;
+            color: #34453C;
+            padding-right: 50px;
+        }
+
+        .description {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 150%;
+            color: #384255;
+
+        }
+
+    </style>
+</head>
+
+<body style="padding: 0; margin: 0; color: black">
+<div class="main">
+    <div class="image-holder">
+        <img  src="https://medcheckbucket.s3.eu-central-1.amazonaws.com/1684761283789img.png"
+              alt="" class="image">
+    </div>
+    <div class="container">
+        <div class="text-header">
+            <p th:text="${title}" style="color: green;">Заголовок!</p>
+            <span style="color: #34453C"> Ваш результат готов.</span>
+        </div>
+        <div>
+            <hr>
+            <br>
+            <div>
+                <p class="description" style="color: green; font-weight: bold"><span class="date-header">Номер результата: </span> <span class="header-text" th:text="${secondMessage}"></span></p>
+            </div>
+            <hr>
+            <br>
+            <p class="description" style="color: #34453C">Посмотреть все свои записи вы можете в своем <a class="link" th:href="${link}">личном кабинете.</a></p>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+</body>
+</html>

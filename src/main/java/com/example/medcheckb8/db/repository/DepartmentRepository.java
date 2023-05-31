@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
     Optional<Department> findByName(Detachment name);
     
-    @Query("select new com.example.medcheckb8.db.dto.response.DepartmentResponse(d.name) from Department d ")
+    @Query("select new com.example.medcheckb8.db.dto.response.DepartmentResponse(lower(d.name)) from Department d ")
     List<DepartmentResponse> getAllDepartments();
     
-    @Query("select new com.example.medcheckb8.db.dto.response.DepartmentResponse(d.name) from Department d where d.id=?1")
+    @Query("select new com.example.medcheckb8.db.dto.response.DepartmentResponse(lower(d.name)) from Department d where d.id=?1")
     Optional<DepartmentResponse> findByIdDepartment(Long departmentId);
 }
