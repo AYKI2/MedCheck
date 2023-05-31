@@ -11,14 +11,13 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.AppointmentResponse(" +
             "a.id,a.doctor.id,concat(a.doctor.firstName,' ', a.doctor.lastName), " +
-            "a.doctor.image, a.doctor.position, a.dateOfVisit, a.status) " +
+            "a.doctor.image, a.doctor.position, a.dateOfVisit,a.timeOfVisit, a.status) " +
             "from Appointment a where a.user.account.email=:email")
     List<AppointmentResponse> getUserAppointments(String email);
 
     @Query("select a from Appointment a where " +
-            "a.fullName ilike :word " +
-            "or cast(a.department.name as STRING) ilike :word " +
-            "or a.doctor.firstName ilike :word " +
-            "or a.doctor.lastName ilike :word")
+            "a.fullName ilike concat('%' ,:word, '%') " +
+            "or a.doctor.firstName ilike concat('%' ,:word, '%') " +
+            "or a.doctor.lastName ilike concat('%' ,:word, '%')")
     List<Appointment> findAll(String word);
 }
