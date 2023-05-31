@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Map<Repeat, Boolean> repeatDays = new HashMap<>();
         for (String day : request.repeatDays().keySet()) {
-            switch (day) {
+            switch (day.toLowerCase()) {
                 case "пн" -> repeatDays.put(Repeat.MONDAY, request.repeatDays().get(day));
                 case "вт" -> repeatDays.put(Repeat.TUESDAY, request.repeatDays().get(day));
                 case "ср" -> repeatDays.put(Repeat.WEDNESDAY, request.repeatDays().get(day));
