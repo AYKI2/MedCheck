@@ -9,7 +9,6 @@ import java.time.LocalTime;
 @Builder
 public record UserResultResponse(
         Long resultId,
-        Long appointmentId,
         Long patientId,
         Detachment name,
         LocalDate date,

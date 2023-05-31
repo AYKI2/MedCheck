@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -69,12 +70,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else if (booked == null) {
             throw new BadRequestException("This specialist is not working on this day or time! Working dates: from " + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
+        LocalDateTime dateTime = request.date();
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())
                 .status(Status.CONFIRMED)
-                .dateOfVisit(request.date())
+                .dateOfVisit(dateTime.toLocalDate())
+                .timeOfVisit(dateTime.toLocalTime())
                 .user(user)
                 .doctor(doctor)
                 .department(department)
@@ -95,7 +98,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         context.setVariable("department", translate.translateMethod(department.getName().name().toLowerCase(),"ru","en"));
         context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
         context.setVariable("date", date);
-        context.setVariable("time", appointment.getDateOfVisit().toLocalTime());
+        context.setVariable("time", appointment.getTimeOfVisit());
 
         context.setVariable("status", translate.translateMethod(appointment.getStatus().name().toLowerCase(),"ru","en"));
         context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
@@ -141,8 +144,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .email(appointment.getEmail())
                     .department(translate.translateMethod(appointment.getDepartment().getName().name().toLowerCase(),"ru","en"))
                     .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
-                    .localDate(appointment.getDateOfVisit().toLocalDate())
-                    .localTime(appointment.getDateOfVisit().toLocalTime())
+                    .localDate(appointment.getDateOfVisit())
+                    .localTime(appointment.getTimeOfVisit())
                     .status(status)
                     .build());
         }
@@ -158,8 +161,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 new NotFountException("Appointment with id: " + id + " not found!"));
         if (appointment.getUser().getId().equals(user.getId())) {
             ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(appointment.getDoctor().getId(),
-                    appointment.getDateOfVisit().toLocalDate(),
-                    appointment.getDateOfVisit().toLocalTime());
+                    appointment.getDateOfVisit(),
+                    appointment.getTimeOfVisit());
             dateAndTime.setIsBusy(false);
             appointment.setStatus(Status.CANCELED);
             return SimpleResponse.builder()
