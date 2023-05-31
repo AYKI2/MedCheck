@@ -3,7 +3,8 @@ package com.example.medcheckb8.db.dto.response;
 import com.example.medcheckb8.db.enums.Status;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 public record AppointmentResponse(
@@ -12,7 +13,8 @@ public record AppointmentResponse(
         String doctorFullName,
         String doctorImage,
         String doctorPosition,
-        LocalDateTime dateTime,
+        LocalDate date,
+        LocalTime time,
         Status status
 ) {
 }

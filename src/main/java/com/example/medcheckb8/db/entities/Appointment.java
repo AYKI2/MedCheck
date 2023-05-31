@@ -4,7 +4,8 @@ import com.example.medcheckb8.db.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -25,13 +26,12 @@ public class Appointment {
     private String email;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private LocalDateTime dateOfVisit;
+    private LocalDate dateOfVisit;
+    private LocalTime timeOfVisit;
     @ManyToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private User user;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Doctor doctor;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
-    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
-    private Result result;
 }

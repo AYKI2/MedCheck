@@ -11,7 +11,7 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.AppointmentResponse(" +
             "a.id,a.doctor.id,concat(a.doctor.firstName,' ', a.doctor.lastName), " +
-            "a.doctor.image, a.doctor.position, a.dateOfVisit, a.status) " +
+            "a.doctor.image, a.doctor.position, a.dateOfVisit,a.timeOfVisit, a.status) " +
             "from Appointment a where a.user.account.email=:email")
     List<AppointmentResponse> getUserAppointments(String email);
 

@@ -3,13 +3,13 @@ package com.example.medcheckb8.db.service.impl;
 import com.example.medcheckb8.db.dto.request.ResultRequest;
 import com.example.medcheckb8.db.dto.response.ResultResponse;
 import com.example.medcheckb8.db.dto.response.UserResultResponse;
-import com.example.medcheckb8.db.entities.Appointment;
+import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Result;
 import com.example.medcheckb8.db.entities.User;
-import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
-import com.example.medcheckb8.db.repository.AppointmentRepository;
+import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.ResultRepository;
+import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
@@ -32,34 +30,33 @@ import java.util.logging.Logger;
 public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final TemplateEngine templateEngine;
+    private final UserRepository userRepository;
+    private final DepartmentRepository departmentRepository;
     private final EmailSenderService emailSenderService;
     private static final Logger logger = Logger.getLogger(Result.class.getName());
-    private final AppointmentRepository appointmentRepository;
 
     @Override
     public UserResultResponse addResult(ResultRequest request) {
         try {
-            Appointment appointment = appointmentRepository.findById(request.appointmentId())
-                    .orElseThrow(()->new NotFountException(String.format("Appointment with id: %d not found!", request.appointmentId())));
-            if(appointment.getResult() != null) throw new AlreadyExistException(String.format("Appointment with id: %d already has a result!", appointment.getId()));
+            User user = userRepository.findById(request.patientId())
+                    .orElseThrow(()->new NotFountException(String.format("Patient with id: %d not found!",request.patientId())));
+            Department department = departmentRepository.findById(request.departmentId())
+                    .orElseThrow(()->new NotFountException(String.format("Department with id: %d not found!",request.departmentId())));
 
             String ordNum = uniquenessCheckOrderNumber();
-            LocalDateTime now = LocalDateTime.now(ZoneId.of(request.zoneId()));
 
-            LocalDate date = LocalDate.from(now);
-            LocalTime time = LocalTime.parse(LocalTime.from(now).format(DateTimeFormatter.ofPattern("HH:mm")));
+            LocalDate date = LocalDate.from(request.date());
+            LocalTime time = LocalTime.parse(LocalTime.from(request.date()).format(DateTimeFormatter.ofPattern("HH:mm")));
 
             Result result = Result.builder()
-                    .department(appointment.getDepartment())
+                    .department(department)
                     .dateOfIssue(date)
                     .timeOfIssue(time)
                     .orderNumber(ordNum)
                     .file(request.file())
-                    .user(appointment.getUser())
+                    .user(user)
                     .build();
 
-            User user = appointment.getUser();
-            appointment.setResult(result);
             user.addResult(result);
             resultRepository.save(result);
             logger.log(Level.INFO, String.format("Result with patient full name: %s successfully added.",
@@ -75,9 +72,8 @@ public class ResultServiceImpl implements ResultService {
 
             return UserResultResponse.builder()
                     .resultId(result.getId())
-                    .appointmentId(appointment.getId())
                     .patientId(user.getId())
-                    .name(appointment.getDepartment().getName())
+                    .name(department.getName())
                     .date(date)
                     .time(time)
                     .orderNumber(ordNum)
