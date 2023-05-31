@@ -15,6 +15,7 @@ import com.example.medcheckb8.db.repository.DoctorRepository;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +23,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
+    private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
+
 
     @Override
     public List<ScheduleResponse> getAllSchedule(String word,
@@ -133,6 +139,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
         doctorRepository.save(doctor);
+        logger.log(Level.INFO, "Schedule saved: Doctor ID={0}, Department ID={1}",
+                new Object[]{doctor.getId(), department.getId()});
+
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)

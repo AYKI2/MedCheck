@@ -12,6 +12,7 @@ import com.example.medcheckb8.db.repository.ResultRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final DepartmentRepository departmentRepository;
@@ -66,10 +68,12 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public ResultResponse getResult(String orderNumber) {
-        return resultRepository.getResultByOrderNumber(orderNumber)
-                .orElseThrow(()-> new NotFountException(
-                        String.format("Result with order number: %s doesn't exist.",orderNumber)
+        ResultResponse result = resultRepository.getResultByOrderNumber(orderNumber)
+                .orElseThrow(() -> new NotFountException(
+                        String.format("Result with order number: %s doesn't exist.", orderNumber)
                 ));
+        logger.log(Level.INFO, "Result retrieved: OrderNumber={0}", orderNumber);
+        return result;
     }
 
     private String generateOrderNumber() {
