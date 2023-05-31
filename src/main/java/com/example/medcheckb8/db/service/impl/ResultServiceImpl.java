@@ -6,6 +6,7 @@ import com.example.medcheckb8.db.dto.response.UserResultResponse;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.entities.Result;
 import com.example.medcheckb8.db.entities.User;
+import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import com.example.medcheckb8.db.repository.ResultRepository;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -39,12 +41,13 @@ public class ResultServiceImpl implements ResultService {
         try {
             Appointment appointment = appointmentRepository.findById(request.appointmentId())
                     .orElseThrow(()->new NotFountException(String.format("Appointment with id: %d not found!", request.appointmentId())));
+            if(appointment.getResult() != null) throw new AlreadyExistException(String.format("Appointment with id: %d already has a result!", appointment.getId()));
 
             String ordNum = uniquenessCheckOrderNumber();
             LocalDateTime now = LocalDateTime.now(ZoneId.of(request.zoneId()));
 
             LocalDate date = LocalDate.from(now);
-            LocalTime time = LocalTime.from(now);
+            LocalTime time = LocalTime.parse(LocalTime.from(now).format(DateTimeFormatter.ofPattern("HH:mm")));
 
             Result result = Result.builder()
                     .department(appointment.getDepartment())
@@ -72,6 +75,7 @@ public class ResultServiceImpl implements ResultService {
 
             return UserResultResponse.builder()
                     .resultId(result.getId())
+                    .appointmentId(appointment.getId())
                     .patientId(user.getId())
                     .name(appointment.getDepartment().getName())
                     .date(date)
