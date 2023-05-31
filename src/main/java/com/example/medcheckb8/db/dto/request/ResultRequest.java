@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record ResultRequest(
         Long departmentId,
         Long patientId,
-        LocalDateTime dateOfIssue,
+        LocalDateTime date,
         String file
 ) {
 }

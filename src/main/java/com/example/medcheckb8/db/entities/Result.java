@@ -3,7 +3,8 @@ package com.example.medcheckb8.db.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -19,7 +20,8 @@ public class Result {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_gen")
     @SequenceGenerator(name = "result_gen", sequenceName = "result_seq", allocationSize = 1, initialValue = 5)
     private Long id;
-    private LocalDateTime dateOfIssue;
+    private LocalDate dateOfIssue;
+    private LocalTime timeOfIssue;
     private String orderNumber;
     private String file;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
