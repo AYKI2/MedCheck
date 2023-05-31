@@ -59,7 +59,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                     resultSet.getTime("timeTo").toLocalTime());
             return new ScheduleResponse(
                     resultSet.getLong("scheduleId"),
-                    Repeat.values()[resultSet.getInt("repeatDay")],
+                    Repeat.valueOf(resultSet.getString("repeatDay")),
                     resultSet.getDate("date").toLocalDate(),
                     resultSet.getString("position"),
                     resultSet.getString("full_name"),
@@ -72,7 +72,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public List<ScheduleResponse> getAll() {
         String sql = "SELECT s.id as scheduleId," +
-                "       srd.repeat_day_key as repeatDay ," +
+                "       srd.repeat_day_key as repeatDayKey ," +
                 "       sdt.time_from as timeFrom," +
                 "       sdt.time_to as timeTo," +
                 "       sdt.date as date," +
@@ -89,7 +89,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                     resultSet.getTime("timeTo").toLocalTime());
             return new ScheduleResponse(
                     resultSet.getLong("scheduleId"),
-                    Repeat.values()[resultSet.getInt("repeatDay")],
+                    Repeat.valueOf(resultSet.getString("repeatDayKey")),
                     resultSet.getDate("date").toLocalDate(),
                     resultSet.getString("position"),
                     resultSet.getString("full_name"),
