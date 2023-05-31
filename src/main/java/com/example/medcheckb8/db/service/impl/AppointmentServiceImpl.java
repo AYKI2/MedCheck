@@ -195,8 +195,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else {
             for (Long appointment : appointments) {
                 repository.deleteById(appointment);
-                user.getAppointments().remove(repository.findById(appointment)
-                        .orElseThrow(() -> new NotFountException("Appointment not found!")));
             }
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)

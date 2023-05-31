@@ -32,4 +32,6 @@ public class Appointment {
     private Doctor doctor;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Department department;
+    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    private Result result;
 }
