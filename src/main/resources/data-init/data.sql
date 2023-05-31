@@ -65,12 +65,17 @@ values (1, 'Мы развиваемся, учимся и оттачиваем м
        (24, 'Мы развиваемся, учимся и оттачиваем мастерство, стажируемся в ведущих университетах Европы, чтобы еще на шаг стать ближе к совершенству.', 'Данияр', 'link image', true, 'Эрматов', 'Врач-ортапед', 12),
        (25, 'Мы развиваемся, учимся и оттачиваем мастерство, стажируемся в ведущих университетах Европы, чтобы еще на шаг стать ближе к совершенству.', 'Элзар', 'link image', true, 'Кадырбаев', 'Врач-оториноларинголог', 13);
 
+insert into results (id, date_of_issue, time_of_issue, file, order_number, department_id, user_id)
+values (1, '2023-06-02','08:00:00','file','88888888888', 1, 1),
+       (2, '2023-06-30','11:00:00','file','99999999999', 2, 2),
+       (3, '2023-06-13','14:00:00','file','11111111111', 3, 3),
+       (4, '2023-06-23','16:00:00','file','22222222222', 3, 4);
 
 insert into appointments (id, date_of_visit, email, full_name, phone_number, status, department_id, doctor_id, user_id, result_id)
-values (1, '2023-06-01','kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CONFIRMED', 1, 1, 1,1),
-       (2, '2023-06-02','elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 2, 2, 2,2),
-       (3, '2023-06-23','isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 3,3),
-       (4, '2023-06-19','uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 3, 3, 4,4);
+values (1, '2023-06-01','kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CONFIRMED', 1, 1, 1, 1),
+       (2, '2023-06-02','elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 2, 2, 2, 2),
+       (3, '2023-06-23','isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 3, 3),
+       (4, '2023-06-19','uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 3, 3, 4, 4);
 
 
 insert into schedules (id, data_of_finish, data_of_start, start_break, end_break, interval_of_hours, department_id, doctor_id)
@@ -415,13 +420,6 @@ values (1, '2023-06-01', false, '08:00:00', '09:00:00', 1),
        (289, '2023-06-16', false, '14:00:00', '15:00:00', 7),
        (290, '2023-06-16', false, '15:00:00', '16:00:00', 7),
        (291, '2023-06-16', true, '16:00:00', '17:00:00', 7);
-
-
-insert into results (id, date_of_issue, time_of_issue, file, order_number, department_id, user_id)
-values (1, '2023-06-02','08:00:00','file','88888888888', 1, 1),
-       (2, '2023-06-30','11:00:00','file','99999999999', 2, 2),
-       (3, '2023-06-13','14:00:00','file','11111111111', 3, 3),
-       (4, '2023-06-23','16:00:00','file','22222222222', 3, 4);
 
 
 insert into schedule_repeat_day (schedule_id, repeat_day, repeat_day_key)

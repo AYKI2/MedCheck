@@ -17,6 +17,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ResultServiceImpl implements ResultService {
                     .orElseThrow(()->new NotFountException(String.format("Appointment with id: %d not found!", request.appointmentId())));
 
             String ordNum = uniquenessCheckOrderNumber();
-            LocalDate now = LocalDate.now(ZoneId.of(request.zoneId()));
+            LocalDateTime now = LocalDateTime.now(ZoneId.of(request.zoneId()));
 
             LocalDate date = LocalDate.from(now);
             LocalTime time = LocalTime.from(now);
