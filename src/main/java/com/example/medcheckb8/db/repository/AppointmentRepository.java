@@ -16,9 +16,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<AppointmentResponse> getUserAppointments(String email);
 
     @Query("select a from Appointment a where " +
-            "a.fullName ilike :word " +
-            "or cast(a.department.name as STRING) ilike :word " +
-            "or a.doctor.firstName ilike :word " +
-            "or a.doctor.lastName ilike :word")
+            "a.fullName ilike concat('%' ,:word, '%') " +
+            "or a.doctor.firstName ilike concat('%' ,:word, '%') " +
+            "or a.doctor.lastName ilike concat('%' ,:word, '%')")
     List<Appointment> findAll(String word);
 }
