@@ -13,6 +13,7 @@ public record ExpertResponse(
         String position,
         String image,
         Detachment name,
+        Long departmentId,
         LocalDate dataOfFinish
 ) {
 }
