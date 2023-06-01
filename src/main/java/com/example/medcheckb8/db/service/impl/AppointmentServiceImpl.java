@@ -21,6 +21,7 @@ import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import com.example.medcheckb8.db.utill.TranslateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -35,10 +36,12 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AppointmentServiceImpl implements AppointmentService {
     private final JwtService jwtService;
     private final UserRepository userRepository;

@@ -9,6 +9,7 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.repository.ApplicationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository repository;
     private static final Logger logger = Logger.getLogger(Application.class.getName());

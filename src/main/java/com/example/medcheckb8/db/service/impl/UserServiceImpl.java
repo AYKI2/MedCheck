@@ -12,14 +12,17 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final JwtService service;
@@ -42,6 +45,9 @@ public class UserServiceImpl implements UserService {
         account.setEmail(request.email());
         account.getUser().setPhoneNumber(request.phoneNumber());
         repository.save(account.getUser());
+        logger.log(Level.INFO, "Profile updated: Account ID={0}, First Name={1}, Last Name={2}, Email={3}, Phone Number={4}",
+                new Object[]{account.getId(), account.getUser().getFirstName(), account.getUser().getLastName(),
+                        account.getEmail(), account.getUser().getPhoneNumber()});
         return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
 
     }
@@ -55,6 +61,7 @@ public class UserServiceImpl implements UserService {
         response.setLastName(account.getUser().getLastName());
         response.setPhoneNumber(account.getUser().getPhoneNumber());
         response.setEmail(account.getEmail());
+        logger.log(Level.INFO, "Profile result: {0}", response.toString());
         return response;
     }
 

@@ -32,10 +32,4 @@ public class Doctor {
     private Department department;
     @OneToOne(mappedBy = "doctor", cascade = ALL)
     private Schedule schedule;
-    void getAppointment(Appointment appointment){
-        if (appointments == null){
-            appointments= new ArrayList<>();
-        }
-        appointments.add(appointment);
-    }
 }

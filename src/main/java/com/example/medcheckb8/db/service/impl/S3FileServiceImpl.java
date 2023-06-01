@@ -13,6 +13,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Slf4j
 @Service
@@ -22,6 +24,8 @@ public class S3FileServiceImpl implements S3FileService {
     @Value("${AWS_BUCKET_NAME}")
     private String BUCKET_NAME;
     private final S3Client s3;
+    private static final Logger logger = Logger.getLogger(S3FileServiceImpl.class.getName());
+
 
     @Autowired
     public S3FileServiceImpl(S3Client s3) {
@@ -46,6 +50,8 @@ public class S3FileServiceImpl implements S3FileService {
                 .key(key)
                 .build();
         s3.putObject(put, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        logger.log(Level.INFO, "File uploaded: Key={0}",
+                new Object[]{key});
         return Map.of(
                 "link", BUCKET_PATH + key);
     }
