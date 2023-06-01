@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/results")
@@ -30,5 +32,12 @@ public class ResultApi {
     @Operation(summary = "Get result method", description = "You can get result by order number")
     public ResultResponse getResult(@RequestParam(required = false) String orderNumber){
         return resultService.getResult(orderNumber);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @GetMapping("/{patientId}")
+    @Operation(summary = "Get patient results method", description = "You can get result by patient id. Only for Admin.")
+    public List<UserResultResponse> getResultByPatientId(@PathVariable Long patientId){
+        return resultService.getResultByUserId(patientId);
     }
 }
