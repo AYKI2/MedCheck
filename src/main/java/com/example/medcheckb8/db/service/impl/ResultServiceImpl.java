@@ -13,6 +13,8 @@ import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.service.ResultService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -27,6 +29,7 @@ import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final TemplateEngine templateEngine;
@@ -72,13 +75,12 @@ public class ResultServiceImpl implements ResultService {
             return UserResultResponse.builder()
                     .resultId(result.getId())
                     .patientId(user.getId())
-                    .name(department.getName())
+                    .name(department.getName().name().toLowerCase())
                     .date(date)
                     .time(time)
                     .orderNumber(ordNum)
                     .file(request.file())
                     .build();
-
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to add result", e);
             throw e;

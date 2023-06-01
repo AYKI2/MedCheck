@@ -11,6 +11,7 @@ public record DoctorResponse(
         String position,
         String image,
         String description,
-        Detachment name
+        Detachment name,
+        Long departmentId
 ) {
 }

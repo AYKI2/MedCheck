@@ -8,6 +8,7 @@ import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
 import com.example.medcheckb8.db.entities.Schedule;
 import com.example.medcheckb8.db.entities.ScheduleDateAndTime;
+import com.example.medcheckb8.db.enums.Detachment;
 import com.example.medcheckb8.db.enums.Repeat;
 import com.example.medcheckb8.db.exceptions.AlreadyExistException;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
@@ -18,6 +19,7 @@ import com.example.medcheckb8.db.repository.DoctorRepository;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
+    private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
+
 
     @Override
     public List<ScheduleResponse> getAllSchedule(String word,
@@ -43,8 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public SimpleResponse save(DoctorScheduleRequest request) {
-        Department department = departmentRepository.findById(request.departmentId())
-                .orElseThrow(() -> new NotFountException("Department with id: " + request.departmentId() + " not found!"));
+        Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
+                .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
 
@@ -128,6 +135,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
         doctorRepository.save(doctor);
+        logger.log(Level.INFO, "Schedule saved: Doctor ID={0}, Department ID={1}",
+                new Object[]{doctor.getId(), department.getId()});
+
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)

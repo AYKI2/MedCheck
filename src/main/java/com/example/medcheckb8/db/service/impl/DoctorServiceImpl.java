@@ -19,6 +19,7 @@ import com.example.medcheckb8.db.utill.ExportToExcel;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,13 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DepartmentRepository departmentRepository;
@@ -151,67 +154,74 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<ScheduleResponse> findDoctorsByDate(String department, String timeZone) {
-        ZoneId zoneId = ZoneId.of(timeZone);
-        LocalDateTime currentTime = LocalDateTime.now(zoneId);
-        List<ScheduleResponse> responses = new ArrayList<>();
-        List<Doctor> doctors = doctorRepository.findByDepartmentName(department);
-        List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
-        LocalDate currentDate = null;
-        boolean isNext = true;
-        boolean isCurrent = true;
-        int everyoneIsBusy = -1;
-        long i = 0;
-        LocalTime nextTime = currentTime.toLocalTime();
-        for (Doctor doctor : doctors) {
-            List<ScheduleDateAndTimeResponse> dateAndTimes = scheduleDateAndTimeRepository.findScheduleDateAndTimesByScheduleId(doctor.getId(), currentTime.toLocalDate());
-            for (ScheduleDateAndTimeResponse dateAndTime : dateAndTimes) {
-                if (isCurrent) {
-                    if (currentDate == null) {
-                        currentDate = dateAndTime.date();
-                    }
-                    everyoneIsBusy = scheduleDateAndTimeRepository.everyoneIsBusy(doctor.getId(), currentDate);
-                    isCurrent = false;
-                    if (!dateAndTime.isBusy() && dateAndTime.timeFrom().isAfter(currentTime.toLocalTime())) {
-                        scheduleDateAndTimeResponses.add(dateAndTime);
-                    }
-                } else if (everyoneIsBusy == 0) {
-                    everyoneIsBusy = -1;
-                    i = currentDate.getDayOfMonth();
-                    isNext = true;
-                    scheduleDateAndTimeResponses.clear();
-                } else if (dateAndTime.date().getDayOfMonth() > i
-                        && currentDate.getDayOfMonth() == dateAndTime.date().getDayOfMonth()
-                ) {
-                    if (dateAndTime.timeFrom().isAfter(nextTime)) {
-                        List<ScheduleDateAndTimeResponse> dates = scheduleDateAndTimeRepository.findDatesByDoctorIdAndDate(doctor.getId(), currentDate);
-                        if (currentTime.toLocalTime().isBefore(dateAndTime.timeFrom())
-                                && dateAndTime.isBusy()) {
-                            continue;
+        try {
+            logger.log(Level.INFO, "Finding doctors by date for department: {0}", department);
+            ZoneId zoneId = ZoneId.of(timeZone);
+            LocalDateTime currentTime = LocalDateTime.now(zoneId);
+            List<ScheduleResponse> responses = new ArrayList<>();
+            List<Doctor> doctors = doctorRepository.findByDepartmentName(department);
+            List<ScheduleDateAndTimeResponse> scheduleDateAndTimeResponses = new ArrayList<>();
+            LocalDate currentDate = null;
+            boolean isNext = true;
+            boolean isCurrent = true;
+            int everyoneIsBusy = -1;
+            long i = 0;
+            LocalTime nextTime = currentTime.toLocalTime();
+            for (Doctor doctor : doctors) {
+                List<ScheduleDateAndTimeResponse> dateAndTimes = scheduleDateAndTimeRepository.findScheduleDateAndTimesByScheduleId(doctor.getId(), currentTime.toLocalDate());
+                for (ScheduleDateAndTimeResponse dateAndTime : dateAndTimes) {
+                    if (isCurrent) {
+                        if (currentDate == null) {
+                            currentDate = dateAndTime.date();
                         }
-                        scheduleDateAndTimeResponses.addAll(dates);
+                        everyoneIsBusy = scheduleDateAndTimeRepository.everyoneIsBusy(doctor.getId(), currentDate);
+                        isCurrent = false;
+                        if (!dateAndTime.isBusy() && dateAndTime.timeFrom().isAfter(currentTime.toLocalTime())) {
+                            scheduleDateAndTimeResponses.add(dateAndTime);
+                        }
+                    } else if (everyoneIsBusy == 0) {
+                        everyoneIsBusy = -1;
+                        i = currentDate.getDayOfMonth();
                         isNext = true;
-                        break;
+                        scheduleDateAndTimeResponses.clear();
+                    } else if (dateAndTime.date().getDayOfMonth() > i
+                            && currentDate.getDayOfMonth() == dateAndTime.date().getDayOfMonth()
+                    ) {
+                        if (dateAndTime.timeFrom().isAfter(nextTime)) {
+                            List<ScheduleDateAndTimeResponse> dates = scheduleDateAndTimeRepository.findDatesByDoctorIdAndDate(doctor.getId(), currentDate);
+                            if (currentTime.toLocalTime().isBefore(dateAndTime.timeFrom())
+                                    && dateAndTime.isBusy()) {
+                                continue;
+                            }
+                            scheduleDateAndTimeResponses.addAll(dates);
+                            isNext = true;
+                            break;
+                        }
+                    } else if (isNext && scheduleDateAndTimeResponses.isEmpty()) {
+                        currentDate = currentDate.plusDays(1L);
+                        nextTime = LocalTime.MIN;
+                        isNext = false;
+                        isCurrent = true;
                     }
-                } else if (isNext && scheduleDateAndTimeResponses.isEmpty()) {
-                    currentDate = currentDate.plusDays(1L);
-                    nextTime = LocalTime.MIN;
-                    isNext = false;
-                    isCurrent = true;
                 }
+                ScheduleResponse build = ScheduleResponse.builder()
+                        .id(doctor.getId())
+                        .fullName(doctor.getLastName() + " " + doctor.getFirstName())
+                        .image(doctor.getImage())
+                        .position(doctor.getPosition())
+                        .localDateTimes(scheduleDateAndTimeResponses)
+                        .build();
+                responses.add(build);
             }
-            ScheduleResponse build = ScheduleResponse.builder()
-                    .id(doctor.getId())
-                    .fullName(doctor.getLastName() + " " + doctor.getFirstName())
-                    .image(doctor.getImage())
-                    .position(doctor.getPosition())
-                    .localDateTimes(scheduleDateAndTimeResponses)
-                    .build();
-            responses.add(build);
+            logger.log(Level.INFO, "Found {0} doctors by date for department: {1}", new Object[]{responses.size(), department});
+            return responses;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "An error occurred while finding doctors by date for department: " + department, e);
+            throw new RuntimeException(e);
         }
-        return responses;
     }
 
-    @Override
+        @Override
     public List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException {
         Instant start = Instant.now();
         String sql = """

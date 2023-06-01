@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Builder
 public record DoctorScheduleRequest(
-        Long departmentId,
+        String department,
         Long doctorId,
         @FutureOrPresent
         LocalDate startDate,
