@@ -145,16 +145,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         for (ScheduleDateAndTime time : fromDoctor.getSchedule().getDateAndTimes()) {
             if(time.getDate().equals(request.dateFrom())){
-                time.setDate(request.dateTo());
-                time.setIsBusy(false);
                 toDoctor.getSchedule().getDateAndTimes().stream().peek(x->{
-                 if(x.getDate().equals(request.dateTo()) && x.getIsBusy()){
+                 if(x.getDate().equals(request.dateTo())){
                      throw new AlreadyExistException(String.format("The Doctor with id: %d has a schedule and an appointment!", request.toId()));
                  }
                 });
+                if(!time.getTimeFrom().equals(toDoctor.getSchedule().getStartBreak())) {
+                    time.setDate(request.dateTo());
+                    time.setIsBusy(false);
+                    toDoctor.getSchedule().getDateAndTimes().add(time);
+                }
             }
         }
-
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Successfully added!")

@@ -184,7 +184,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new NotFountException("User not found!"));
         if (appointments == null || appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
             repository.deleteAll(user.getAppointments());
-            user.getAppointments().clear();
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
                     .message("Successfully cleared!")
