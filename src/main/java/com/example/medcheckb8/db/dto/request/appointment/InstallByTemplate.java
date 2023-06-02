@@ -11,7 +11,6 @@ public record InstallByTemplate(
         LocalDate dateFrom,
         LocalDate dateTo,
         String startBreak,
-        String endBreak,
-        LocalDate date
+        String endBreak
 ) {
 }

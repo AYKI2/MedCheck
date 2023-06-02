@@ -153,13 +153,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         Doctor toDoctor = doctorRepository.findById(request.toId())
                 .orElseThrow(()-> new NotFountException(String.format("Doctor with id: %d not found!", request.toId())));
 
+        if(fromDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", fromDoctor.getId()));
+        else if(toDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", toDoctor.getId()));
+
         for (ScheduleDateAndTime time : fromDoctor.getSchedule().getDateAndTimes()) {
             if(time.getDate().equals(request.dateFrom())){
-                toDoctor.getSchedule().getDateAndTimes().stream().peek(x->{
-                 if(x.getDate().equals(request.dateTo())){
-                     throw new AlreadyExistException(String.format("The Doctor with id: %d has a schedule and an appointment!", request.toId()));
-                 }
-                });
+                for (ScheduleDateAndTime dateAndTime : toDoctor.getSchedule().getDateAndTimes()) {
+                    if(dateAndTime.getDate().equals(request.dateTo())){
+                        throw new AlreadyExistException(String.format("The Doctor with id: %d has a schedule and an appointment!", request.toId()));
+                    }
+                }
                 if(!time.getTimeFrom().equals(toDoctor.getSchedule().getStartBreak())) {
                     time.setDate(request.dateTo());
                     time.setIsBusy(false);
