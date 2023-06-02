@@ -1,6 +1,5 @@
 package com.example.medcheckb8.db.dto.response;
 
-import com.example.medcheckb8.db.enums.Detachment;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ public record ResultResponse (
     LocalDate dateOfIssue,
     LocalTime timeOfIssue,
     String orderNumber,
-    Detachment name,
+    String name,
     String file
     ) {
 
