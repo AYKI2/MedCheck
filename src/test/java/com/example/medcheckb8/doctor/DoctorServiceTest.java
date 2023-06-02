@@ -38,6 +38,7 @@ class DoctorServiceTest {
     @Test
     void getAllWithSearchExperts() {
         //firstName,LastName писать маленкими буквами а услуги(Detachment) большими
+
         String keyword = "гер";
         ExpertResponse expertRespon = new ExpertResponse(111L, true, "Акыл", "торин", "global", "image", Detachment.ALLERGOLOGY, LocalDate.now());
         ExpertResponse expertRespon2 = new ExpertResponse(101L, true, "Геракыл", "торин", "global", "image", Detachment.DERMATOLOGY, LocalDate.now());
