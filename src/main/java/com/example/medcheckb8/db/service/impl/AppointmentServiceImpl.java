@@ -102,8 +102,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         context.setVariable("status", appointment.getStatus().name().toLowerCase());
         context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
-        context.setVariable("patient", appointment.getUser().getFirstName() + " " + appointment.getUser().getLastName());
-        context.setVariable("phoneNumber", appointment.getUser().getPhoneNumber());
+        context.setVariable("patient", appointment.getFullName());
+        context.setVariable("phoneNumber", appointment.getPhoneNumber());
 
         context.setVariable("link", request.link());
 
