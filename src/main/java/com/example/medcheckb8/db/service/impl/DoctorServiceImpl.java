@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -87,8 +86,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
-        return doctorRepository.getAllWithSearch(keyWord).stream().filter(doctor -> (doctor.firstName().toLowerCase().contains(keyWord)) || doctor.lastName().toLowerCase().contains(keyWord) || doctor.name().toString().contains(keyWord))
-                .collect(Collectors.toList());
+        return doctorRepository.getAllWithSearch(keyWord);
     }
 
     @Override
