@@ -20,7 +20,6 @@ import com.example.medcheckb8.db.service.EmailSenderService;
 import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
-import com.example.medcheckb8.db.utill.TranslateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,6 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -52,7 +50,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final TemplateEngine templateEngine;
     private final AppointmentRepository repository;
     private final AppointmentRepository appointmentRepository;
-    private final TranslateUtil translate;
     private static final Logger logger = Logger.getLogger(Appointment.class.getName());
 
     @Override
@@ -98,12 +95,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         String subject = "Medcheck : Оповещение о записи";
         Context context = new Context();
         context.setVariable("title", String.format("Здравствуйте, %s!", appointment.getUser().getFirstName()));
-        context.setVariable("department", translate.translateMethod(department.getName().name().toLowerCase(),"ru","en"));
+        context.setVariable("department", department.getName().name().toLowerCase());
         context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
         context.setVariable("date", date);
         context.setVariable("time", appointment.getTimeOfVisit());
 
-        context.setVariable("status", translate.translateMethod(appointment.getStatus().name().toLowerCase(),"ru","en"));
+        context.setVariable("status", appointment.getStatus().name().toLowerCase());
         context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
         context.setVariable("patient", appointment.getUser().getFirstName() + " " + appointment.getUser().getLastName());
         context.setVariable("phoneNumber", appointment.getUser().getPhoneNumber());
@@ -145,7 +142,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .fullName(appointment.getFullName())
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
-                    .department(translate.translateMethod(appointment.getDepartment().getName().name().toLowerCase(),"ru","en"))
+                    .department(appointment.getDepartment().getName().name().toLowerCase())
                     .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
                     .localDate(appointment.getDateOfVisit())
                     .localTime(appointment.getTimeOfVisit())
