@@ -56,6 +56,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         if(!contains) throw new BadRequestException("Doctor with " +request.doctorId()+ " id does not work in this department.");
         if(doctor.getSchedule() != null) {throw new AlreadyExistException("Doctor with id: "+ request.doctorId() +" already has a schedule.");}
 
+        if(request.startDate().isAfter(request.endDate()) ||
+                LocalTime.parse(request.startBreak()).isAfter(LocalTime.parse(request.endBreak())) ||
+                LocalTime.parse(request.startTime()).isAfter(LocalTime.parse(request.endTime()))) throw new BadRequestException("Data entered incorrectly!");
+
         Map<Repeat, Boolean> repeatDays = new HashMap<>();
         for (String day : request.repeatDays().keySet()) {
             switch (day.toLowerCase()) {
