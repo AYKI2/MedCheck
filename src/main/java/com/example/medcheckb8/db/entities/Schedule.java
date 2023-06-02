@@ -17,6 +17,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "schedules")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class Schedule {
     @Id

@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-uluk.properties")
+@TestPropertySource(locations = "classpath:application-local.properties")
 class DoctorServiceTest {
     @Autowired
     private DoctorServiceImpl doctorService;

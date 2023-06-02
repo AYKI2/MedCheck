@@ -17,9 +17,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "from Doctor d")
     List<DoctorResponse> getAll();
     @Query("select new com.example.medcheckb8.db.dto.response.ExpertResponse(d.id,d.isActive, d.firstName, d.lastName, d.position," +
-            " d.image, d.department.name,d.department.id,s.dataOfFinish) " +
-            "from Doctor d left join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
-            " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.id")
+            " d.image, d.department.name,s.dataOfFinish) " +
+            "from Doctor d left join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ILIKE concat('%',:keyWord,'%') or d.lastName ILIKE concat('%',:keyWord,'%') or" +
+            " cast(d.department.name as STRING ) ILIKE concat('%',:keyWord,'%') order by d.id")
     List<ExpertResponse> getAllWithSearch(String keyWord);
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
