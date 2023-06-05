@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,7 +21,7 @@ import java.util.Map;
 public class S3API {
     private final S3FileService service;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -30,7 +31,7 @@ public class S3API {
         return service.upload(file);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping
     @Operation(
             summary = "The file delete method",
@@ -39,4 +40,22 @@ public class S3API {
         return service.delete(link);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/download/{link}")
+    @Operation(
+            summary = "The file download method",
+            description = "Using the method, you can download the file from the link")
+    public byte[] download(@PathVariable String link) {
+        return service.download(link);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping
+    @Operation(
+            summary = "Get all files",
+            description = "Using the method, you can get all files."
+    )
+    public List<String> listAllFiles(){
+        return service.listAllFiles();
+    }
 }

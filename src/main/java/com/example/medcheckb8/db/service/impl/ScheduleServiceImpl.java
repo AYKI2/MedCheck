@@ -16,6 +16,7 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
 
+import com.example.medcheckb8.db.repository.ScheduleDateAndTimeRepository;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
+    private final ScheduleDateAndTimeRepository scheduleDateAndTimeRepository;
     private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
 
 
@@ -160,23 +162,22 @@ public class ScheduleServiceImpl implements ScheduleService {
         if(fromDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", fromDoctor.getId()));
         else if(toDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", toDoctor.getId()));
 
+        if(fromDoctor.getSchedule().getDataOfStart().isBefore(request.dateFrom()) ||
+                toDoctor.getSchedule().getDataOfStart().isBefore(request.dateTo())) throw new BadRequestException("Data entered incorrectly!");
+
         for (ScheduleDateAndTime time : fromDoctor.getSchedule().getDateAndTimes()) {
-            if(time.getDate().equals(request.dateFrom())){
-                for (ScheduleDateAndTime dateAndTime : toDoctor.getSchedule().getDateAndTimes()) {
-                    if(dateAndTime.getDate().equals(request.dateTo())){
-                        throw new AlreadyExistException(String.format("The Doctor with id: %d has a schedule and an appointment!", request.toId()));
-                    }
-                }
-                if(!time.getTimeFrom().equals(toDoctor.getSchedule().getStartBreak())) {
-                    time.setDate(request.dateTo());
-                    time.setIsBusy(false);
-                    toDoctor.getSchedule().getDateAndTimes().add(time);
-                }
+            if(!time.getTimeFrom().equals(toDoctor.getSchedule().getStartBreak())){
+                time.setIsBusy(false);
+                time.setDate(request.dateTo());
+                time.setSchedule(toDoctor.getSchedule());
+                scheduleDateAndTimeRepository.save(time);
+                toDoctor.getSchedule().getDateAndTimes().add(time);
             }
         }
+
         return SimpleResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Successfully added!")
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Failed to add!")
                 .build();
     }
 }

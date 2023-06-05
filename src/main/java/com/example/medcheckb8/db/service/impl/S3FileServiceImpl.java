@@ -1,20 +1,24 @@
 package com.example.medcheckb8.db.service.impl;
 
+import com.amazonaws.util.IOUtils;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.service.S3FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,12 +60,12 @@ public class S3FileServiceImpl implements S3FileService {
                 "link", BUCKET_PATH + key);
     }
 
+    @Override
     public Map<String, String> delete(String fileLink) {
-
         log.info("Deleting file...");
 
         try {
-            String key = fileLink.substring(BUCKET_PATH.length());
+            String key = fileLink.replace(BUCKET_PATH,"");
             log.warn("Deleting object: {}", key);
 
             s3.deleteObject(dor -> dor.bucket(BUCKET_NAME).key(key).build());
@@ -73,5 +77,27 @@ public class S3FileServiceImpl implements S3FileService {
         }
         return Map.of(
                 "message", fileLink + " has been deleted");
+    }
+
+    @Override
+    public byte[] download(String fileLink) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(BUCKET_NAME)
+                .key(fileLink)
+                .build();
+        try (ResponseInputStream<GetObjectResponse> objectResponse = s3.getObject(getObjectRequest)){
+            return IOUtils.toByteArray(objectResponse);
+        }catch (IOException e){
+            throw new BadRequestException("Error downloading file from S3: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> listAllFiles(){
+        ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                .bucket(BUCKET_NAME)
+                .build();
+        ListObjectsV2Response listObjectsV2Result = s3.listObjectsV2(listObjectsRequest);
+        return listObjectsV2Result.contents().stream().map(S3Object::key).collect(Collectors.toList());
     }
 }
