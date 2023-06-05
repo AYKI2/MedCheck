@@ -95,11 +95,16 @@ public class DoctorServiceImpl implements DoctorService {
             Doctor doctor = doctorRepository.findById(request.doctorId()).orElseThrow(() -> new NotFountException(
                     String.format("Doctor with id: %d not found.", request.doctorId())
             ));
+            Department department = departmentRepository.findById(request.departmentId()).orElseThrow(() -> new NotFountException(
+                    String.format("Department with id: %d not found.", request.doctorId())
+            ));
 
             doctor.setFirstName(request.firstName());
             doctor.setLastName(request.lastName());
             doctor.setImage(request.image());
             doctor.setDescription(request.description());
+            doctor.setDepartment(department);
+            doctor.setPosition(request.position());
 
             doctorRepository.save(doctor);
             logger.info(String.format("Doctor with id: %d Successfully updated.", doctor.getId()));
