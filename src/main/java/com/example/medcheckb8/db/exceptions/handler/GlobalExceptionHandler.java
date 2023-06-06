@@ -57,4 +57,12 @@ public class GlobalExceptionHandler {
                 error
         );
     }
+    @ExceptionHandler(DownloadFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse downloadFailedException(DownloadFailedException e) {
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage(),
+                DownloadFailedException.class.getSimpleName());
+    }
 }
