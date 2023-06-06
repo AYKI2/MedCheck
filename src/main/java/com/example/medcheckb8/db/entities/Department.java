@@ -27,7 +27,7 @@ public class Department {
     @OneToMany(mappedBy = "department", cascade = ALL)
     private List<Appointment> appointments;
     @OneToMany(mappedBy = "department", cascade = ALL)
-    private List<Doctor> doctors;
+    private List<Doctor> doctors = new ArrayList<>();
 
     public void addDoctor(Doctor doctor) {
         if (doctor == null) {
