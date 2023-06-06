@@ -90,13 +90,11 @@ public class S3FileServiceImpl implements S3FileService {
             String os = System.getProperty("os.name");
             String localFilePath = "C:\\Downloads\\"+fileLink;
             String username = System.getProperty("user.name");
-
             if (os.contains("Mac") || os.contains("mac")) {
                 localFilePath = "/Users/" + username + "/Downloads/"+fileLink;
             } else if (os.contains("Linux")) {
                 localFilePath = "/home/" + username + "/Downloads/"+fileLink;
             }
-
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(BUCKET_NAME)
                     .key(fileLink)
