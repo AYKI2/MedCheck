@@ -1,19 +1,24 @@
 package com.example.medcheckb8.db.service.impl;
 
-import com.amazonaws.util.IOUtils;
-import com.example.medcheckb8.db.exceptions.BadRequestException;
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
+import com.example.medcheckb8.db.exceptions.DownloadFailedException;
 import com.example.medcheckb8.db.service.S3FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -80,15 +85,41 @@ public class S3FileServiceImpl implements S3FileService {
     }
 
     @Override
-    public byte[] download(String fileLink) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(BUCKET_NAME)
-                .key(fileLink)
-                .build();
-        try (ResponseInputStream<GetObjectResponse> objectResponse = s3.getObject(getObjectRequest)){
-            return IOUtils.toByteArray(objectResponse);
-        }catch (IOException e){
-            throw new BadRequestException("Error downloading file from S3: " + e.getMessage());
+    public SimpleResponse download(String fileLink) {
+        try {
+            String os = System.getProperty("os.name");
+            String localFilePath = "C:\\Downloads\\"+fileLink;
+            String username = System.getProperty("user.name");
+
+            if (os.contains("Mac") || os.contains("mac")) {
+                localFilePath = "/Users/" + username + "/Downloads/"+fileLink;
+            } else if (os.contains("Linux")) {
+                localFilePath = "/home/" + username + "/Downloads/"+fileLink;
+            }
+
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(fileLink)
+                    .build();
+
+            ResponseBytes<GetObjectResponse> responseBytes = s3.getObjectAsBytes(getObjectRequest);
+
+            saveFileLocally(responseBytes, localFilePath);
+
+            return SimpleResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Файл успешно загружен.")
+                    .build();
+        } catch (IOException e) {
+            throw new DownloadFailedException("Ошибка при загрузке файла: " + e.getMessage());
+        }
+    }
+
+    private static void saveFileLocally(ResponseBytes<GetObjectResponse> responseBytes, String localFilePath) throws IOException {
+        Path path = Paths.get(localFilePath);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path.toFile())) {
+            SdkBytes data = SdkBytes.fromByteArray(responseBytes.asByteArray());
+            fileOutputStream.write(data.asByteArray());
         }
     }
 

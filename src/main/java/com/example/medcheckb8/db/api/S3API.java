@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.api;
 
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.S3FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +46,7 @@ public class S3API {
     @Operation(
             summary = "The file download method",
             description = "Using the method, you can download the file from the link")
-    public byte[] download(@PathVariable String link) {
+    public SimpleResponse download(@PathVariable String link) {
         return service.download(link);
     }
 

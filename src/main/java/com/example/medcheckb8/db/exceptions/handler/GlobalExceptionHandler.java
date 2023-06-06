@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.FORBIDDEN,
                 e.getMessage(),
-                BadRequestException.class.getSimpleName());
+                BadCredentialException.class.getSimpleName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -56,5 +56,13 @@ public class GlobalExceptionHandler {
                 e.getClass().getSimpleName(),
                 error
         );
+    }
+    @ExceptionHandler(DownloadFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionResponse downloadFailedException(DownloadFailedException e) {
+        return new ExceptionResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage(),
+                DownloadFailedException.class.getSimpleName());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.service;
 
+import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,6 +12,6 @@ public interface S3FileService {
     Map<String, String> upload(MultipartFile file) throws IOException;
 
     Map<String, String> delete(String fileLink);
-    byte[] download(String fileLink);
+    SimpleResponse download(String fileLink);
     List<String> listAllFiles();
 }
