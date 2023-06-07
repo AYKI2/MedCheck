@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
+import com.example.medcheckb8.db.dto.response.OurDoctorsResponse;
 import com.example.medcheckb8.db.dto.response.SearchResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -35,4 +36,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<SearchResponse> globalSearch(String word);
 
     Boolean existsDoctorByDepartmentAndId(Department department, Long id);
+    @Query("select new com.example.medcheckb8.db.dto.response.OurDoctorsResponse(d.id,d.firstName,d.lastName,d.position,d.image,d.department.name) " +
+            "from Doctor d where cast(d.department.name as STRING) = ?1 ")
+    List<OurDoctorsResponse> findDoctorByDepartmentName(String name);
 }

@@ -2,12 +2,8 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
-import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
-import com.example.medcheckb8.db.dto.response.DoctorResponse;
-import com.example.medcheckb8.db.dto.response.ScheduleDateAndTimeResponse;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
-import com.example.medcheckb8.db.dto.response.ExpertResponse;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
@@ -267,5 +263,10 @@ public class DoctorServiceImpl implements DoctorService {
             throw e;
         }
         return null;
+    }
+
+    @Override
+    public List<OurDoctorsResponse> findByDepartmentName(String name) {
+        return doctorRepository.findDoctorByDepartmentName(name);
     }
 }
