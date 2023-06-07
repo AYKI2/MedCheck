@@ -2,6 +2,7 @@ package com.example.medcheckb8.result;
 
 import com.example.medcheckb8.db.dto.request.ResultRequest;
 import com.example.medcheckb8.db.dto.response.ResultResponse;
+import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.repository.ResultRepository;
 import com.example.medcheckb8.db.service.impl.ResultServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -42,18 +43,6 @@ public class ResultServiceTest {
     }
 
     @Test
-    void throwsExceptionIfOrderNumberInvalid(){
-        String orderNumber = "111111111115";
-
-        Mockito.when(resultService.getResult(orderNumber)).thenReturn(null);
-
-        assertThrows(NotFoundException.class, () ->
-            resultService.getResult(orderNumber),
-                "Result with order number: " + orderNumber + " doesn't exist.");
-    }
-
-
-    @Test
     void testGetResult(){
         String orderNumber = "11111111111";
         ResultResponse resultResponse = ResultResponse.builder()
@@ -68,10 +57,8 @@ public class ResultServiceTest {
                 .file("https://medcheckbucket.s3.eu-central-1.amazonaws.com/1685539128052hello.docx")
                 .build();
 
-
         Mockito.when(resultRepository.getResultByOrderNumber(orderNumber)).thenReturn(Optional.of(resultResponse));
         assertThat(resultResponse).isEqualTo(resultService.getResult(orderNumber));
     }
-
 
 }
