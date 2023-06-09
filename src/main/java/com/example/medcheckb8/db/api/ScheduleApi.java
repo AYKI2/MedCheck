@@ -1,7 +1,6 @@
 package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.DoctorScheduleRequest;
-import com.example.medcheckb8.db.dto.request.appointment.InstallByTemplate;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ScheduleService;
@@ -38,13 +37,5 @@ public class ScheduleApi {
             description = "With this method, you can add a doctor's schedule. Available for admin only.")
     public SimpleResponse save(@RequestBody DoctorScheduleRequest request) {
         return service.save(request);
-    }
-
-    @PostMapping("/template")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "Install by template",
-            description = "With this method, you can set one doctor's schedule for other doctors.Only for admin.")
-    public SimpleResponse installByTemplate(@RequestBody InstallByTemplate request){
-        return service.installByTemplate(request);
     }
 }

@@ -95,7 +95,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         String subject = "Medcheck : Оповещение о записи";
         Context context = new Context();
         context.setVariable("title", String.format("Здравствуйте, %s!", appointment.getUser().getFirstName()));
-        context.setVariable("department", department.getName().name().toLowerCase());
+        context.setVariable("department", department.getName().getTranslate());
         context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
         context.setVariable("date", date);
         context.setVariable("time", appointment.getTimeOfVisit());
@@ -142,7 +142,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .fullName(appointment.getFullName())
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
-                    .department(appointment.getDepartment().getName().name().toLowerCase())
+                    .department(appointment.getDepartment().getName().getTranslate())
                     .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
                     .localDate(appointment.getDateOfVisit())
                     .localTime(appointment.getTimeOfVisit())

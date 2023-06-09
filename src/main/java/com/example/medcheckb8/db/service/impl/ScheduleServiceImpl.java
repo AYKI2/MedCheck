@@ -1,7 +1,6 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorScheduleRequest;
-import com.example.medcheckb8.db.dto.request.appointment.InstallByTemplate;
 import com.example.medcheckb8.db.dto.response.ScheduleResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
@@ -16,7 +15,6 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
 
-import com.example.medcheckb8.db.repository.ScheduleDateAndTimeRepository;
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +37,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository repository;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
-    private final ScheduleDateAndTimeRepository scheduleDateAndTimeRepository;
     private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
 
 
@@ -148,36 +145,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Schedule successfully saved!")
-                .build();
-    }
-
-
-    @Override
-    public SimpleResponse installByTemplate(InstallByTemplate request) {
-        Doctor fromDoctor = doctorRepository.findById(request.fromId())
-                .orElseThrow(()-> new NotFountException(String.format("Doctor with id: %d not found!", request.fromId())));
-        Doctor toDoctor = doctorRepository.findById(request.toId())
-                .orElseThrow(()-> new NotFountException(String.format("Doctor with id: %d not found!", request.toId())));
-
-        if(fromDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", fromDoctor.getId()));
-        else if(toDoctor.getSchedule() == null) throw new NotFountException(String.format("Doctor with id: %d has no schedule", toDoctor.getId()));
-
-        if(fromDoctor.getSchedule().getDataOfStart().isBefore(request.dateFrom()) ||
-                toDoctor.getSchedule().getDataOfStart().isBefore(request.dateTo())) throw new BadRequestException("Data entered incorrectly!");
-
-        for (ScheduleDateAndTime time : fromDoctor.getSchedule().getDateAndTimes()) {
-            if(!time.getTimeFrom().equals(toDoctor.getSchedule().getStartBreak())){
-                time.setIsBusy(false);
-                time.setDate(request.dateTo());
-                time.setSchedule(toDoctor.getSchedule());
-                scheduleDateAndTimeRepository.save(time);
-                toDoctor.getSchedule().getDateAndTimes().add(time);
-            }
-        }
-
-        return SimpleResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .message("Failed to add!")
                 .build();
     }
 }
