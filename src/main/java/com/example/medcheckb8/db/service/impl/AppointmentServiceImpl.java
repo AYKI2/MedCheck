@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -64,25 +63,24 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new BadRequestException("This specialist does not work in this department.");
         }
-        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date().toLocalDate(), request.date().toLocalTime());
+        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date(), request.time());
         if (booked != null && booked) {
             throw new AlreadyExistException("This time is busy!");
         } else if (booked == null) {
             throw new BadRequestException("This specialist is not working on this day or time! Working dates: from " + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
-        LocalDateTime dateTime = request.date();
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())
                 .status(Status.CONFIRMED)
-                .dateOfVisit(dateTime.toLocalDate())
-                .timeOfVisit(dateTime.toLocalTime())
+                .dateOfVisit(request.date())
+                .timeOfVisit(request.time())
                 .user(user)
                 .doctor(doctor)
                 .department(department)
                 .build();
-        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date().toLocalDate(), request.date().toLocalTime());
+        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date(), request.time());
         dateAndTime.setIsBusy(true);
         doctor.getAppointments().add(appointment);
         user.getAppointments().add(appointment);
@@ -118,7 +116,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .image(doctor.getImage())
                         .position(doctor.getPosition())
                         .build())
-                .dateAndTime(request.date())
+                .date(request.date())
+                .time(request.time())
                 .build();
     }
 

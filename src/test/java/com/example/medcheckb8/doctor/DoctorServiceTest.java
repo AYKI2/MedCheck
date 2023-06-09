@@ -127,7 +127,7 @@ class DoctorServiceTest {
     @Test
     void testUpdate () {
         var request = new DoctorUpdateRequest(
-                1L, "Kuban", "Kelsinbekov", "doctor", "image", "good");
+                1L, 1L,"Kuban", "Kelsinbekov", "doctor", "image", "good");
 
         Doctor doctor = new Doctor();
         doctor.setId(1L);
