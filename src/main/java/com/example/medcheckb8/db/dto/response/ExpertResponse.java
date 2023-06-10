@@ -1,18 +1,20 @@
 package com.example.medcheckb8.db.dto.response;
 
-import com.example.medcheckb8.db.enums.Detachment;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDate;
 @Builder
-public record ExpertResponse(
-        Long id,
-        Boolean isActive,
-        String firstName,
-        String lastName,
-        String position,
-        String image,
-        Detachment name,
-        LocalDate dataOfFinish
-) {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExpertResponse {
+    private Long id;
+    private Boolean isActive;
+    private String firstName;
+    private String lastName;
+    private String position;
+    private String image;
+    private String departmentName;
+    private LocalDate dataOfFinish;
 }

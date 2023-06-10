@@ -6,6 +6,7 @@ import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
+import com.example.medcheckb8.db.enums.Detachment;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
@@ -73,14 +74,20 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorResponse findById(Long id) {
         logger.info("Finding doctor with ID: {}" + id);
-        return doctorRepository.findByDoctorId(id).orElseThrow(() -> new NotFountException(
+        DoctorResponse response = doctorRepository.findByDoctorId(id).orElseThrow(() -> new NotFountException(
                 String.format("Doctor with id: %d doesn't exist", id)
         ));
+        response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
+        return response;
     }
 
     @Override
     public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
-        return doctorRepository.getAllWithSearch(keyWord);
+        List<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord);
+        for (ExpertResponse response : allWithSearch) {
+            response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
+        }
+        return allWithSearch;
     }
 
     @Override
@@ -267,6 +274,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<OurDoctorsResponse> findByDepartmentName(String name) {
-        return doctorRepository.findDoctorByDepartmentName(name);
+        List<OurDoctorsResponse> doctors = doctorRepository.findDoctorByDepartmentName(name);
+        for (OurDoctorsResponse doctor : doctors) {
+            doctor.setDepartmentName(Detachment.valueOf(doctor.getDepartmentName()).getTranslate());
+        }
+        return doctors;
     }
 }

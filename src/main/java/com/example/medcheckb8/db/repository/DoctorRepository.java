@@ -14,17 +14,17 @@ import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
-            " d.image, d.description, d.department.name,d.department.id) " +
+            " d.image, d.description, cast(d.department.name as string),d.department.id) " +
             "from Doctor d")
     List<DoctorResponse> getAll();
     @Query("select new com.example.medcheckb8.db.dto.response.ExpertResponse(d.id,d.isActive, d.firstName, d.lastName, d.position," +
-            " d.image, d.department.name,s.dataOfFinish) " +
+            " d.image, cast(d.department.name as string),s.dataOfFinish) " +
             "from Doctor d left join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
             " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.id desc")
     List<ExpertResponse> getAllWithSearch(String keyWord);
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
-            " d.image, d.description, d.department.name,d.department.id) " +
+            " d.image, d.description, cast(d.department.name as string),d.department.id) " +
             "from Doctor d where d.id=?1")
     Optional<DoctorResponse> findByDoctorId(Long id);
 
@@ -36,7 +36,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<SearchResponse> globalSearch(String word);
 
     Boolean existsDoctorByDepartmentAndId(Department department, Long id);
-    @Query("select new com.example.medcheckb8.db.dto.response.OurDoctorsResponse(d.id,d.firstName,d.lastName,d.position,d.image,d.department.name) " +
+    @Query("select new com.example.medcheckb8.db.dto.response.OurDoctorsResponse(d.id,d.firstName,d.lastName,d.position,d.image,cast(d.department.name as string )) " +
             "from Doctor d where cast(d.department.name as STRING) = ?1 ")
     List<OurDoctorsResponse> findDoctorByDepartmentName(String name);
 }
