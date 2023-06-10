@@ -53,8 +53,8 @@ class DoctorServiceTest {
     void getAllWithSearchExperts() {
         //firstName,LastName писать маленкими буквами а услуги(Detachment) большими
         String keyword = "гер";
-        ExpertResponse expertRespon = new ExpertResponse(111L, true, "Акыл", "торин", "global", "image", Detachment.ALLERGOLOGY, LocalDate.now());
-        ExpertResponse expertRespon2 = new ExpertResponse(101L, true, "Геракыл", "торин", "global", "image", Detachment.DERMATOLOGY, LocalDate.now());
+        ExpertResponse expertRespon = new ExpertResponse(111L, true, "Акыл", "торин", "global", "image", Detachment.ALLERGOLOGY.getTranslate(), LocalDate.now());
+        ExpertResponse expertRespon2 = new ExpertResponse(101L, true, "Геракыл", "торин", "global", "image", Detachment.DERMATOLOGY.getTranslate(), LocalDate.now());
         List<ExpertResponse> expectedExperts = Arrays.asList(expertRespon, expertRespon2);
 
         when(doctorRepository.getAllWithSearch(anyString())).thenReturn(expectedExperts);
@@ -108,7 +108,7 @@ class DoctorServiceTest {
     void testFindById(){
         Long id = 1L;
         DoctorResponse doctorResponse = new DoctorResponse(
-                id, "Kuban", "Kelsinbekov", "doctor", "image", "good", Detachment.ALLERGOLOGY,1L
+                id, "Kuban", "Kelsinbekov", "doctor", "image", "good", Detachment.ALLERGOLOGY.getTranslate(),1L
         );
 
         when(doctorRepository.findByDoctorId(id)).thenReturn(Optional.of(doctorResponse));
@@ -116,9 +116,9 @@ class DoctorServiceTest {
         DoctorResponse result = doctorService.findById(id);
 
         assertNotNull(result);
-        assertEquals(id, result.id());
-        assertEquals("Kuban", result.firstName());
-        assertEquals("Kelsinbekov", result.lastName());
+        assertEquals(id, result.getId());
+        assertEquals("Kuban", result.getFirstName());
+        assertEquals("Kelsinbekov", result.getLastName());
 
         verify(doctorRepository).findByDoctorId(id);
     }
