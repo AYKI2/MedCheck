@@ -39,7 +39,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final DoctorRepository doctorRepository;
     private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
 
-
     @Override
     public List<ScheduleResponse> getAllSchedule(String word,
                                                  LocalDate startDate,
