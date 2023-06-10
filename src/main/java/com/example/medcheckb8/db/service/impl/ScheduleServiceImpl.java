@@ -49,7 +49,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public SimpleResponse save(DoctorScheduleRequest request) {
-        Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
+        Detachment detachment = Detachment.ALLERGOLOGY;
+        for (Detachment value : Detachment.values()) {
+            if(value.getTranslate().equals(request.department())){detachment = value; break;}
+        }
+        Department department = departmentRepository.findByName(detachment)
                 .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
