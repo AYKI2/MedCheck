@@ -92,10 +92,9 @@ public class DoctorAPI {
     }
 
     @GetMapping("/{departmentName}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "The expert find by department name.",
             description = "This method should be used to find the Experts by department name")
-    public List<OurDoctorsResponse> findById(@PathVariable @NotNull(message = "Название отделения не должно быть пустым!") String departmentName) {
+    public List<OurDoctorsResponse> findByName(@PathVariable @NotNull(message = "Название отделения не должно быть пустым!") String departmentName) {
         return doctorService.findByDepartmentName(departmentName.toUpperCase());
     }
 }
