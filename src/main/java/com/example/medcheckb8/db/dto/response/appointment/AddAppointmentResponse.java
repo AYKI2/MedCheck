@@ -2,10 +2,12 @@ package com.example.medcheckb8.db.dto.response.appointment;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 public record AddAppointmentResponse(
         AppointmentDoctorResponse response,
-        LocalDateTime dateAndTime) {
+        LocalDate date,
+        LocalTime time) {
 }

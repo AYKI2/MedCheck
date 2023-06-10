@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 public record AddAppointmentRequest(
@@ -15,8 +15,8 @@ public record AddAppointmentRequest(
         @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z]*)*$", message = "Service must contain only letters.")
         String department,
         Long doctorId,
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-        LocalDateTime date,
+        LocalDate date,
+        LocalTime time,
         @Size(min = 2, max = 30, message = "The name must contain between 2 and 30 characters.")
         @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z]*)*$", message = "The name must contain only letters.")
         String fullName,

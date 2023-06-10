@@ -2,14 +2,11 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
-import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
-import com.example.medcheckb8.db.dto.response.DoctorResponse;
-import com.example.medcheckb8.db.dto.response.ScheduleDateAndTimeResponse;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
-import com.example.medcheckb8.db.dto.response.ExpertResponse;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
+import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
@@ -25,14 +22,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,11 +89,16 @@ public class DoctorServiceImpl implements DoctorService {
             Doctor doctor = doctorRepository.findById(request.doctorId()).orElseThrow(() -> new NotFountException(
                     String.format("Doctor with id: %d not found.", request.doctorId())
             ));
+            Department department = departmentRepository.findById(request.departmentId()).orElseThrow(() -> new NotFountException(
+                    String.format("Department with id: %d not found.", request.doctorId())
+            ));
 
             doctor.setFirstName(request.firstName());
             doctor.setLastName(request.lastName());
             doctor.setImage(request.image());
             doctor.setDescription(request.description());
+            doctor.setDepartment(department);
+            doctor.setPosition(request.position());
 
             doctorRepository.save(doctor);
             logger.info(String.format("Doctor with id: %d Successfully updated.", doctor.getId()));
@@ -217,7 +216,7 @@ public class DoctorServiceImpl implements DoctorService {
             return responses;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "An error occurred while finding doctors by date for department: " + department, e);
-            throw new RuntimeException(e);
+            throw new BadRequestException(e.getMessage());
         }
     }
 
@@ -264,5 +263,10 @@ public class DoctorServiceImpl implements DoctorService {
             throw e;
         }
         return null;
+    }
+
+    @Override
+    public List<OurDoctorsResponse> findByDepartmentName(String name) {
+        return doctorRepository.findDoctorByDepartmentName(name);
     }
 }

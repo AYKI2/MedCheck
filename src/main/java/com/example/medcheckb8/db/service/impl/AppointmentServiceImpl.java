@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -64,25 +63,24 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new BadRequestException("This specialist does not work in this department.");
         }
-        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date().toLocalDate(), request.date().toLocalTime());
+        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date(), request.time());
         if (booked != null && booked) {
             throw new AlreadyExistException("This time is busy!");
         } else if (booked == null) {
             throw new BadRequestException("This specialist is not working on this day or time! Working dates: from " + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
-        LocalDateTime dateTime = request.date();
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())
                 .status(Status.CONFIRMED)
-                .dateOfVisit(dateTime.toLocalDate())
-                .timeOfVisit(dateTime.toLocalTime())
+                .dateOfVisit(request.date())
+                .timeOfVisit(request.time())
                 .user(user)
                 .doctor(doctor)
                 .department(department)
                 .build();
-        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date().toLocalDate(), request.date().toLocalTime());
+        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date(), request.time());
         dateAndTime.setIsBusy(true);
         doctor.getAppointments().add(appointment);
         user.getAppointments().add(appointment);
@@ -95,15 +93,15 @@ public class AppointmentServiceImpl implements AppointmentService {
         String subject = "Medcheck : Оповещение о записи";
         Context context = new Context();
         context.setVariable("title", String.format("Здравствуйте, %s!", appointment.getUser().getFirstName()));
-        context.setVariable("department", department.getName().name().toLowerCase());
+        context.setVariable("department", department.getName().getTranslate());
         context.setVariable("doctor", doctor.getLastName() + " " + doctor.getFirstName());
         context.setVariable("date", date);
         context.setVariable("time", appointment.getTimeOfVisit());
 
         context.setVariable("status", appointment.getStatus().name().toLowerCase());
         context.setVariable("now", LocalDate.now(ZoneId.of(request.zoneId())));
-        context.setVariable("patient", appointment.getUser().getFirstName() + " " + appointment.getUser().getLastName());
-        context.setVariable("phoneNumber", appointment.getUser().getPhoneNumber());
+        context.setVariable("patient", appointment.getFullName());
+        context.setVariable("phoneNumber", appointment.getPhoneNumber());
 
         context.setVariable("link", request.link());
 
@@ -118,7 +116,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .image(doctor.getImage())
                         .position(doctor.getPosition())
                         .build())
-                .dateAndTime(request.date())
+                .date(request.date())
+                .time(request.time())
                 .build();
     }
 
@@ -142,7 +141,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .fullName(appointment.getFullName())
                     .phoneNumber(appointment.getPhoneNumber())
                     .email(appointment.getEmail())
-                    .department(appointment.getDepartment().getName().name().toLowerCase())
+                    .department(appointment.getDepartment().getName().getTranslate())
                     .specialist(appointment.getDoctor().getLastName() + " " + appointment.getDoctor().getFirstName())
                     .localDate(appointment.getDateOfVisit())
                     .localTime(appointment.getTimeOfVisit())
@@ -184,7 +183,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new NotFountException("User not found!"));
         if (appointments == null || appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
             repository.deleteAll(user.getAppointments());
-            user.getAppointments().clear();
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
                     .message("Successfully cleared!")
@@ -195,7 +193,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .status(HttpStatus.OK)
                     .message("Successfully cleared!")
                     .build();
-        } else {
+        } else if(user.getAccount().getRole() == Role.ADMIN) {
             for (Long appointment : appointments) {
                 repository.deleteById(appointment);
             }
@@ -204,6 +202,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .message("Successfully deleted!")
                     .build();
         }
+        return SimpleResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Deletion failure!")
+                .build();
     }
         
     @Override

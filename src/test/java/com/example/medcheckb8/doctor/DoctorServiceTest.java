@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-kuban.properties")
+@TestPropertySource(locations = "classpath:application-local.properties")
 @ExtendWith(SpringExtension.class)
 class DoctorServiceTest {
     @Autowired
@@ -127,7 +127,7 @@ class DoctorServiceTest {
     @Test
     void testUpdate () {
         var request = new DoctorUpdateRequest(
-                1L, "Kuban", "Kelsinbekov", "doctor", "image", "good");
+                1L, 1L,"Kuban", "Kelsinbekov", "doctor", "image", "good");
 
         Doctor doctor = new Doctor();
         doctor.setId(1L);

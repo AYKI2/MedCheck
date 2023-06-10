@@ -4,12 +4,14 @@ import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
+import com.example.medcheckb8.db.dto.response.OurDoctorsResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -89,4 +91,11 @@ public class DoctorAPI {
         doctorService.exportDoctorToExcel(response);
     }
 
+    @GetMapping("/{departmentName}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "The expert find by department name.",
+            description = "This method should be used to find the Experts by department name")
+    public List<OurDoctorsResponse> findById(@PathVariable @NotNull(message = "Название отделения не должно быть пустым!") String departmentName) {
+        return doctorService.findByDepartmentName(departmentName.toUpperCase());
+    }
 }

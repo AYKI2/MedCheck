@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
 import com.example.medcheckb8.db.dto.response.ExpertResponse;
+import com.example.medcheckb8.db.dto.response.OurDoctorsResponse;
 import com.example.medcheckb8.db.dto.response.SearchResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -19,7 +20,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.ExpertResponse(d.id,d.isActive, d.firstName, d.lastName, d.position," +
             " d.image, d.department.name,s.dataOfFinish) " +
             "from Doctor d left join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
-            " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.id")
+            " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.id desc")
     List<ExpertResponse> getAllWithSearch(String keyWord);
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
@@ -35,4 +36,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<SearchResponse> globalSearch(String word);
 
     Boolean existsDoctorByDepartmentAndId(Department department, Long id);
+    @Query("select new com.example.medcheckb8.db.dto.response.OurDoctorsResponse(d.id,d.firstName,d.lastName,d.position,d.image,d.department.name) " +
+            "from Doctor d where cast(d.department.name as STRING) = ?1 ")
+    List<OurDoctorsResponse> findDoctorByDepartmentName(String name);
 }

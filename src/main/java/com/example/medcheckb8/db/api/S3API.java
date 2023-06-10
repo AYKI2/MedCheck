@@ -5,7 +5,7 @@ import com.example.medcheckb8.db.service.S3FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class S3API {
     private final S3FileService service;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -32,7 +32,7 @@ public class S3API {
         return service.upload(file);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping
     @Operation(
             summary = "The file delete method",
@@ -46,8 +46,12 @@ public class S3API {
     @Operation(
             summary = "The file download method",
             description = "Using the method, you can download the file from the link")
-    public SimpleResponse download(@PathVariable String link) {
-        return service.download(link);
+    public ResponseEntity<byte[]> download(@PathVariable String link) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(link).build());
+
+        return new ResponseEntity<>(service.download(link), headers, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

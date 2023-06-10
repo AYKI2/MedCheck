@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(
                 HttpStatus.FORBIDDEN,
                 e.getMessage(),
-                BadRequestException.class.getSimpleName());
+                BadCredentialException.class.getSimpleName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -2,11 +2,8 @@ package com.example.medcheckb8.db.service;
 
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
-import com.example.medcheckb8.db.dto.response.DoctorExportResponse;
-import com.example.medcheckb8.db.dto.response.DoctorResponse;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
-import com.example.medcheckb8.db.dto.response.ExpertResponse;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -28,4 +25,5 @@ public interface DoctorService {
     List<ScheduleResponse> findDoctorsByDate(String department, String timeZone);
     
     List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException;
+    List<OurDoctorsResponse> findByDepartmentName(String name);
 }

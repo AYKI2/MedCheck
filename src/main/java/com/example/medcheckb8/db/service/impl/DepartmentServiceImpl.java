@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,14 +25,19 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentResponse> getAllDepartment() {
         logger.info("Getting all departments");
-        List<DepartmentResponse> departments = departmentRepository.getAllDepartments();
+        List<Department> all = departmentRepository.findAll();
+        List<DepartmentResponse> departments = new ArrayList<>();
+        for (Department department : all) {
+            departments.add(DepartmentResponse.builder().name(department.getName().getTranslate()).build());
+        }
         logger.info("Retrieved {} departments" + departments.size());
         return departments;}
 
     @Override
     public DepartmentResponse findById(Long departmentId) {
         logger.info("Finding department by ID: {}" + departmentId);
-        return departmentRepository.findByIdDepartment(departmentId)
+        Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(()->new NotFountException(String.format("This is department : %s doesn't exists! ",departmentId)));
+        return DepartmentResponse.builder().name(department.getName().getTranslate()).build();
     }
 }

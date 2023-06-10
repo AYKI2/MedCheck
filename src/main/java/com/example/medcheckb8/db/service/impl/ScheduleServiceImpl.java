@@ -14,6 +14,7 @@ import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
+
 import com.example.medcheckb8.db.repository.custom.ScheduleRepository;
 import com.example.medcheckb8.db.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -145,5 +147,4 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .message("Schedule successfully saved!")
                 .build();
     }
-
 }
