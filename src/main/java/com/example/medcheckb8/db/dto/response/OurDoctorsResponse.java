@@ -1,15 +1,17 @@
 package com.example.medcheckb8.db.dto.response;
 
-import com.example.medcheckb8.db.enums.Detachment;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
-public record OurDoctorsResponse(
-        Long id,
-        String firstName,
-        String lastName,
-        String position,
-        String image,
-        Detachment name
-) {
+@Getter
+@Setter
+public class OurDoctorsResponse {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String position;
+    private String image;
+    private String departmentName;
 }
