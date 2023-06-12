@@ -24,6 +24,6 @@ public interface DoctorService {
 
     List<ScheduleResponse> findDoctorsByDate(String department, String timeZone);
     
-    List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException;
+    void exportDoctorToExcel(HttpServletResponse response) throws IOException;
     List<OurDoctorsResponse> findByDepartmentName(String name);
 }

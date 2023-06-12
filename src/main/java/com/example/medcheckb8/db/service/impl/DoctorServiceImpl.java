@@ -228,7 +228,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorExportResponse> exportDoctorToExcel(HttpServletResponse response) throws IOException {
+    public void exportDoctorToExcel(HttpServletResponse response) throws IOException {
         Instant start = Instant.now();
         String sql = """
                 SELECT d.id as doctorId,
@@ -268,7 +268,6 @@ public class DoctorServiceImpl implements DoctorService {
             logger.severe("Ошибка при экспорте врачей в Excel: " + e.getMessage());
             throw e;
         }
-        return null;
     }
 
     @Override
