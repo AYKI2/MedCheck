@@ -16,6 +16,7 @@ import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
+import com.example.medcheckb8.db.service.EmailSenderService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -52,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TemplateEngine templateEngine;
-    private final EmailService emailService;
+    private final EmailSenderService emailService;
     private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     @Override
