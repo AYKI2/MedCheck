@@ -8,31 +8,31 @@ public class PasswordValidator implements ConstraintValidator<PasswordValid, Str
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         boolean isValid = true;
         if (s == null || s.isBlank()) {
-            System.out.println("Password cannot be empty!");
+            System.out.println("Пароль не может быть пустым!");
             return false;
         }
         if (s.length() > 20 || s.length() < 6) {
-            System.out.println("Password must be less than 20 and more than 6 characters in length.");
+            System.out.println("Пароль должен содержать от 6 до 20 символов.");
             isValid = false;
         }
         String upperCaseChars = "(.*[A-Z].*)";
         if (!s.matches(upperCaseChars)) {
-            System.out.println("Password must have at least one uppercase character");
+            System.out.println("Пароль должен содержать хотя бы одну заглавную букву");
             isValid = false;
         }
         String lowerCaseChars = "(.*[a-z].*)";
         if (!s.matches(lowerCaseChars)) {
-            System.out.println("Password must have at least one lowercase character");
+            System.out.println("Пароль должен содержать хотя бы одну строчную букву");
             isValid = false;
         }
         String numbers = "(.*[0-9].*)";
         if (!s.matches(numbers)) {
-            System.out.println("Password must have at least one number");
+            System.out.println("Пароль должен содержать хотя бы одну цифру");
             isValid = false;
         }
         String specialChars = "(.*[@#$%].*$)";
         if (!s.matches(specialChars)) {
-            System.out.println("Password must have at least one special character among @#$%");
+            System.out.println("Пароль должен содержать хотя бы один специальный символ из @#$%");
             isValid = false;
         }
         return isValid;

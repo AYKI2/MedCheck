@@ -6,10 +6,10 @@ import lombok.Builder;
 
 @Builder
 public record FreeSpecialistRequest(
-        @NotEmpty(message = "Department cannot be empty!")
+        @NotEmpty(message = "Отдел не может быть пустым!")
         String department,
 
-        @NotNull(message = "The timezone must not be empty!")
+        @NotNull(message = "Часовой пояс не может быть пустым!")
         String timeZone
 ) {
 }

@@ -55,19 +55,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AddAppointmentResponse save(AddAppointmentRequest request) {
         Account currentUser = jwtService.getAccountInToken();
         User user = userRepository.findByAccountId(currentUser.getId())
-                .orElseThrow(() -> new NotFountException("User not found!"));
+                .orElseThrow(() -> new NotFountException("Пользователь не найден!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
-                .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
+                .orElseThrow(() -> new NotFountException("Доктор с идентификатором: " + request.doctorId() + " не найден!"));
         Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
-                .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
+                .orElseThrow(() -> new NotFountException("Отделение с названием: " + request.department() + " не найден!"));
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
-            throw new BadRequestException("This specialist does not work in this department.");
+            throw new BadRequestException("Этот специалист не работает в данном отделении.");
         }
         Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date(), request.time());
         if (booked != null && booked) {
-            throw new AlreadyExistException("This time is busy!");
+            throw new AlreadyExistException("Это время занято!");
         } else if (booked == null) {
-            throw new BadRequestException("This specialist is not working on this day or time! Working dates: from " + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
+            throw new BadRequestException("Этот специалист не работает в этот день или в это время! Рабочие даты: с" + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())
@@ -155,9 +155,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public SimpleResponse canceled(Long id) {
         User user = userRepository.findByAccountId(jwtService.getAccountInToken().getId())
-                .orElseThrow(() -> new NotFountException("User not found!"));
+                .orElseThrow(() -> new NotFountException("Пользователь не найден!"));
         Appointment appointment = repository.findById(id).orElseThrow(() ->
-                new NotFountException("Appointment with id: " + id + " not found!"));
+                new NotFountException("Запись с идентификатором: " + id + " не найдена!"));
         if (appointment.getUser().getId().equals(user.getId())) {
             ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(appointment.getDoctor().getId(),
                     appointment.getDateOfVisit(),
@@ -166,12 +166,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointment.setStatus(Status.CANCELED);
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Successfully canceled!")
+                    .message("Успешно отменено!")
                     .build();
         } else {
             return SimpleResponse.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message("Request not completed!")
+                    .message("Запрос не выполнен!")
                     .build();
         }
     }
@@ -180,18 +180,18 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public SimpleResponse delete(List<Long> appointments) {
         User user = userRepository.findByAccountId(jwtService.getAccountInToken().getId())
-                .orElseThrow(() -> new NotFountException("User not found!"));
+                .orElseThrow(() -> new NotFountException("Пользователь не найден!"));
         if (appointments == null || appointments.isEmpty() && user.getAccount().getRole() == Role.PATIENT) {
             repository.deleteAll(user.getAppointments());
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Successfully cleared!")
+                    .message("Успешно очищено!")
                     .build();
         } else if (user.getAccount().getRole() == Role.ADMIN && appointments.size() == repository.count()) {
             repository.deleteAll();
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Successfully cleared!")
+                    .message("Успешно очищено!")
                     .build();
         } else if(user.getAccount().getRole() == Role.ADMIN) {
             for (Long appointment : appointments) {
@@ -199,21 +199,21 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Successfully deleted!")
+                    .message("Успешно удалено!")
                     .build();
         }
         return SimpleResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .message("Deletion failure!")
+                .message("Ошибка удаления!")
                 .build();
     }
         
     @Override
     public List<AppointmentResponse> getUserAppointments() {
         Account account = jwtService.getAccountInToken();
-        logger.info("Retrieving appointments for user with email: {}" + account.getEmail());
+        logger.info("Получение записей для пользователя с email: {}" + account.getEmail());
         List<AppointmentResponse> appointments = appointmentRepository.getUserAppointments(account.getEmail());
-        logger.severe("Retrieved {} appointments for user with email: {}" + appointments.size() + account.getEmail());
+        logger.severe("Получено {} записей для пользователя с email: {}" + appointments.size() + account.getEmail());
         return appointments;
     }
 }

@@ -46,7 +46,7 @@ public class DoctorServiceImpl implements DoctorService {
     public SimpleResponse save(DoctorSaveRequest request) {
         Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new NotFountException(
-                        String.format("Department with id: %d not found", request.departmentId())
+                        String.format("Отделение с ID: %d не найдено", request.departmentId())
                 ));
 
         Doctor doctor = Doctor.builder()
@@ -61,21 +61,21 @@ public class DoctorServiceImpl implements DoctorService {
 
         department.addDoctor(doctor);
         doctorRepository.save(doctor);
-        logger.info("Saved doctor with full name: {} {}" + doctor.getFirstName() + doctor.getLastName());
+        logger.info("Сохранен врач с полным именем: {} {}" + doctor.getFirstName() + doctor.getLastName());
 
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
-                .message(String.format("Doctor with full name: %s %s Successfully saved",
+                .message(String.format("Врач с полным именем: %s %s успешно сохранен",
                         doctor.getFirstName(), doctor.getLastName()))
                 .build();
     }
 
     @Override
     public DoctorResponse findById(Long id) {
-        logger.info("Finding doctor with ID: {}" + id);
+        logger.info("Поиск врача по ID: {}" + id);
         DoctorResponse response = doctorRepository.findByDoctorId(id).orElseThrow(() -> new NotFountException(
-                String.format("Doctor with id: %d doesn't exist", id)
+                String.format("Врач с ID: %d не существует", id)
         ));
         response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
         return response;
@@ -94,10 +94,10 @@ public class DoctorServiceImpl implements DoctorService {
     public SimpleResponse update(DoctorUpdateRequest request) {
         try {
             Doctor doctor = doctorRepository.findById(request.doctorId()).orElseThrow(() -> new NotFountException(
-                    String.format("Doctor with id: %d not found.", request.doctorId())
+                    String.format("Врач с ID: %d не найден.", request.doctorId())
             ));
             Department department = departmentRepository.findById(request.departmentId()).orElseThrow(() -> new NotFountException(
-                    String.format("Department with id: %d not found.", request.doctorId())
+                    String.format("Отделение с ID: %d не найдено.", request.doctorId())
             ));
 
             doctor.setFirstName(request.firstName());
@@ -108,60 +108,60 @@ public class DoctorServiceImpl implements DoctorService {
             doctor.setPosition(request.position());
 
             doctorRepository.save(doctor);
-            logger.info(String.format("Doctor with id: %d Successfully updated.", doctor.getId()));
+            logger.info(String.format("Врач с ID: %d успешно обновлен.", doctor.getId()));
 
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message(String.format("Doctor with id: %d Successfully updated.", doctor.getId()))
+                    .message(String.format("Врач с ID: %d успешно обновлен.", doctor.getId()))
                     .build();
         } catch (Exception e) {
-            logger.severe("Error updating doctor: " + e.getMessage());
+            logger.severe("Ошибка при обновлении врача: " + e.getMessage());
             throw e;
         }
     }
 
     @Override
     public SimpleResponse delete(Long id) {
-        logger.info(String.format("Attempting to delete doctor with id: %d", id));
+        logger.info(String.format("Попытка удалить врача с ID: %d", id));
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFountException(
-                String.format("Doctor with id: %d not found.", id)
+                String.format("Врач с ID: %d не найден.", id)
         ));
         doctorRepository.delete(doctor);
-        logger.info(String.format("Doctor with id: %d successfully deleted", id));
+        logger.info(String.format("Врач с ID: %d успешно удален", id));
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
-                .message(String.format("Doctor with id: %d Successfully deleted.", id))
+                .message(String.format("Врач с ID: %d успешно удален.", id))
                 .build();
     }
 
     @Override
     public SimpleResponse activateAndDeactivateDoctor(Boolean isActive, Long doctorId) {
-        logger.info(String.format("Activating/deactivating doctor with id %s", doctorId));
+        logger.info(String.format("Активация/деактивация врача с идентификатором %s", doctorId));
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new NotFountException(
-                String.format("Doctor with id: %d not found.", doctorId)
+                String.format("Врач с идентификатором: %d не найден.", doctorId)
         ));
 
         doctor.setIsActive(isActive);
         doctorRepository.save(doctor);
 
         if (!isActive) {
-            logger.info(String.format("Doctor with id %s has been deactivated", doctorId));
+            logger.info(String.format("Врач с идентификатором %s был деактивирован", doctorId));
             return SimpleResponse.builder()
                     .status(HttpStatus.OK)
-                    .message(String.format("Doctor with id: %s is deactivated!", doctor.getId()))
+                    .message(String.format("Врач с идентификатором: %s деактивирован!", doctor.getId()))
                     .build();
         }
-        logger.info(String.format("Doctor with id %s has been activated", doctorId));
+        logger.info(String.format("Врач с идентификатором %s был активирован", doctorId));
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
-                .message(String.format("Doctor with id: %s is activated!", doctor.getId()))
+                .message(String.format("Врач с идентификатором: %s активирован!", doctor.getId()))
                 .build();
     }
 
     @Override
     public List<ScheduleResponse> findDoctorsByDate(String department, String timeZone) {
         try {
-            logger.log(Level.INFO, "Finding doctors by date for department: {0}", department);
+            logger.log(Level.INFO, "Поиск врачей по дате для отдела: {0}", department);
             ZoneId zoneId = ZoneId.of(timeZone);
             LocalDateTime currentTime = LocalDateTime.now(zoneId);
             List<ScheduleResponse> responses = new ArrayList<>();
@@ -219,10 +219,10 @@ public class DoctorServiceImpl implements DoctorService {
                         .build();
                 responses.add(build);
             }
-            logger.log(Level.INFO, "Found {0} doctors by date for department: {1}", new Object[]{responses.size(), department});
+            logger.log(Level.INFO, "Найдено {0} врачей по дате для отдела: {1}", new Object[]{responses.size(), department});
             return responses;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "An error occurred while finding doctors by date for department: " + department, e);
+            logger.log(Level.SEVERE, "Произошла ошибка при поиске врачей по дате для отдела: " + department, e);
             throw new BadRequestException(e.getMessage());
         }
     }
@@ -264,9 +264,8 @@ public class DoctorServiceImpl implements DoctorService {
             });
             ExportToExcel exportToExcel = new ExportToExcel(doctors);
             exportToExcel.exportDataToExcel(response);
-            logger.info(String.format("Successfully exported %d doctors to Excel. Execution time: %d ms", doctors.size(), Duration.between(start, Instant.now()).toMillis()));
-        } catch (Exception e) {
-            logger.severe("Error exporting doctors to Excel: " + e.getMessage());
+            logger.info(String.format("Успешно экспортировано %d врачей в Excel. Время выполнения: %d мс", doctors.size(), Duration.between(start, Instant.now()).toMillis()));        } catch (Exception e) {
+            logger.severe("Ошибка при экспорте врачей в Excel: " + e.getMessage());
             throw e;
         }
         return null;

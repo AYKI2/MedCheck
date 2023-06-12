@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAllPatients(String word) {
-        logger.info("Getting all patients with search word: {}" + word);
+        logger.info("Получение всех пациентов с поисковым термином: {}" + word);
         if (word == null) {
             return repository.getAllPatients();
         }
@@ -45,10 +45,10 @@ public class UserServiceImpl implements UserService {
         account.setEmail(request.email());
         account.getUser().setPhoneNumber(request.phoneNumber());
         repository.save(account.getUser());
-        logger.log(Level.INFO, "Profile updated: Account ID={0}, First Name={1}, Last Name={2}, Email={3}, Phone Number={4}",
+        logger.log(Level.INFO, "Обновлен профиль: ID аккаунта={0}, Имя={1}, Фамилия={2}, Email={3}, Номер телефона={4}",
                 new Object[]{account.getId(), account.getUser().getFirstName(), account.getUser().getLastName(),
                         account.getEmail(), account.getUser().getPhoneNumber()});
-        return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully update!").build();
+        return SimpleResponse.builder().status(HttpStatus.OK).message("Успешно обновлено!").build();
 
     }
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         response.setLastName(account.getUser().getLastName());
         response.setPhoneNumber(account.getUser().getPhoneNumber());
         response.setEmail(account.getEmail());
-        logger.log(Level.INFO, "Profile result: {0}", response.toString());
+        logger.log(Level.INFO, "Результат профиля: {0}", response.toString());
         return response;
     }
 
@@ -69,14 +69,14 @@ public class UserServiceImpl implements UserService {
     public SimpleResponse deleteById(Long id) {
         try {
             if (id == 1) {
-                throw new BadRequestException("Cannot delete id \"1\" because this id belongs to the Admin");
+                throw new BadRequestException("Нельзя удалить пользователя с ID \"1\", так как этот ID принадлежит администратору");
             }
-            User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("User with Id : %s not found", id)));
+            User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("Пользователь с ID: %s не найден", id)));
             repository.delete(user);
-            logger.info("User with Id " + id + " deleted successfully");
-            return SimpleResponse.builder().status(HttpStatus.OK).message("The user removed").build();
+            logger.info("Пользователь с ID " + id + "  успешно удален");
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Пользователь удален").build();
         } catch (BadRequestException e) {
-            logger.warning("Error while deleting user with Id " + id + ": " + e.getMessage());
+            logger.warning("Ошибка при удалении пользователя с ID " + id + ": " + e.getMessage());
             throw new RuntimeException(e);
 
         }

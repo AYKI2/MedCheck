@@ -75,7 +75,7 @@ public class S3FileServiceImpl implements S3FileService {
             throw new IllegalStateException(e.getMessage());
         }
         return Map.of(
-                "message", fileLink + " has been deleted");
+                "message", fileLink + "  был удален");
     }
 
     @Override

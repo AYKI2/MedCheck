@@ -24,8 +24,8 @@ public class UserApi {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping
-    @Operation(summary = "To receive all patients.",
-            description = "With this method, the admin can get all the patients. Only for admin.")
+    @Operation(summary = "Получить всех пациентов.",
+            description = "С помощью этого метода администратор может получить всех пациентов. Только для администратора.")
     public List<UserResponse> getAllPatients(@RequestParam(required = false) String word) {
         return service.getAllPatients(word);
     }
@@ -33,7 +33,8 @@ public class UserApi {
     @PutMapping
     @PreAuthorize("hasAnyAuthority('PATIENT','ADMIN')")
     @Operation(
-            summary = "The profile update method", description = "User profile which can see own information or changed"
+            summary = "Метод обновления профиля",
+            description = "Профиль пользователя, который может просматривать собственную информацию или изменять ее"
     )
     public SimpleResponse update(@RequestBody @Valid ProfileRequest request) {
         return service.getProfile(request);
@@ -41,14 +42,14 @@ public class UserApi {
 
     @GetMapping("/getResult")
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
-    @Operation(summary = "The method to send information ", description = "Information for autocomplete")
-    public ProfileResponse getResult() {
+    @Operation(summary = "Метод отправки информации",
+            description = "Информация для автозаполнения")    public ProfileResponse getResult() {
         return service.getResult();
     }
 
     @DeleteMapping("/")
-    @Operation(summary = "The patient delete method.",
-            description = "This method should be used to delete the Patient")
+    @Operation(summary = "Метод удаления пациента",
+            description = "Этот метод следует использовать для удаления пациента")
     public SimpleResponse deleteById(@RequestParam Long id) {
         return service.deleteById(id);
     }

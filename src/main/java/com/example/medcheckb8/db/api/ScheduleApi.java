@@ -23,8 +23,8 @@ public class ScheduleApi {
 
     @GetMapping("/")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Schedule search and get all schedule",
-            description = " Using this method you can find schedules by export names or see all experts with their schedules")
+    @Operation(summary = "Метод поиска расписания и получения всех расписаний",
+            description = "С помощью этого метода вы можете найти расписания по названиям экспертов или просмотреть все расписания экспертов.")
     public List<ScheduleResponse> getAll(@RequestParam(required = false) String word,
                                          @RequestParam(required = false) LocalDate startDate,
                                          @RequestParam(required = false) LocalDate endDate) {
@@ -33,8 +33,8 @@ public class ScheduleApi {
 
     @PostMapping("/save")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Add doctor's schedule",
-            description = "With this method, you can add a doctor's schedule. Available for admin only.")
+    @Operation(summary = "Метод добавления расписания врача",
+            description = "С помощью этого метода вы можете добавить расписание врача. Доступно только для администратора.")
     public SimpleResponse save(@RequestBody DoctorScheduleRequest request) {
         return service.save(request);
     }

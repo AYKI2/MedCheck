@@ -24,20 +24,20 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentResponse> getAllDepartment() {
-        logger.info("Getting all departments");
+        logger.info("Получение всех отделений");
         List<Department> all = departmentRepository.findAll();
         List<DepartmentResponse> departments = new ArrayList<>();
         for (Department department : all) {
             departments.add(DepartmentResponse.builder().name(department.getName().getTranslate()).build());
         }
-        logger.info("Retrieved {} departments" + departments.size());
+        logger.info("Получено {} отделений" + departments.size());
         return departments;}
 
     @Override
     public DepartmentResponse findById(Long departmentId) {
-        logger.info("Finding department by ID: {}" + departmentId);
+        logger.info("Поиск отделения по ID: {}" + departmentId);
         Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(()->new NotFountException(String.format("This is department : %s doesn't exists! ",departmentId)));
+                .orElseThrow(()->new NotFountException(String.format("Отделение с ID: %s не существует! ",departmentId)));
         return DepartmentResponse.builder().name(department.getName().getTranslate()).build();
     }
 }

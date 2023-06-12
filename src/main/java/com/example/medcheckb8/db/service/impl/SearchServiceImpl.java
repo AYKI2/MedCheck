@@ -19,9 +19,9 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<SearchResponse> search(String word) {
-        logger.info("Searching for term: {}" + word);
+        logger.info("Поиск термина: {}" + word);
         List<SearchResponse> results = doctorRepository.globalSearch(word);
-        logger.info("Found {} results for term: {}" + results.size() + word);
+        logger.info("Найдено {} результатов для термина: {}" + results.size() + word);
         return results;
     }
 }

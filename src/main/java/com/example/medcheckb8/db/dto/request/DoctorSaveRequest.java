@@ -8,22 +8,22 @@ import lombok.Builder;
 @Builder
 public record DoctorSaveRequest(
         Long departmentId,
-        @Size(min = 2, max = 30, message = "First name must contain between 2 and 30 characters.")
-        @NotBlank(message = "First name cannot be empty!")
-        @NotNull(message = "First name cannot be null!")
+        @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
+        @NotBlank(message = "Имя не может быть пустым!")
+        @NotNull(message = "Имя не может быть null!")
         String firstName,
-        @Size(min = 2, max = 30, message = "The Last name must contain between 2 and 30 characters.")
-        @NotBlank(message = "Last name cannot be empty!")
-        @NotNull(message = "Last name cannot be null!")
+        @Size(min = 2, max = 30, message = "Фамилия должна содержать от 2 до 30 символов.")
+        @NotBlank(message = "Фамилия не может быть пустой!")
+        @NotNull(message = "Фамилия не может быть null!")
         String lastName,
-        @NotBlank(message = "Position name cannot be empty!")
-        @NotNull(message = "Position name cannot be null!")
+        @NotBlank(message = "Должность не может быть пустой!")
+        @NotNull(message = "Должность не может быть null!")
         String position,
-        @NotBlank(message = "Image cannot be empty!")
-        @NotNull(message = "Image cannot be null!")
+        @NotBlank(message = "Изображение не может быть пустым!")
+        @NotNull(message = "Изображение не может быть null!")
         String image,
-        @NotBlank(message = "Description cannot be empty!")
-        @NotNull(message = "Description cannot be null!")
+        @NotBlank(message = "Описание не может быть пустым!")
+        @NotNull(message = "Описание не может быть null!")
         String description
 ) {
 }

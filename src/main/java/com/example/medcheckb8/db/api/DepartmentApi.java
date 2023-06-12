@@ -20,8 +20,8 @@ public class DepartmentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @GetMapping("/getAll")
     @Operation(
-            summary = "The departments get all method",
-            description = "All departments page"
+            summary = "Метод получения всех отделов",
+            description = "Страница со всеми отделами"
     )
     List<DepartmentResponse>getAll(){
         return departmentService.getAllDepartment();
@@ -29,8 +29,8 @@ public class DepartmentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @GetMapping("/{departmentId}")
     @Operation(
-            summary = "The departments get by id method",
-            description = "Departments get by id"
+            summary = "Метод получения отдела по идентификатору",
+            description = "Получение отдела по идентификатору"
     )
     DepartmentResponse findById( @PathVariable Long departmentId){
         return departmentService.findById(departmentId);

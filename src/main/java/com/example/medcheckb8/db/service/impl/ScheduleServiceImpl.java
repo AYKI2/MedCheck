@@ -53,17 +53,17 @@ public class ScheduleServiceImpl implements ScheduleService {
             if(value.getTranslate().equals(request.department())){detachment = value; break;}
         }
         Department department = departmentRepository.findByName(detachment)
-                .orElseThrow(() -> new NotFountException("Department with name: " + request.department() + " not found!"));
+                .orElseThrow(() -> new NotFountException("Отделение с названием: " + request.department() + " не найдено!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
-                .orElseThrow(() -> new NotFountException("Doctor with id: " + request.doctorId() + " not found!"));
+                .orElseThrow(() -> new NotFountException("Врач с ID : " + request.doctorId() + " не найдено!"));
 
         boolean contains = department.getDoctors().contains(doctor);
-        if(!contains) throw new BadRequestException("Doctor with " +request.doctorId()+ " id does not work in this department.");
-        if(doctor.getSchedule() != null) {throw new AlreadyExistException("Doctor with id: "+ request.doctorId() +" already has a schedule.");}
+        if(!contains) throw new BadRequestException("Врач с ID " +request.doctorId()+ " не работает в этом отделении.");
+        if(doctor.getSchedule() != null) {throw new AlreadyExistException("Врач с ID: "+ request.doctorId() +" уже имеет расписание.");}
 
         if(request.startDate().isAfter(request.endDate()) ||
                 LocalTime.parse(request.startBreak()).isAfter(LocalTime.parse(request.endBreak())) ||
-                LocalTime.parse(request.startTime()).isAfter(LocalTime.parse(request.endTime()))) throw new BadRequestException("Data entered incorrectly!");
+                LocalTime.parse(request.startTime()).isAfter(LocalTime.parse(request.endTime()))) throw new BadRequestException("Неверно введены данные!");
 
         Map<Repeat, Boolean> repeatDays = new HashMap<>();
         for (String day : request.repeatDays().keySet()) {
@@ -141,13 +141,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         doctor.getSchedule().setDateAndTimes(dateAndTimes);
         doctorRepository.save(doctor);
-        logger.log(Level.INFO, "Schedule saved: Doctor ID={0}, Department ID={1}",
+        logger.log(Level.INFO, "Расписание сохранено: ID врача={0}, ID отделения={1}",
                 new Object[]{doctor.getId(), department.getId()});
 
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Schedule successfully saved!")
+                .message("Расписание успешно сохранено!")
                 .build();
     }
 }
