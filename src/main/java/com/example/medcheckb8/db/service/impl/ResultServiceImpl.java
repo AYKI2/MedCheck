@@ -66,7 +66,7 @@ public class ResultServiceImpl implements ResultService {
             String subject = "Medcheck : Оповещение о результате";
             Context context = new Context();
             context.setVariable("title", String.format("Здравствуйте, %s %s!", user.getFirstName(), user.getLastName()));
-            context.setVariable("secondMessage", String.format("Ваш номер результата: %s", ordNum));
+            context.setVariable("secondMessage", ordNum);
 
             String html  = templateEngine.process("resultEmail.html", context);
             emailSenderService.sendEmail(user.getAccount().getEmail(), subject, html);
