@@ -41,9 +41,9 @@ public class ResultServiceImpl implements ResultService {
     public UserResultResponse addResult(ResultRequest request) {
         try {
             User user = userRepository.findById(request.patientId())
-                    .orElseThrow(()->new NotFountException(String.format("Patient with id: %d not found!",request.patientId())));
+                    .orElseThrow(()->new NotFountException(String.format("Пациент с ID: %d не найден!",request.patientId())));
             Department department = departmentRepository.findById(request.departmentId())
-                    .orElseThrow(()->new NotFountException(String.format("Department with id: %d not found!",request.departmentId())));
+                    .orElseThrow(()->new NotFountException(String.format("Отделение с ID: %d не найдено!",request.departmentId())));
 
             String ordNum = uniquenessCheckOrderNumber();
             LocalDate date = LocalDate.from(request.date());
@@ -60,7 +60,7 @@ public class ResultServiceImpl implements ResultService {
 
             user.addResult(result);
             resultRepository.save(result);
-            logger.log(Level.INFO, String.format("Result with patient full name: %s successfully added.",
+            logger.log(Level.INFO, String.format("Результат с полным именем пациента: %s успешно добавлен.",
                     (user.getFirstName() + " " + user.getLastName())));
 
             String subject = "Medcheck : Оповещение о результате";
@@ -81,7 +81,7 @@ public class ResultServiceImpl implements ResultService {
                     .file(request.file())
                     .build();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to add result", e);
+            logger.log(Level.SEVERE, "Ошибка при добавлении результата", e);
             throw e;
         }
 
@@ -91,7 +91,7 @@ public class ResultServiceImpl implements ResultService {
     public ResultResponse getResult(String orderNumber) {
         return resultRepository.getResultByOrderNumber(orderNumber)
                 .orElseThrow(()-> new NotFountException(
-                        String.format("Result with order number: %s doesn't exist.",orderNumber)
+                        String.format("Результат с номером заказа: %s не существует.",orderNumber)
                 ));
     }
 
@@ -106,7 +106,7 @@ public class ResultServiceImpl implements ResultService {
             sb.append(chars.charAt(index));
         }
         String orderNumber = sb.toString();
-        logger.info(String.format("Generated order number: %s", orderNumber));
+        logger.info(String.format("Сгенерирован номер заказа: %s", orderNumber));
         return orderNumber;
     }
 
@@ -116,7 +116,7 @@ public class ResultServiceImpl implements ResultService {
         for (Result result : all) {
             if (s.equals(result.getOrderNumber())) {
                 s = generateOrderNumber();
-                logger.info("Generated a new order number {} due to duplication with result id: {}" + s + result.getId());
+                logger.info("Сгенерирован новый номер заказа {} из-за дублирования с ID результата: {}" + s + result.getId());
             } else {
                 return s;
             }

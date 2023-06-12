@@ -22,21 +22,24 @@ public class ResultApi {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    @Operation(summary = "The add result method", description = "This method should be used to add a patient result")
+    @Operation(summary = "Метод добавления результата",
+            description = "Этот метод следует использовать для добавления результата пациента.")
     public UserResultResponse addResult(@RequestBody ResultRequest request){
         return resultService.addResult(request);
     }
 
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     @GetMapping
-    @Operation(summary = "Get result method", description = "You can get result by order number")
+    @Operation(summary = "Метод получения результата",
+            description = "Вы можете получить результат по номеру заказа.")
     public ResultResponse getResult(@RequestParam(required = false) String orderNumber){
         return resultService.getResult(orderNumber);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/{patientId}")
-    @Operation(summary = "Get patient results method", description = "You can get result by patient id. Only for Admin.")
+    @Operation(summary = "Метод получения результатов пациента",
+            description = "Вы можете получить результаты по идентификатору пациента. Только для администратора.")
     public List<UserResultResponse> getResultByPatientId(@PathVariable Long patientId){
         return resultService.getResultByUserId(patientId);
     }

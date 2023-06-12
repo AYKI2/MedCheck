@@ -2,7 +2,6 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.service.EmailSenderService;
-import com.example.medcheckb8.db.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.logging.Logger;
 @Slf4j
 public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender javaMailSender;
-    private static final Logger logger = Logger.getLogger(EmailService.class.getName());
+    private static final Logger logger = Logger.getLogger(EmailSenderService.class.getName());
 
     @Override
     public void sendEmail(String toEmail, String subject, String body) {
@@ -31,13 +30,13 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             helper.setText(body, true);
             helper.setSubject(subject);
             javaMailSender.send(message);
-            logger.log(Level.INFO, "Email sent to: {0}", toEmail);
+            logger.log(Level.INFO, "Отправлено письмо на адрес: {0}", toEmail);
         } catch (MessagingException e) {
-            logger.log(Level.SEVERE, "Failed to send email", e);
-            throw new NotFountException("Email send failed!");
+            logger.log(Level.SEVERE, "Не удалось отправить электронное письмо", e);
+            throw new NotFountException("Не удалось отправить письмо!");
         } catch (NullPointerException e) {
-            logger.log(Level.SEVERE, "NullPointerException occurred", e);
-            throw new NotFountException("Not found and returned null!");
+            logger.log(Level.SEVERE, "Возникло исключение NullPointerException", e);
+            throw new NotFountException("Не найдено и вернуто значение null!");
         }
     }
 }

@@ -8,12 +8,12 @@ import lombok.Builder;
 
 @Builder
 public record ApplicationRequest(
-        @Size(min = 2, max = 30, message = "First name must contain between 2 and 30 characters.")
-        @NotBlank(message = "First name cannot be empty!")
-        @NotNull(message = "First name cannot be null!")
+        @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
+        @NotBlank(message = "Имя не может быть пустым!")
+        @NotNull(message = "Имя не может быть пустым!")
         String name,
-        @NotBlank(message = "Phone number cannot be empty!")
-        @NotNull(message = "Phone number cannot be empty!")
-        @PhoneNumberValid(message = "Invalid phone number!")
+        @NotBlank(message = "Номер телефона не может быть пустым!")
+        @NotNull(message = "Номер телефона не может быть пустым!")
+        @PhoneNumberValid(message = "Неверный номер телефона!")
         String phoneNumber) {
 }

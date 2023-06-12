@@ -16,7 +16,6 @@ import com.example.medcheckb8.db.dto.response.AuthenticationResponse;
 import com.example.medcheckb8.db.repository.AccountRepository;
 import com.example.medcheckb8.db.repository.UserRepository;
 import com.example.medcheckb8.db.service.AccountService;
-import com.example.medcheckb8.db.service.EmailService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -58,14 +57,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
-        logger.info("Registering user: " + request.email());
+        logger.info("Регистрация пользователя: " + request.email());
         if (repository.existsByEmail(request.email())) {
-            logger.warning("Email already exists: " + request.email());
-            throw new AlreadyExistException("This email already exists!");
+            logger.warning("Email уже существует: " + request.email());
+            throw new AlreadyExistException("Этот email уже существует!");
         }
         if (userRepository.existsByPhoneNumber(request.phoneNumber())) {
-            logger.warning("Phone number already in use: " + request.phoneNumber());
-            throw new AlreadyExistException("This number is already in use!");
+            logger.warning("Номер телефона уже используется:  " + request.phoneNumber());
+            throw new AlreadyExistException("Этот номер уже используется!");
         }
         User user = User.builder()
                 .firstName(request.firstName())
@@ -77,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
                         .build())
                 .build();
         userRepository.save(user);
-        logger.info("User registered successfully: " + user.getAccount().getEmail());
+        logger.info("Пользователь успешно зарегистрирован: " + user.getAccount().getEmail());
 
         String jwt = jwtService.generateToken(user.getAccount());
         return AuthenticationResponse.builder()
@@ -89,18 +88,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        logger.info("Authenticating user: " + request.email());
+        logger.info("Аутентификация пользователя:  " + request.email());
         if (!repository.existsByEmail(request.email())) {
-            logger.warning("User not found: " + request.email());
-            throw new BadRequestException("User with email: " + request.email() + " doesn't exists!");
+            logger.warning("Пользователь не найден: " + request.email());
+            throw new BadRequestException("Пользователь с email: " + request.email() + "не существует");
         }
-        Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException(String.format("User with email: %s doesn't exists!", request.email())));
+        Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException(String.format("Пользователь с email: %s не существует!", request.email())));
         if (!passwordEncoder.matches(request.password(), account.getPassword())) {
-            logger.warning("Invalid password for user: " + request.email());
-            throw new BadCredentialException("Invalid password!");
+            logger.warning("Неверный пароль для пользователя " + request.email());
+            throw new BadCredentialException("Неверный пароль!");
         }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        logger.info("User authenticated successfully: " + request.email());
+        logger.info("Пользователь успешно аутентифицирован: " + request.email());
         String token = jwtService.generateToken(account);
         return AuthenticationResponse.builder()
                 .email(account.getEmail())
@@ -117,11 +116,11 @@ public class AccountServiceImpl implements AccountService {
             FirebaseOptions firebaseOptions = FirebaseOptions.builder()
                     .setCredentials(googleCredentials)
                     .build();
-            log.info("Successfully worked the init method");
+            log.info("Метод init успешно выполнен");
             FirebaseApp firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
-            logger.info("Firebase app initialized successfully.");
+            logger.info("Приложение Firebase успешно инициализировано.");
         } catch (IOException e) {
-            logger.severe("IOException occurred while initializing Firebase app: " + e.getMessage());
+            logger.severe("Произошла ошибка ввода-вывода при инициализации приложения " + e.getMessage());
         }
     }
 
@@ -139,8 +138,8 @@ public class AccountServiceImpl implements AccountService {
             userRepository.save(newUser);
         }
         Account account = repository.findByEmail(firebaseToken.getEmail()).orElseThrow(() -> {
-            log.error(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
-            return new NotFountException(String.format("User with this email address %s was not found!", firebaseToken.getEmail()));
+            log.error(String.format("Пользователь с таким email-адресом %s не найден!", firebaseToken.getEmail()));
+            return new NotFountException(String.format("Пользователь с таким email-адресом %s не найден!", firebaseToken.getEmail()));
         });
 
         String token = jwtService.generateToken(account);
@@ -156,7 +155,7 @@ public class AccountServiceImpl implements AccountService {
     private String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        logger.info("Getting current user: " + username);
+        logger.info("Получение текущего пользователя: " + username);
         return username;
     }
 
@@ -164,69 +163,69 @@ public class AccountServiceImpl implements AccountService {
     public SimpleResponse changePassword(ChangePasswordRequest request) {
         try {
             Account account = repository.findByEmail(getCurrentUser()).
-                    orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", getCurrentUser())));
+                    orElseThrow(() -> new NotFountException(String.format("Пользователь с email : %s не существует! ", getCurrentUser())));
             if (!passwordEncoder.matches(request.oldPassword(), account.getPassword())) {
-                logger.log(Level.WARNING, "Wrong old password for user " + getCurrentUser());
-                return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message("Wrong old password.").build();
+                logger.log(Level.WARNING, "Неверный старый пароль для пользователя  " + getCurrentUser());
+                return SimpleResponse.builder().status(HttpStatus.NOT_FOUND).message("Неверный старый пароль").build();
             }
             account.setPassword(passwordEncoder.encode(request.newPassword()));
             repository.save(account);
-            logger.log(Level.INFO, "Password updated successfully for user " + getCurrentUser());
-            return SimpleResponse.builder().status(HttpStatus.OK).message("Password updated successfully.").build();
+            logger.log(Level.INFO, "Пароль успешно обновлен для пользователя " + getCurrentUser());
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Пароль успешно обновлен.").build();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Exception occurred while changing password for user " + getCurrentUser(), e);
+            logger.log(Level.SEVERE, "Произошла ошибка при изменении пароля для пользователя " + getCurrentUser(), e);
         }
-        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+        return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Произошла ошибка.").build();
     }
 
     @Override
     public SimpleResponse forgotPassword(String email, String link) {
         Account account = repository.findByEmail(email).
-                orElseThrow(() -> new NotFountException(String.format("User with email : %s doesn't exists! ", email)));
+                orElseThrow(() -> new NotFountException(String.format("Пользователь с email : %s не существует! ", email)));
         String token = UUID.randomUUID().toString();
         account.setResetToken(token);
         repository.save(account);
         try {
             String resetPasswordLink = link + "/" + token;
-            String subject = "Here's the link to reset your password";
+            String subject = "Вот ссылка для сброса пароля";
             Context context = new Context();
-            context.setVariable("title", "Password Reset");
-            context.setVariable("message", "Hello " + account.getUsername() + "" +
-                    " Click the link below to reset your password:");
+            context.setVariable("title", "Сброс пароля");
+            context.setVariable("message", "Здравствуйте" + account.getUsername() + "" +
+                    " Чтобы сбросить пароль, перейдите по ссылке ниже:");
             context.setVariable("link", resetPasswordLink);
-            context.setVariable("tokenTitle", "Reset Password");
+            context.setVariable("tokenTitle", "Сброс пароля");
             String htmlContent = templateEngine.process("reset-password-template.html", context);
             emailService.sendEmail(email, subject, htmlContent);
-            log.info("Password reset email sent to: {}", email);
+            log.info("Отправлено письмо для сброса пароля на адрес: {}", email);
         } catch (NotFountException ex) {
-            log.error("User not found while updating reset password token for email: {}", email);
+            log.error("Пользователь не найден при обновлении токена сброса пароля для email: {}", email);
             return SimpleResponse.builder().
                     status(HttpStatus.OK).
-                    message("Please check your email inbox for password reset instructions.")
+                    message("Проверьте электронную почту для получения инструкций по сбросу пароля.")
                     .build();
         }
-        log.info("Reset password token updated for email: {}", email);
+        log.info("Обновлен токен сброса пароля для email: {}", email);
         return SimpleResponse.builder().
                 status(HttpStatus.OK).
-                message("Please check your email inbox for password reset instructions.")
+                message("Проверьте электронную почту для получения инструкций по сбросу пароля.")
                 .build();
     }
 
     @Override
     public SimpleResponse resetToken(NewPasswordRequest newPasswordRequest) {
-        logger.info("Resetting password for token: {}" + newPasswordRequest.token());
+        logger.info("Сброс пароля для токена: {}" + newPasswordRequest.token());
         try {
             Account account = repository.findByResetToken(newPasswordRequest.token()).
-                    orElseThrow(() -> new NotFountException("Invalid token"));
+                    orElseThrow(() -> new NotFountException("Неверный токен"));
 
             account.setPassword(passwordEncoder.encode(newPasswordRequest.newPassword()));
             account.setResetToken(null);
             repository.save(account);
-            logger.info("Password reset successful for token: {}" + newPasswordRequest.token());
-            return SimpleResponse.builder().status(HttpStatus.OK).message("Successfully updated!").build();
+            logger.info("Сброс пароля успешно выполнен для токена: {}" + newPasswordRequest.token());
+            return SimpleResponse.builder().status(HttpStatus.OK).message("Успешно обновлено!").build();
         } catch (NotFountException e) {
-            logger.severe("Error resetting password for token: {}" + newPasswordRequest.token());
-            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+            logger.severe("Ошибка сброса пароля для токена: {}" + newPasswordRequest.token());
+            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Произошла ошибка.").build();
         }
     }
 }

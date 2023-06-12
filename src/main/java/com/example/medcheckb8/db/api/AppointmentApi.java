@@ -32,51 +32,51 @@ public class AppointmentApi {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('PATIENT')")
-    @Operation(summary = "Method for adding a new entry.",
-            description = "Using this method, the patient can make an appointment with a doctor.Only for patients.")
+    @Operation(summary = "Метод для добавления новой записи.",
+            description = "С помощью этого метода пациент может записаться на прием к врачу. Только для пациентов.")
     public AddAppointmentResponse addAppointment(@RequestBody @Valid AddAppointmentRequest request) {
         return service.save(request);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Get all appointments.",
-            description = "Using this method, the admin can see all appointments.Only for admin.")
+    @Operation(summary = "Получить все записи на прием.",
+            description = "С помощью этого метода администратор может просмотреть все записи на прием. Только для администратора.")
     public List<GetAllAppointmentResponse> getAll(@RequestParam(required = false) String keyWord) {
         return service.getAll(keyWord);
     }
 
     @PostMapping("/free")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
-    @Operation(summary = "To get the closest free time.",
-            description = "Using this method, the patient can get the nearest free time.Only for patients.")
+    @Operation(summary = "Получить ближайшее свободное время.",
+            description = "С помощью этого метода пациент может получить ближайшее свободное время. Только для пациентов.")
     public List<ScheduleResponse> getTheNearestFreeDoctors(@RequestBody @Valid FreeSpecialistRequest request) {
         return doctorService.findDoctorsByDate(request.department(), request.timeZone());
     }
 
     @PostMapping("/canceled")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
-    @Operation(summary = "To canceled the appointment.",
-            description = "Using this method, the patient can cancel the doctor's appointment.Only for patients.")
+    @Operation(summary = "Отменить запись.",
+            description = "С помощью этого метода пациент может отменить запись к врачу. Только для пациентов.")
     public SimpleResponse canceled(@RequestParam Long appointmentId) {
         return service.canceled(appointmentId);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
-    @Operation(summary = "To delete appointments.",
-            description = "This method can be used by both the admin and the patient. When using the method as a patient," +
-                    "you don't have to give an 'id', since the patient can only delete all appointments, while the admin can" +
-                    " delete them one by one or all.")
+    @Operation(summary = "Удалить записи.",
+            description = "Этот метод может быть использован как администратором, так и пациентом. Если используется как пациент, " +
+                    "то необходимо передать 'id', так как пациент может удалить только все записи, в то время как администратор " +
+                    "может удалять их по одной или все сразу.")
     public SimpleResponse delete(@RequestBody(required = false) List<Long> appointments) {
         return service.delete(appointments);
     }
 
     @GetMapping("/myAppointments")
     @PreAuthorize("hasAnyAuthority('PATIENT')")
-    @Operation(summary = "To get your appointments.",
-            description = "Using this method, the patient can retrieve all of their appointments. For patients only.")
-    public List<AppointmentResponse> myAppointments(){
+    @Operation(summary = "Получить ваши записи.",
+            description = "С помощью этого метода пациент может получить все свои записи. Только для пациентов.")
+    public List<AppointmentResponse> myAppointments() {
         return appointmentService.getUserAppointments();
     }
 }

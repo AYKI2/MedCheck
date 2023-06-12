@@ -5,9 +5,9 @@ import lombok.Builder;
 
 @Builder
 public record AuthenticationRequest(
-        @NotBlank(message = "Email cannot be empty!")
+        @NotBlank(message = "Email не может быть пустым!")
         String email,
-        @NotBlank(message = "Password cannot be empty!")
+        @NotBlank(message = "Пароль не может быть пустым!")
         String password
 ) {
 }

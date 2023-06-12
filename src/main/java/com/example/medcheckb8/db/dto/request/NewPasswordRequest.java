@@ -6,8 +6,8 @@ import lombok.Builder;
 
 @Builder
 public record NewPasswordRequest(
-        @PasswordValid(message = "Invalid password!")
-        @NotBlank(message = "Password cannot be empty!")
+        @PasswordValid(message = "Неверный пароль!")
+        @NotBlank(message = "Пароль не может быть пустым!")
         String newPassword,
         String token
 ) {

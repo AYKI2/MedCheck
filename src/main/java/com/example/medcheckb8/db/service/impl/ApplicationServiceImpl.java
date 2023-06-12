@@ -35,23 +35,23 @@ public class ApplicationServiceImpl implements ApplicationService {
         repository.save(application);
         try {
             repository.save(application);
-            String successMessage = String.format("Successfully %s saved!", request.name());
+            String successMessage = String.format("Успешно сохранено: %s!", request.name());
             logger.info(successMessage);
             return new SimpleResponse(HttpStatus.OK, successMessage);
         } catch (Exception e) {
-            String errorMessage = "Error while saving application: " + e.getMessage();
+            String errorMessage = "Ошибка при сохранении заявки: " + e.getMessage();
             logger.severe(errorMessage);
-            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Something went wrong.").build();
+            return SimpleResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).message("Произошла ошибка.").build();
         }
     }
 
     @Override
     public List<ApplicationResponse> getAllApplication(String word) {
         if (word == null) {
-            logger.info("Retrieved all applications: " + repository.getAllApplication().size());
+            logger.info("Получено все заявки: " + repository.getAllApplication().size());
             return repository.getAllApplication();
         }
-        logger.info("Search results for '" + word + "': " + repository.globalSearch(word).size());
+        logger.info("Результаты поиска для '" + word + "': " + repository.globalSearch(word).size());
         return repository.globalSearch(word);
     }
 
@@ -59,21 +59,21 @@ public class ApplicationServiceImpl implements ApplicationService {
     public SimpleResponse deleteByIdApplication(List<Long> id) {
         for (Long aLong : id) {
             if (repository.findById(aLong).isEmpty()) {
-                logger.warning("Application not found with ID: " + id);
-                throw new NotFountException("Application not found with ID: " + id);
+                logger.warning("Заявка не найдена с ID:  " + id);
+                throw new NotFountException("Заявка не найдена с ID: " + id);
 
             }
         }
         repository.deleteApplications(id);
-        logger.info(String.format("Application with ID: %s successfully deleted!", id));
+        logger.info(String.format("Заявка с ID: %s успешно удалена!", id));
         return SimpleResponse.builder().status(HttpStatus.OK)
-                .message(String.format("Application with ID: %s successfully delete !", id)).build();
+                .message(String.format("Заявка с ID: %s успешно удалена!", id)).build();
     }
 
     @Override
     public ApplicationResponse findById(Long id) {
-        logger.info("Finding application by ID: {}" + id);
-        return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Application with ID : %s not found!", id)));
+        logger.info("Поиск заявки по ID: {}" + id);
+        return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Заявка с ID: %s не найдена!", id)));
     }
 
 }

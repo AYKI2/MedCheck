@@ -21,11 +21,9 @@ public class GlobalSearchAPI {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @GetMapping
-    @Operation(
-            summary = "The global search method",
-            description = "Using the method, you can find" +
-                    " a doctor by name and surname," +
-                    " you can find a department")
+    @Operation(summary = "Метод глобального поиска",
+                    description = "С помощью этого метода вы можете найти врача по имени и фамилии, " +
+                            "а также найти отделение.")
     public List<SearchResponse> search(@RequestParam(required = false) String word) {
         return searchService.search(word);
     }

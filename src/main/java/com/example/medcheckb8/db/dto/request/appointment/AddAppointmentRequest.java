@@ -11,18 +11,16 @@ import java.time.LocalTime;
 
 @Builder
 public record AddAppointmentRequest(
-        @Size(min = 4, max = 20, message = "Service must contain between 4 and 20 characters.")
-        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z]*)*$", message = "Service must contain only letters.")
-        String department,
+        @Size(min = 4, max = 20, message = "Служба должна содержать от 4 до 20 символов.")
+        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Служба должна содержать только буквы.") String department,
         Long doctorId,
         LocalDate date,
         LocalTime time,
-        @Size(min = 2, max = 30, message = "The name must contain between 2 and 30 characters.")
-        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z]*)*$", message = "The name must contain only letters.")
-        String fullName,
-        @PhoneNumberValid(message = "Invalid phone number!")
+        @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
+        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Имя должно содержать только буквы.") String fullName,
+        @PhoneNumberValid(message = "Неверный номер телефона!")
         String phoneNumber,
-        @Email(message = "Invalid email!")
+        @Email(message = "Неверный формат email!")
         String email,
         String zoneId,
         String link

@@ -20,32 +20,32 @@ public class ApplicationAPI {
     private final ApplicationService service;
 
     @PostMapping("/add")
-    @Operation(summary = "Method for saving the request.",
-            description = "You can apply using this method.")
+    @Operation(summary = "Метод для сохранения запроса.",
+            description = "Вы можете применить этот метод для сохранения запроса.")
     public SimpleResponse addApplication(@RequestBody @Valid ApplicationRequest request) {
         return service.addApplication(request);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/getAll")
-    @Operation(summary = "Way to receive all applications.",
-            description = "With this method, the admin can get all the abandoned applications. Only for admin.")
+    @Operation(summary = "Способ получения всех заброшенных заявок.",
+            description = "С помощью этого метода администратор может получить все заброшенные заявки. Только для администратора.")
     public List<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word) {
         return service.getAllApplication(word);
     }
 
     @GetMapping("/find")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Way to receive find by id applications",
-            description = "With this method , the admin can find by id the abandoned applications. Only for admin. ")
+    @Operation(summary = "Способ получения заброшенных заявок по идентификатору.",
+            description = "С помощью этого метода администратор может найти заброшенные заявки по идентификатору. Только для администратора.")
     public ApplicationResponse findById(@RequestParam Long id) {
         return service.findById(id);
     }
 
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Way to receive delete by id applications",
-            description = "With this method , the admin can delete by id the abandoned applications. Only for admin.")
+    @Operation(summary = "Способ удаления заброшенных заявок по идентификатору.",
+            description = "С помощью этого метода администратор может удалить заброшенные заявки по идентификатору. Только для администратора.")
     public SimpleResponse deleteById(@RequestBody List<Long> id) {
         return service.deleteByIdApplication(id);
     }

@@ -29,33 +29,33 @@ public class DoctorAPI {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "The expert save method.",
-            description = "This method should be used to save the Expert")
+    @Operation(summary = "Метод сохранения эксперта.",
+            description = "Этот метод следует использовать для сохранения эксперта.")
     public SimpleResponse save(@RequestBody @Valid DoctorSaveRequest doctorRequest) {
         return doctorService.save(doctorRequest);
     }
 
     @GetMapping("/find")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "The expert find method.",
-            description = "This method should be used to find the Expert by id")
+    @Operation(summary = "Метод поиска эксперта.",
+            description = "Этот метод следует использовать для поиска эксперта по идентификатору.")
     public DoctorResponse findById(@RequestParam Long doctorId) {
         return doctorService.findById(doctorId);
     }
 
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "The  search method experts", description = "Using the method, you can find" +
-            " a doctor by name and surname," +
-            " you can find a department")
+    @Operation(summary = "Метод поиска экспертов",
+            description = "С помощью этого метода вы можете найти врача по имени и фамилии, " +
+                    "а также найти отделение.")
     List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
         return doctorService.getAllWithSearchExperts(keyWord);
     }
 
     @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "The expert update method.",
-            description = "This method should be used to update the Expert")
+    @Operation(summary = "Метод обновления эксперта.",
+            description = "Этот метод следует использовать для обновления эксперта.")
     public SimpleResponse update(@RequestBody @Valid DoctorUpdateRequest doctorRequest) {
         return doctorService.update(doctorRequest);
     }
@@ -63,16 +63,16 @@ public class DoctorAPI {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "The expert delete method.",
-            description = "This method should be used to delete the Expert")
+    @Operation(summary = "Метод удаления эксперта.",
+            description = "Этот метод следует использовать для удаления эксперта.")
     public SimpleResponse delete(@RequestParam Long doctorId) {
         return doctorService.delete(doctorId);
     }
 
     @PostMapping("/isActive")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "The expert activate and deactivate method.",
-            description = "This method should be used to activate and deactivate the Expert.")
+    @Operation(summary = "Метод активации и деактивации эксперта.",
+            description = "Этот метод предназначен для активации и деактивации эксперта.")
     public SimpleResponse isActive(@RequestParam Boolean isActive,
                                    @RequestParam Long doctorId) {
         return doctorService.activateAndDeactivateDoctor(isActive, doctorId);
@@ -80,8 +80,8 @@ public class DoctorAPI {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/export-to-excel")
-    @Operation(summary = "The Export to Excel method",
-            description = "Using the method, export dataBase doctors values to Excel values."
+    @Operation(summary = "Метод экспорта в Excel",
+            description = "С помощью этого метода вы можете экспортировать значения базы данных врачей в Excel."
     )
     public void exportToExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
@@ -92,8 +92,8 @@ public class DoctorAPI {
     }
 
     @GetMapping("/{departmentName}")
-    @Operation(summary = "The expert find by department name.",
-            description = "This method should be used to find the Experts by department name")
+    @Operation(summary = "Метод поиска экспертов по названию отдела.",
+            description = "Этот метод следует использовать для поиска экспертов по названию отдела.")
     public List<OurDoctorsResponse> findByName(@PathVariable @NotNull(message = "Название отделения не должно быть пустым!") String departmentName) {
         return doctorService.findByDepartmentName(departmentName.toUpperCase());
     }

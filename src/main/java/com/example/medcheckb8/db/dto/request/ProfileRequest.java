@@ -9,20 +9,20 @@ import lombok.Builder;
 
 @Builder
 public record ProfileRequest(
-        @Size(min = 2, max = 30, message = "First name must contain between 2 and 30 characters.")
-        @NotBlank(message = "First name cannot be empty!")
-        @NotNull(message = "First name cannot be null!")
+        @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
+        @NotBlank(message = "Имя не может быть пустым!")
+        @NotNull(message = "Имя не может быть null!")
         String firstName,
-        @Size(min = 2, max = 30, message = "First name must contain between 2 and 30 characters.")
-        @NotBlank(message = "Last name cannot be empty!")
-        @NotNull(message = "Last name cannot be null!")
+        @Size(min = 2, max = 30, message = "Фамилия должна содержать от 2 до 30 символов.")
+        @NotBlank(message = "Фамилия не может быть пустой!")
+        @NotNull(message = "Фамилия не может быть null!")
         String lastName,
-        @NotBlank(message = "Phone number cannot be empty!")
-        @NotNull(message = "Phone number cannot be empty!")
-        @PhoneNumberValid(message = "Invalid phone number!")
+        @NotBlank(message = "Номер телефона не может быть пустым!")
+        @NotNull(message = "Номер телефона не может быть пустым!")
+        @PhoneNumberValid(message = "Неверный номер телефона!")
         String phoneNumber,
-        @NotBlank(message = "Email cannot be empty!")
-        @NotNull(message = "Email cannot be empty!")
-        @Email(message = "Not valid email!")
+        @NotBlank(message = "Email не может быть пустым!")
+        @NotNull(message = "Email не может быть пустым!")
+        @Email(message = "Неверный формат email!")
         String email) {
 }
