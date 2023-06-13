@@ -36,7 +36,6 @@ public class DoctorAPI {
     }
 
     @GetMapping("/find")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Метод поиска эксперта.",
             description = "Этот метод следует использовать для поиска эксперта по идентификатору.")
     public DoctorResponse findById(@RequestParam Long doctorId) {
