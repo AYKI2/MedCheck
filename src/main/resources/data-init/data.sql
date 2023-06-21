@@ -66,10 +66,10 @@ values (1, 'Мы развиваемся, учимся и оттачиваем м
        (25, 'Мы развиваемся, учимся и оттачиваем мастерство, стажируемся в ведущих университетах Европы, чтобы еще на шаг стать ближе к совершенству.', 'Элзар', 'https://medcheckbucket.s3.eu-central-1.amazonaws.com/1686565390521doctor10M.png', true, 'Кадырбаев', 'Врач-оториноларинголог', 13);
 
 insert into appointments (id, date_of_visit, time_of_visit,email, full_name, phone_number, status, department_id, doctor_id, user_id)
-values (1, '2023-06-01','14:00:00', 'kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CONFIRMED', 1, 1, 1),
-       (2, '2023-06-02','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 2, 2, 2),
-       (3, '2023-06-23','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 3),
-       (4, '2023-06-20','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 3, 3, 4);
+values (1, '2023-06-01','14:00:00', 'kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CONFIRMED', 1, 1, 2),
+       (2, '2023-06-02','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 2, 2, 3),
+       (3, '2023-06-23','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 4),
+       (4, '2023-06-20','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 3, 3, 5);
 
 
 insert into schedules (id, data_of_finish, data_of_start, start_break, end_break, interval_of_hours, department_id, doctor_id)

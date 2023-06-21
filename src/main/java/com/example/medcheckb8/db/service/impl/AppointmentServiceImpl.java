@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.service.impl;
 import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
 import com.example.medcheckb8.db.dto.response.appointment.AppointmentDoctorResponse;
 import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
@@ -215,5 +216,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<AppointmentResponse> appointments = appointmentRepository.getUserAppointments(account.getEmail());
         logger.severe("Получено {} записей для пользователя с email: {}" + appointments.size() + account.getEmail());
         return appointments;
+    }
+
+    @Override
+    public AppointmentResponseId getUserAppointmentById(Long id) {
+        return appointmentRepository.findByPatientId(id);
     }
 }

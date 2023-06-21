@@ -1,5 +1,6 @@
 package com.example.medcheckb8.db.repository;
 
+import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
 import org.springframework.stereotype.Repository;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.entities.Appointment;
@@ -20,4 +21,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "or a.doctor.firstName ilike concat('%' ,:word, '%') " +
             "or a.doctor.lastName ilike concat('%' ,:word, '%')")
     List<Appointment> findAll(String word);
+
+    @Query("select new com.example.medcheckb8.db.dto.response.AppointmentResponseId(" +
+            "a.id, a.doctor.id, a.user.firstName, a.user.lastName, concat(a.doctor.firstName,' ', a.doctor.lastName)," +
+            "a.user.account.email, a.user.phoneNumber, a.dateOfVisit, a.timeOfVisit, a.status, cast(a.department.name as string ))" +
+            " from Appointment a where a.id=:id")
+    AppointmentResponseId findByPatientId(Long id);
 }
