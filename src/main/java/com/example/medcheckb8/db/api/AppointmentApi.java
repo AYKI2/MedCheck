@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.api;
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.request.appointment.FreeSpecialistRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
 import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
@@ -78,5 +79,13 @@ public class AppointmentApi {
             description = "С помощью этого метода пациент может получить все свои записи. Только для пациентов.")
     public List<AppointmentResponse> myAppointments() {
         return appointmentService.getUserAppointments();
+    }
+
+    @GetMapping("/myAppointment")
+    @PreAuthorize("hasAnyAuthority('PATIENT')")
+    @Operation(summary = "Получить ваши записи по id.",
+            description = "С помощью этого метода пациент может свою записи. Только для пациентов.")
+    public AppointmentResponseId myAppointmentById(@RequestParam Long id) {
+        return appointmentService.getUserAppointmentById(id);
     }
 }

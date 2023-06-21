@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.service;
 
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
+import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
 import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
@@ -18,5 +19,7 @@ public interface AppointmentService {
     SimpleResponse delete(List<Long> appointments);
     
     List<AppointmentResponse> getUserAppointments();
+
+    AppointmentResponseId getUserAppointmentById(Long id);
 
 }
