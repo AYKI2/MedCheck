@@ -2,10 +2,9 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.dto.request.ProfileRequest;
-import com.example.medcheckb8.db.dto.response.ProfileResponse;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
-import com.example.medcheckb8.db.dto.response.UserResponse;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.entities.Account;
+import com.example.medcheckb8.db.entities.Result;
 import com.example.medcheckb8.db.entities.User;
 import com.example.medcheckb8.db.exceptions.BadRequestException;
 import com.example.medcheckb8.db.exceptions.NotFountException;
@@ -16,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,5 +80,29 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
 
         }
+    }
+
+    @Override
+    public UserGetResultResponse findById(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new NotFountException(String.format("Пользователь с ID: %s не найден", id)));
+        List<ResultUserResponse> responses = new ArrayList<>();
+        for (Result result : user.getResults()) {
+            responses.add(ResultUserResponse.builder()
+                    .resultId(result.getId())
+                    .dateOfIssue(result.getDateOfIssue())
+                    .timeOfIssue(result.getTimeOfIssue())
+                    .orderNumber(result.getOrderNumber())
+                    .services(result.getDepartment().getName().getTranslate())
+                    .file(result.getFile())
+                    .build());
+        }
+        return UserGetResultResponse.builder()
+                .patientId(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getAccount().getEmail())
+                .results(responses)
+                .build();
     }
 }

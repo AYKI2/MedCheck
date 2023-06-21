@@ -3,6 +3,7 @@ package com.example.medcheckb8.db.api;
 import com.example.medcheckb8.db.dto.request.ProfileRequest;
 import com.example.medcheckb8.db.dto.response.ProfileResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
+import com.example.medcheckb8.db.dto.response.UserGetResultResponse;
 import com.example.medcheckb8.db.dto.response.UserResponse;
 import com.example.medcheckb8.db.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,5 +53,11 @@ public class UserApi {
             description = "Этот метод следует использовать для удаления пациента")
     public SimpleResponse deleteById(@RequestParam Long id) {
         return service.deleteById(id);
+    }
+    @GetMapping("/{patientId}")
+    @Operation(summary = "Метод нахождения пациента",
+            description = "Этот метод следует использовать для нахождения пациента по ID")
+    public UserGetResultResponse findById(@PathVariable Long patientId) {
+        return service.findById(patientId);
     }
 }
