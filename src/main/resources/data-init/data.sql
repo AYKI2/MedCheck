@@ -67,13 +67,13 @@ values (1, 'Мы развиваемся, учимся и оттачиваем м
 
 insert into appointments (id, date_of_visit, time_of_visit,email, full_name, phone_number, status, department_id, doctor_id, user_id)
 values (1, '2023-07-03','14:00:00', 'kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CONFIRMED', 1, 1, 2),
---        (2, '2023-07-04','14:00:00', 'kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CANCELED', 3, 6, 2),
-       (2, '2023-06-27','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'COMPLETED', 2, 2, 3),
---        (4, '2023-06-28','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 5, 9, 3),
-       (3, '2023-07-11','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CANCELED', 2, 2, 4),
---        (6, '2023-07-13','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 4),
-       (4, '2023-07-06','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 5, 10, 5);
---        (8, '2023-07-12','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'CANCELED', 8, 15, 5);
+       (2, '2023-07-04','14:00:00', 'kuban@gmail.com' ,'Кубан Келсинбеков', '0999888777', 'CANCELED', 3, 6, 2),
+       (3, '2023-06-27','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'COMPLETED', 2, 2, 3),
+       (4, '2023-06-28','13:00:00', 'elizf@gmail.com' ,'Элиза Ашырбаева', '0999888777', 'CANCELED', 5, 9, 3),
+       (5, '2023-07-11','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CANCELED', 2, 2, 4),
+       (6, '2023-07-13','15:00:00', 'isxak@gmail.com' ,'Исхак Абдухамидов', '0999888777', 'CONFIRMED', 3, 3, 4),
+       (7, '2023-07-06','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'COMPLETED', 5, 10, 5),
+       (8, '2023-07-12','14:00:00', 'uluk@gmail.com' ,'Улук Исманов', '0999888777', 'CANCELED', 8, 15, 5);
 
 
 insert into schedules (id, data_of_finish, data_of_start, start_break, end_break, interval_of_hours, department_id, doctor_id)
