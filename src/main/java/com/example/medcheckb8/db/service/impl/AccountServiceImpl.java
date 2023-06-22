@@ -92,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
         logger.info("Аутентификация пользователя:  " + request.email());
         if (!repository.existsByEmail(request.email())) {
             logger.warning("Пользователь не найден: " + request.email());
-            throw new BadRequestException("Пользователь с email: " + request.email() + "не существует");
+            throw new BadRequestException("Пользователь с email: " + request.email() + " не существует");
         }
         Account account = repository.findByEmail(request.email()).orElseThrow(() -> new NotFountException(String.format("Пользователь с email: %s не существует!", request.email())));
         if (!passwordEncoder.matches(request.password(), account.getPassword())) {

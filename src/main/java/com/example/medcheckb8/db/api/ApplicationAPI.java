@@ -2,6 +2,7 @@ package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
+import com.example.medcheckb8.db.dto.response.PaginationResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,5 +49,13 @@ public class ApplicationAPI {
             description = "С помощью этого метода администратор может удалить заброшенные заявки по идентификатору. Только для администратора.")
     public SimpleResponse deleteById(@RequestBody List<Long> id) {
         return service.deleteByIdApplication(id);
+    }
+
+    @GetMapping("/pagination")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "Получить все заявки", description = "Получить пагинированный список всех заявок")
+    public PaginationResponse pagination(@RequestParam int page,
+                                         @RequestParam int size) {
+        return service.getAllPagination(page, size);
     }
 }
