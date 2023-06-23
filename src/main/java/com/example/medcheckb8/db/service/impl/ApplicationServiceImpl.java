@@ -1,6 +1,7 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
+import com.example.medcheckb8.db.dto.response.PaginationResponse;
 import com.example.medcheckb8.db.entities.Application;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.service.ApplicationService;
@@ -10,6 +11,9 @@ import com.example.medcheckb8.db.repository.ApplicationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +78,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationResponse findById(Long id) {
         logger.info("Поиск заявки по ID: {}" + id);
         return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Заявка с ID: %s не найдена!", id)));
+    }
+
+    @Override
+    public PaginationResponse getAllPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<ApplicationResponse> applicationPage = repository.findAllBy(pageable);
+        return PaginationResponse
+                .builder()
+                .application(applicationPage.getContent())
+                .currentPage(applicationPage.getSize())
+                .pageSize(applicationPage.getNumber() + 1)
+                .build();
     }
 
 }
