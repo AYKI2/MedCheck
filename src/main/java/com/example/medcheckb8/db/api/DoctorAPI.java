@@ -13,6 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +50,11 @@ public class DoctorAPI {
     @Operation(summary = "Метод поиска экспертов",
             description = "С помощью этого метода вы можете найти врача по имени и фамилии, " +
                     "а также найти отделение.")
-    List<ExpertResponse> search(@RequestParam(required = false) String keyWord) {
-        return doctorService.getAllWithSearchExperts(keyWord);
+    Page<ExpertResponse> search(@RequestParam(required = false) String keyWord,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return doctorService.getAllWithSearchExperts(keyWord ,pageable);
     }
 
     @PutMapping()

@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -82,8 +84,8 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
-        List<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord);
+    public Page<ExpertResponse> getAllWithSearchExperts(String keyWord, Pageable pageable) {
+        Page<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord,pageable);
         for (ExpertResponse response : allWithSearch) {
             response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
         }
