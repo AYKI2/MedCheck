@@ -39,15 +39,12 @@ class DoctorServiceTest {
     private DoctorServiceImpl doctorService;
     @MockBean
     private DepartmentRepository departmentRepository;
-
     @MockBean
     private DoctorRepository doctorRepository;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
 
     @Test
     void getAllWithSearchExperts() {

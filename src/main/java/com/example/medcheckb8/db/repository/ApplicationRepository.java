@@ -15,12 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date,a.phoneNumber,a.processed)from Application a")
-    List<ApplicationResponse> getAllApplication();
-
-    @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date,a.phoneNumber,a.processed) " +
-            "from  Application a  where a.name  ilike  concat('%' ,:word, '%') ")
-    List<ApplicationResponse> globalSearch(String word);
+    @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id, a.name, a.date, a.phoneNumber, a.processed) " +
+            "from Application a where (:word is null or :word = '' or a.name ilike concat('%', :word, '%'))")
+    Page<ApplicationResponse> globalSearch(@Param("word") String word, Pageable pageable);
 
     @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date,a.phoneNumber,a.processed)from Application a where a.id = ?1")
     Optional<ApplicationResponse> findByIdApplication(Long id);
@@ -28,10 +25,4 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Modifying
     @Query("DELETE FROM Application a WHERE a.id IN (:ids)")
     void deleteApplications(@Param("ids") List<Long> ids);
-
-    @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date," +
-                    "a.phoneNumber,a.processed)" +
-                    " from Application a order by a.id desc ")
-    Page<ApplicationResponse> findAllBy(Pageable pageable);
-
 }

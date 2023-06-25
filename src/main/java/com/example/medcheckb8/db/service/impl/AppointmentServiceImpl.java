@@ -2,12 +2,10 @@ package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.config.jwt.JwtService;
 import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
-import com.example.medcheckb8.db.dto.response.AppointmentResponse;
-import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.dto.response.appointment.AppointmentDoctorResponse;
 import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.*;
 import com.example.medcheckb8.db.enums.Detachment;
 import com.example.medcheckb8.db.enums.Role;
@@ -22,6 +20,9 @@ import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -127,11 +128,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<GetAllAppointmentResponse> getAll(String keyWord) {
-        List<Appointment> all;
-        if(keyWord != null) all = repository.findAll(keyWord);
-        else all = repository.findAll();
-        List<GetAllAppointmentResponse> response = new ArrayList<>();
+    public PaginationResponse<GetAllAppointmentResponse> getAll(String keyWord, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Appointment> all = repository.findAll(keyWord, pageable);
+        List<GetAllAppointmentResponse> appointments = new ArrayList<>();
         boolean status = false;
         for (Appointment appointment : all) {
             if (appointment.getStatus().equals(Status.CONFIRMED)) {
@@ -139,7 +139,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             } else if (appointment.getStatus().equals(Status.COMPLETED)) {
                 status = true;
             }
-            response.add(GetAllAppointmentResponse.builder()
+            appointments.add(GetAllAppointmentResponse.builder()
                     .appointmentId(appointment.getId())
                     .patientId(appointment.getUser().getId())
                     .doctorId(appointment.getDoctor().getId())
@@ -153,6 +153,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .status(status)
                     .build());
         }
+        PaginationResponse<GetAllAppointmentResponse> response = new PaginationResponse<>();
+        response.setResponses(appointments);
+        response.setCurrentPage(pageable.getPageNumber() + 1);
+        response.setPageSize(appointments.size());
         return response;
     }
 

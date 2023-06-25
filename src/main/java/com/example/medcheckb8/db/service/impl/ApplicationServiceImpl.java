@@ -50,13 +50,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationResponse> getAllApplication(String word) {
-        if (word == null) {
-            logger.info("Получено все заявки: " + repository.getAllApplication().size());
-            return repository.getAllApplication();
-        }
-        logger.info("Результаты поиска для '" + word + "': " + repository.globalSearch(word).size());
-        return repository.globalSearch(word);
+    public PaginationResponse<ApplicationResponse> getAllApplication(String word, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        logger.info("Результаты поиска для '" + word + "': " + repository.globalSearch(word,pageable).getTotalElements());
+        Page<ApplicationResponse> applicationPage = repository.globalSearch(word,pageable);
+        PaginationResponse<ApplicationResponse> response = new PaginationResponse<>();
+        response.setResponses(applicationPage.getContent());
+        response.setCurrentPage(pageable.getPageNumber() + 1);
+        response.setPageSize(applicationPage.getSize());
+        return response;
     }
 
     @Override
@@ -79,17 +81,4 @@ public class ApplicationServiceImpl implements ApplicationService {
         logger.info("Поиск заявки по ID: {}" + id);
         return repository.findByIdApplication(id).orElseThrow(() -> new NotFountException(String.format("Заявка с ID: %s не найдена!", id)));
     }
-
-    @Override
-    public PaginationResponse getAllPagination(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<ApplicationResponse> applicationPage = repository.findAllBy(pageable);
-        return PaginationResponse
-                .builder()
-                .application(applicationPage.getContent())
-                .currentPage(applicationPage.getSize())
-                .pageSize(applicationPage.getNumber() + 1)
-                .build();
-    }
-
 }

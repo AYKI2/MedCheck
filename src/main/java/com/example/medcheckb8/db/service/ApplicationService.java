@@ -10,12 +10,9 @@ import java.util.List;
 public interface ApplicationService {
     SimpleResponse addApplication(ApplicationRequest request);
 
-    List<ApplicationResponse> getAllApplication(String word);
+    PaginationResponse<ApplicationResponse> getAllApplication(String word, int page, int size);
 
     SimpleResponse deleteByIdApplication(List<Long> id);
 
     ApplicationResponse findById(Long id);
-
-    PaginationResponse getAllPagination(int page, int size);
-
 }

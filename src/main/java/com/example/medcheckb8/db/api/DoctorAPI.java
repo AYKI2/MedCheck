@@ -44,9 +44,9 @@ public class DoctorAPI {
     @Operation(summary = "Метод поиска экспертов",
             description = "С помощью этого метода вы можете найти врача по имени и фамилии, " +
                     "а также найти отделение.")
-    PaginationExperts search(@RequestParam(required = false) String keyWord,
-                                @RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "5") int size) {
+    PaginationResponse<ExpertResponse> search(@RequestParam(required = false) String keyWord,
+                                @RequestParam(required = false) int page,
+                                @RequestParam(required = false) int size) {
         return doctorService.getAllWithSearchExperts(keyWord,page,size);
     }
 

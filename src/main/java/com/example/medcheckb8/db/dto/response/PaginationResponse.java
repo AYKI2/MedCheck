@@ -8,8 +8,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaginationResponse {
-    private List<ApplicationResponse> application;
+public class PaginationResponse<T> {
+    private List<T> responses;
     private int currentPage;
     private int pageSize;
 }
