@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Builder
 public record AddAppointmentRequest(
@@ -15,7 +14,7 @@ public record AddAppointmentRequest(
         @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Служба должна содержать только буквы.") String department,
         Long doctorId,
         LocalDate date,
-        LocalTime time,
+        String time,
         @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
         @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Имя должно содержать только буквы.") String fullName,
         @PhoneNumberValid(message = "Неверный номер телефона!")

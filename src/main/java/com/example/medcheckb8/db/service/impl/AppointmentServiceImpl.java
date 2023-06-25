@@ -30,7 +30,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new BadRequestException("Этот специалист не работает в данном отделении.");
         }
-        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date(), request.time());
+        Boolean booked = dateAndTimeRepository.booked(doctor.getSchedule().getId(), request.date(), LocalTime.parse(request.time()));
         if (booked != null && booked) {
             throw new AlreadyExistException("Это время занято!");
         } else if (booked == null) {
@@ -76,12 +78,12 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .email(request.email())
                 .status(Status.CONFIRMED)
                 .dateOfVisit(request.date())
-                .timeOfVisit(request.time())
+                .timeOfVisit(LocalTime.parse(request.time()))
                 .user(user)
                 .doctor(doctor)
                 .department(department)
                 .build();
-        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date(), request.time());
+        ScheduleDateAndTime dateAndTime = dateAndTimeRepository.findByDateAndTime(doctor.getId(), request.date(), LocalTime.parse(request.time()));
         dateAndTime.setIsBusy(true);
         doctor.getAppointments().add(appointment);
         user.getAppointments().add(appointment);
@@ -118,7 +120,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .position(doctor.getPosition())
                         .build())
                 .date(request.date())
-                .time(request.time())
+                .dayOfWeek(request.date().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")))
+                .timeFrom(String.format(String.valueOf(DateTimeFormatter.ofPattern("HH:mm"))))
+                .timeTo(String.format(String.valueOf(DateTimeFormatter.ofPattern("HH:mm"))))
                 .build();
     }
 
@@ -197,6 +201,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .build();
         } else if(user.getAccount().getRole() == Role.ADMIN) {
             for (Long appointment : appointments) {
+                Appointment appointmentObject = repository.findById(appointment)
+                        .orElseThrow(()-> new NotFountException(String.format("Запись с id: %d не найдено!", appointment)));
+                user.getAppointments().remove(appointmentObject);
                 repository.deleteById(appointment);
             }
             return SimpleResponse.builder()
