@@ -108,6 +108,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         String htmlContent = templateEngine.process("emailMessage.html", context);
         emailSenderService.sendEmail(request.email(), subject, htmlContent);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalTime timeFrom = dateAndTime.getTimeFrom();
+        String formattedTimeFrom = timeFrom.format(formatter);
+
+        LocalTime timeTo = dateAndTime.getTimeTo();
+        String formattedTimeTo = timeTo.format(formatter);
         return AddAppointmentResponse.builder()
                 .response(AppointmentDoctorResponse.builder()
                         .id(doctor.getId())
@@ -118,8 +125,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .build())
                 .date(request.date())
                 .dayOfWeek(request.date().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("ru")))
-                .timeFrom(String.format(String.valueOf(DateTimeFormatter.ofPattern("HH:mm"))))
-                .timeTo(String.format(String.valueOf(DateTimeFormatter.ofPattern("HH:mm"))))
+                .timeFrom(formattedTimeFrom)
+                .timeTo(formattedTimeTo)
                 .build();
     }
 
