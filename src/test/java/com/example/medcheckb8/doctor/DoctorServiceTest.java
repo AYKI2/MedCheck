@@ -2,9 +2,7 @@ package com.example.medcheckb8.doctor;
 
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
-import com.example.medcheckb8.db.dto.response.DoctorResponse;
-import com.example.medcheckb8.db.dto.response.PaginationExperts;
-import com.example.medcheckb8.db.dto.response.SimpleResponse;
+import com.example.medcheckb8.db.dto.response.*;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
 import com.example.medcheckb8.db.enums.Detachment;
@@ -33,7 +31,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations = "classpath:application-uluk.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 @ExtendWith(SpringExtension.class)
 class DoctorServiceTest {
     @Autowired
@@ -52,12 +50,9 @@ class DoctorServiceTest {
         String keyword = "А";
         int page = 1;
         int size = 5;
-        PaginationExperts actualExperts = doctorService.getAllWithSearchExperts(keyword,page,size);
 
+        PaginationResponse<ExpertResponse> actualExperts = doctorService.getAllWithSearchExperts(keyword, page, size);
         Assertions.assertNotNull(actualExperts);
-
-
-
     }
 
     @Test
