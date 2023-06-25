@@ -54,7 +54,7 @@ public class DoctorAPI {
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return doctorService.getAllWithSearchExperts(keyWord ,pageable);
+        return doctorService.getAllWithSearchExperts(keyWord,pageable);
     }
 
     @PutMapping()
