@@ -86,16 +86,20 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public PaginationExperts getAllWithSearchExperts(String keyWord, int page , int size) {
-        Pageable pageable = PageRequest.of(page-1, size);
-        Page<ExpertResponse> expertResponses = doctorRepository.getAllWithSearch(keyWord,pageable);
-        PaginationExperts paginationExperts = new PaginationExperts();
-        paginationExperts.setResponses(expertResponses.getContent());
-        paginationExperts.setCurrentPage(pageable.getPageNumber()+1);
-        paginationExperts.setPageSize(expertResponses.getSize());
-        for (ExpertResponse response : paginationExperts.getResponses()) {
-            response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
+        try {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<ExpertResponse> expertResponses = doctorRepository.getAllWithSearch(keyWord, pageable);
+            PaginationExperts paginationExperts = new PaginationExperts();
+            paginationExperts.setResponses(expertResponses.getContent());
+            paginationExperts.setCurrentPage(pageable.getPageNumber() + 1);
+            paginationExperts.setPageSize(expertResponses.getSize());
+            for (ExpertResponse response : paginationExperts.getResponses()) {
+                response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
+            }
+            return paginationExperts;
+        }catch (NullPointerException e){
+            throw new BadRequestException(e.getMessage());
         }
-        return paginationExperts;
     }
 
     @Override
