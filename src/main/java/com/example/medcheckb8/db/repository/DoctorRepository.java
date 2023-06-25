@@ -6,6 +6,8 @@ import com.example.medcheckb8.db.dto.response.OurDoctorsResponse;
 import com.example.medcheckb8.db.dto.response.SearchResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,7 +23,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             " d.image, cast(d.department.name as string),s.dataOfFinish) " +
             "from Doctor d left join Schedule s on d.id = s.doctor.id where :keyWord = null or d.firstName ilike concat('%',:keyWord,'%') or d.lastName ilike concat('%',:keyWord,'%') or" +
             " cast(d.department.name as STRING ) ilike concat('%',:keyWord,'%') order by d.id desc")
-    List<ExpertResponse> getAllWithSearch(String keyWord);
+    Page<ExpertResponse> getAllWithSearch(String keyWord, Pageable pageable);
 
     @Query("select new com.example.medcheckb8.db.dto.response.DoctorResponse(d.id, d.firstName, d.lastName, d.position," +
             " d.image, d.description, cast(d.department.name as string),d.department.id) " +
