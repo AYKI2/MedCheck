@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -84,12 +85,19 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Page<ExpertResponse> getAllWithSearchExperts(String keyWord, Pageable pageable) {
-        Page<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord,pageable);
-        for (ExpertResponse response : allWithSearch) {
+    public PaginationExperts getAllWithSearchExperts(String keyWord, int page , int size) {
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<ExpertResponse> expertResponses = doctorRepository.getAllWithSearch(keyWord,pageable);
+        PaginationExperts paginationExperts = new PaginationExperts();
+        paginationExperts.setResponses(expertResponses.getContent());
+        paginationExperts.setCurrentPage(pageable.getPageNumber()+1);
+        paginationExperts.setPageSize(expertResponses.getSize());
+//        return doctorRepository.getAllWithSearch(keyWord,pageable);
+//        Page<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord,pageable);
+        for (ExpertResponse response : paginationExperts.getResponses()) {
             response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
         }
-        return allWithSearch;
+        return paginationExperts;
     }
 
     @Override

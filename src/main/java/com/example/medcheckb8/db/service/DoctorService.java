@@ -16,7 +16,7 @@ public interface DoctorService {
 
     DoctorResponse findById(Long id);
 
-    Page<ExpertResponse> getAllWithSearchExperts(String keyWord , Pageable pageable);
+    PaginationExperts getAllWithSearchExperts(String keyWord , int page , int size);
 
     SimpleResponse update(DoctorUpdateRequest doctorRequest);
 
