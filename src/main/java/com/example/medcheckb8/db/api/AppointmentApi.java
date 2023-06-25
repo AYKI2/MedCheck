@@ -45,8 +45,8 @@ public class AppointmentApi {
     @Operation(summary = "Получить все записи на прием.",
             description = "С помощью этого метода администратор может просмотреть все записи на прием. Только для администратора.")
     public PaginationResponse<GetAllAppointmentResponse> getAll(@RequestParam(required = false) String keyWord,
-                                                                @RequestParam(required = false) int page,
-                                                                @RequestParam(required = false) int size) {
+                                                                @RequestParam(required = false, defaultValue = "1") int page,
+                                                                @RequestParam(required = false, defaultValue = "50") int size) {
         return service.getAll(keyWord, page, size);
     }
 

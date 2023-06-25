@@ -32,8 +32,8 @@ public class ApplicationAPI {
     @Operation(summary = "Способ получения всех заброшенных заявок.",
             description = "С помощью этого метода администратор может получить все запрошенные заявки с пагинацией. Только для администратора.")
     public PaginationResponse<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word,
-                                                                     @RequestParam(required = false) int page,
-                                                                     @RequestParam(required = false) int size) {
+                                                                     @RequestParam(required = false, defaultValue = "1") int page,
+                                                                     @RequestParam(required = false, defaultValue = "50") int size) {
         return service.getAllApplication(word,page,size);
     }
 

@@ -62,7 +62,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new NotFountException("Пользователь не найден!"));
         Doctor doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(() -> new NotFountException("Доктор с идентификатором: " + request.doctorId() + " не найден!"));
-        Department department = departmentRepository.findByName(Detachment.valueOf(request.department()))
+        Department department = departmentRepository.findByName(Detachment.valueOf(request.department().toUpperCase()))
                 .orElseThrow(() -> new NotFountException("Отделение с названием: " + request.department() + " не найден!"));
         if (!doctorRepository.existsDoctorByDepartmentAndId(department, request.doctorId())) {
             throw new BadRequestException("Этот специалист не работает в данном отделении.");
