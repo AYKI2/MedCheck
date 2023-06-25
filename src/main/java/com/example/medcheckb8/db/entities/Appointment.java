@@ -19,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_gen")
-    @SequenceGenerator(name = "appointment_gen", sequenceName = "appointment_seq", allocationSize = 1, initialValue = 6)
+    @SequenceGenerator(name = "appointment_gen", sequenceName = "appointment_seq", allocationSize = 1, initialValue = 9)
     private Long id;
     private String fullName;
     private String phoneNumber;

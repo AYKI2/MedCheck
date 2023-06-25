@@ -196,9 +196,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .build();
         } else if(user.getAccount().getRole() == Role.ADMIN) {
             for (Long appointment : appointments) {
-                Appointment appointmentObject = repository.findById(appointment)
-                        .orElseThrow(()-> new NotFountException(String.format("Запись с id: %d не найдено!", appointment)));
-                user.getAppointments().remove(appointmentObject);
                 repository.deleteById(appointment);
             }
             return SimpleResponse.builder()
@@ -223,6 +220,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentResponseId getUserAppointmentById(Long id) {
-        return appointmentRepository.findByPatientId(id);
+        AppointmentResponseId patient = appointmentRepository.findByPatientId(id);
+        patient.setDepartmentName(Detachment.valueOf(patient.getDepartmentName()).getTranslate());
+        return patient;
     }
 }

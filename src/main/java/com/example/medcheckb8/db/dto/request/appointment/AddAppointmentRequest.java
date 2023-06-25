@@ -11,12 +11,14 @@ import java.time.LocalDate;
 @Builder
 public record AddAppointmentRequest(
         @Size(min = 4, max = 20, message = "Служба должна содержать от 4 до 20 символов.")
-        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Служба должна содержать только буквы.") String department,
+        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Служба должна содержать только буквы.")
+        String department,
         Long doctorId,
         LocalDate date,
         String time,
         @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов.")
-        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z]+(([',. -][а-яА-ЯёЁa-zA-Z ])?[а-яА-ЯёЁa-zA-Z])$", message = "Имя должно содержать только буквы.") String fullName,
+        @Pattern(regexp = "^[а-яА-ЯёЁa-zA-Z\\s]+$", message = "Имя должно содержать только буквы.")
+        String fullName,
         @PhoneNumberValid(message = "Неверный номер телефона!")
         String phoneNumber,
         @Email(message = "Неверный формат email!")
