@@ -2,8 +2,6 @@ package com.example.medcheckb8.db.repository;
 
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
 import com.example.medcheckb8.db.entities.Application;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +15,7 @@ import java.util.Optional;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id, a.name, a.date, a.phoneNumber, a.processed) " +
             "from Application a where (:word is null or :word = '' or a.name ilike concat('%', :word, '%'))")
-    Page<ApplicationResponse> globalSearch(@Param("word") String word, Pageable pageable);
+    List<ApplicationResponse> globalSearch(@Param("word") String word);
 
     @Query("select new com.example.medcheckb8.db.dto.response.ApplicationResponse(a.id,a.name,a.date,a.phoneNumber,a.processed)from Application a where a.id = ?1")
     Optional<ApplicationResponse> findByIdApplication(Long id);

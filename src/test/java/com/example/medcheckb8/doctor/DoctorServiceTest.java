@@ -48,10 +48,8 @@ class DoctorServiceTest {
     @Test
     public void testGetAllWithSearchExperts() {
         String keyword = "А";
-        int page = 1;
-        int size = 5;
 
-        PaginationResponse<ExpertResponse> actualExperts = doctorService.getAllWithSearchExperts(keyword, page, size);
+        List<ExpertResponse> actualExperts = doctorService.getAllWithSearchExperts(keyword);
         Assertions.assertNotNull(actualExperts);
     }
 

@@ -20,9 +20,6 @@ import com.example.medcheckb8.db.entities.Account;
 import com.example.medcheckb8.db.entities.Appointment;
 import com.example.medcheckb8.db.repository.AppointmentRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -129,10 +126,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public PaginationResponse<GetAllAppointmentResponse> getAll(String keyWord, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Appointment> all = repository.findAll(keyWord, pageable);
-        List<GetAllAppointmentResponse> appointments = new ArrayList<>();
+    public List<GetAllAppointmentResponse> getAll(String keyWord) {
+        List<Appointment> all = repository.findAll(keyWord);
+        List<GetAllAppointmentResponse> response = new ArrayList<>();
         boolean status = false;
         for (Appointment appointment : all) {
             if (appointment.getStatus().equals(Status.CONFIRMED)) {
@@ -140,7 +136,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             } else if (appointment.getStatus().equals(Status.COMPLETED)) {
                 status = true;
             }
-            appointments.add(GetAllAppointmentResponse.builder()
+            response.add(GetAllAppointmentResponse.builder()
                     .appointmentId(appointment.getId())
                     .patientId(appointment.getUser().getId())
                     .doctorId(appointment.getDoctor().getId())
@@ -154,10 +150,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .status(status)
                     .build());
         }
-        PaginationResponse<GetAllAppointmentResponse> response = new PaginationResponse<>();
-        response.setResponses(appointments);
-        response.setCurrentPage(pageable.getPageNumber() + 1);
-        response.setPageSize(appointments.size());
         return response;
     }
 

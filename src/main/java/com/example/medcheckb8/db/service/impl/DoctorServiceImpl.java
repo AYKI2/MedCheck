@@ -18,9 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -85,21 +82,12 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public PaginationResponse<ExpertResponse> getAllWithSearchExperts(String keyWord, int page , int size) {
-        try {
-            Pageable pageable = PageRequest.of(page - 1, size);
-            Page<ExpertResponse> expertResponses = doctorRepository.getAllWithSearch(keyWord, pageable);
-            PaginationResponse<ExpertResponse> paginationExperts = new PaginationResponse<>();
-            paginationExperts.setResponses(expertResponses.getContent());
-            paginationExperts.setCurrentPage(pageable.getPageNumber() + 1);
-            paginationExperts.setPageSize(expertResponses.getSize());
-            for (ExpertResponse response : paginationExperts.getResponses()) {
-                response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
-            }
-            return paginationExperts;
-        }catch (IllegalArgumentException e){
-            throw new BadRequestException(e.getMessage());
+    public List<ExpertResponse> getAllWithSearchExperts(String keyWord) {
+        List<ExpertResponse> experts = doctorRepository.getAllWithSearch(keyWord);
+        for (ExpertResponse response : experts) {
+            response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
         }
+        return experts;
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.example.medcheckb8.db.dto.request.appointment.AddAppointmentRequest;
 import com.example.medcheckb8.db.dto.request.appointment.FreeSpecialistRequest;
 import com.example.medcheckb8.db.dto.response.AppointmentResponse;
 import com.example.medcheckb8.db.dto.response.AppointmentResponseId;
-import com.example.medcheckb8.db.dto.response.PaginationResponse;
 import com.example.medcheckb8.db.dto.response.appointment.AddAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.GetAllAppointmentResponse;
 import com.example.medcheckb8.db.dto.response.appointment.ScheduleResponse;
@@ -44,10 +43,8 @@ public class AppointmentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "Получить все записи на прием.",
             description = "С помощью этого метода администратор может просмотреть все записи на прием. Только для администратора.")
-    public PaginationResponse<GetAllAppointmentResponse> getAll(@RequestParam(required = false) String keyWord,
-                                                                @RequestParam(required = false, defaultValue = "1") int page,
-                                                                @RequestParam(required = false, defaultValue = "50") int size) {
-        return service.getAll(keyWord, page, size);
+    public List<GetAllAppointmentResponse> getAll(@RequestParam(required = false) String keyWord) {
+        return service.getAll(keyWord);
     }
 
     @PostMapping("/free")

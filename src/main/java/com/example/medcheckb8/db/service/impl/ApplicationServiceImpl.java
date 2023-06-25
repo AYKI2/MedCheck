@@ -1,7 +1,6 @@
 package com.example.medcheckb8.db.service.impl;
 
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
-import com.example.medcheckb8.db.dto.response.PaginationResponse;
 import com.example.medcheckb8.db.entities.Application;
 import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.service.ApplicationService;
@@ -11,9 +10,6 @@ import com.example.medcheckb8.db.repository.ApplicationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -50,15 +46,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public PaginationResponse<ApplicationResponse> getAllApplication(String word, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        logger.info("Результаты поиска для '" + word + "': " + repository.globalSearch(word,pageable).getTotalElements());
-        Page<ApplicationResponse> applicationPage = repository.globalSearch(word,pageable);
-        PaginationResponse<ApplicationResponse> response = new PaginationResponse<>();
-        response.setResponses(applicationPage.getContent());
-        response.setCurrentPage(pageable.getPageNumber() + 1);
-        response.setPageSize(applicationPage.getSize());
-        return response;
+    public List<ApplicationResponse> getAllApplication(String word) {
+        logger.info("Результаты поиска для '" + word + "': " + repository.globalSearch(word).size());
+        return repository.globalSearch(word);
     }
 
     @Override

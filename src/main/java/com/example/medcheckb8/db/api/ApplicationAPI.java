@@ -2,7 +2,6 @@ package com.example.medcheckb8.db.api;
 
 import com.example.medcheckb8.db.dto.request.ApplicationRequest;
 import com.example.medcheckb8.db.dto.response.ApplicationResponse;
-import com.example.medcheckb8.db.dto.response.PaginationResponse;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.service.ApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,10 +30,8 @@ public class ApplicationAPI {
     @GetMapping("/getAll")
     @Operation(summary = "Способ получения всех заброшенных заявок.",
             description = "С помощью этого метода администратор может получить все запрошенные заявки с пагинацией. Только для администратора.")
-    public PaginationResponse<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word,
-                                                                     @RequestParam(required = false, defaultValue = "1") int page,
-                                                                     @RequestParam(required = false, defaultValue = "50") int size) {
-        return service.getAllApplication(word,page,size);
+    public List<ApplicationResponse> getAllApplication(@RequestParam(required = false) String word) {
+        return service.getAllApplication(word);
     }
 
     @GetMapping("/find")
