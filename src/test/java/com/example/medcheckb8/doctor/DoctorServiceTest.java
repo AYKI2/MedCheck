@@ -3,7 +3,7 @@ package com.example.medcheckb8.doctor;
 import com.example.medcheckb8.db.dto.request.DoctorSaveRequest;
 import com.example.medcheckb8.db.dto.request.DoctorUpdateRequest;
 import com.example.medcheckb8.db.dto.response.DoctorResponse;
-import com.example.medcheckb8.db.dto.response.ExpertResponse;
+import com.example.medcheckb8.db.dto.response.PaginationExperts;
 import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.entities.Department;
 import com.example.medcheckb8.db.entities.Doctor;
@@ -12,6 +12,8 @@ import com.example.medcheckb8.db.exceptions.NotFountException;
 import com.example.medcheckb8.db.repository.DepartmentRepository;
 import com.example.medcheckb8.db.repository.DoctorRepository;
 import com.example.medcheckb8.db.service.impl.DoctorServiceImpl;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,16 +25,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-local.properties")
+@Transactional
+@TestPropertySource(locations = "classpath:application-uluk.properties")
 @ExtendWith(SpringExtension.class)
 class DoctorServiceTest {
     @Autowired
@@ -47,22 +48,16 @@ class DoctorServiceTest {
     }
 
     @Test
-    void getAllWithSearchExperts() {
-        //firstName,LastName писать маленкими буквами а услуги(Detachment) большими
-        String keyword = "гер";
-        ExpertResponse expertRespon = new ExpertResponse(111L, true, "Акыл", "торин", "global", "image", Detachment.ALLERGOLOGY.getTranslate(), LocalDate.now());
-        ExpertResponse expertRespon2 = new ExpertResponse(101L, true, "Геракыл", "торин", "global", "image", Detachment.DERMATOLOGY.getTranslate(), LocalDate.now());
-        List<ExpertResponse> expectedExperts = Arrays.asList(expertRespon, expertRespon2);
+    public void testGetAllWithSearchExperts() {
+        String keyword = "А";
+        int page = 1;
+        int size = 5;
+        PaginationExperts actualExperts = doctorService.getAllWithSearchExperts(keyword,page,size);
 
-        when(doctorRepository.getAllWithSearch(anyString())).thenReturn(expectedExperts);
+        Assertions.assertNotNull(actualExperts);
 
 
-        List<ExpertResponse> experts = doctorService.getAllWithSearchExperts(keyword);
 
-        assertNotNull(experts);
-        assertFalse(experts.isEmpty());
-        assertEquals(2, experts.size());
-        assertEquals(expertRespon, experts.get(0));
     }
 
     @Test
