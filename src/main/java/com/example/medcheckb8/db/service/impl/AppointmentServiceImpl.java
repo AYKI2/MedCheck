@@ -105,8 +105,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         context.setVariable("patient", appointment.getFullName());
         context.setVariable("phoneNumber", appointment.getPhoneNumber());
 
-        context.setVariable("link", request.link());
-
         String htmlContent = templateEngine.process("emailMessage.html", context);
         emailSenderService.sendEmail(request.email(), subject, htmlContent);
 

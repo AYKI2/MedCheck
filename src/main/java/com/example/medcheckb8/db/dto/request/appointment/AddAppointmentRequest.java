@@ -21,7 +21,6 @@ public record AddAppointmentRequest(
         String phoneNumber,
         @Email(message = "Неверный формат email!")
         String email,
-        String zoneId,
-        String link
+        String zoneId
 ) {
 }
