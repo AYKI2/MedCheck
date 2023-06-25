@@ -92,8 +92,6 @@ public class DoctorServiceImpl implements DoctorService {
         paginationExperts.setResponses(expertResponses.getContent());
         paginationExperts.setCurrentPage(pageable.getPageNumber()+1);
         paginationExperts.setPageSize(expertResponses.getSize());
-//        return doctorRepository.getAllWithSearch(keyWord,pageable);
-//        Page<ExpertResponse> allWithSearch = doctorRepository.getAllWithSearch(keyWord,pageable);
         for (ExpertResponse response : paginationExperts.getResponses()) {
             response.setDepartmentName(Detachment.valueOf(response.getDepartmentName()).getTranslate());
         }
