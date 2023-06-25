@@ -73,6 +73,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else if (booked == null) {
             throw new BadRequestException("Этот специалист не работает в этот день или в это время! Рабочие даты: с" + doctor.getSchedule().getDataOfStart() + " to " + doctor.getSchedule().getDataOfFinish());
         }
+
         Appointment appointment = Appointment.builder()
                 .fullName(request.fullName())
                 .phoneNumber(request.phoneNumber())
