@@ -6,10 +6,10 @@ import com.example.medcheckb8.db.dto.response.SimpleResponse;
 import com.example.medcheckb8.db.dto.response.UserGetResultResponse;
 import com.example.medcheckb8.db.dto.response.UserResponse;
 
-import java.util.Set;
+import java.util.List;
 
 public interface UserService {
-    Set<UserResponse> getAllPatients(String word);
+    List<UserResponse> getAllPatients(String word);
 
     SimpleResponse getProfile(ProfileRequest request);
 
