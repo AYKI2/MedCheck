@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(User.class.getName());
 
     @Override
-    public List<UserResponse> getAllPatients(String word) {
+    public Set<UserResponse> getAllPatients(String word) {
         logger.info("Получение всех пациентов с поисковым термином: {}" + word);
         if (word == null) {
             return repository.getAllPatients();

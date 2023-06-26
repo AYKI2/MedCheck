@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -16,11 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByAccountId(Long id);
 
     @Query("select new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email, r.dateOfIssue,r.timeOfIssue) from User u join Result r where r.user.id = u.id")
-    List<UserResponse> getAllPatients();
+    Set<UserResponse> getAllPatients();
 
     @Query("select new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email, r.dateOfIssue,r.timeOfIssue) " +
             "from User u  join Result r where r.user.id = u.id and" +
             "(u.firstName like %:word% or u.lastName like %:word%  or u.account.email like %:word%) ")
-    List<UserResponse> getAllPatients(String word);
+    Set<UserResponse> getAllPatients(String word);
 
 }

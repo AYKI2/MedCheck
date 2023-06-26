@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class UserApi {
     @GetMapping
     @Operation(summary = "Получить всех пациентов.",
             description = "С помощью этого метода администратор может получить всех пациентов. Только для администратора.")
-    public List<UserResponse> getAllPatients(@RequestParam(required = false) String word) {
+    public Set<UserResponse> getAllPatients(@RequestParam(required = false) String word) {
         return service.getAllPatients(word);
     }
 
