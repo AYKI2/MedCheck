@@ -9,7 +9,8 @@ public record SearchResponse(
         String doctorFirstName,
         String doctorLastName,
         String doctorPosition,
-        String departmentName
+        String departmentName,
+        String image
 ) {
 
 }

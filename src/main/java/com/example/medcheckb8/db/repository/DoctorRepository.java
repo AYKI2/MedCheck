@@ -31,7 +31,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("select d from Doctor d where lower(d.department.name) = lower(?1) and d.schedule != null")
     List<Doctor> findByDepartmentName(String department);
 
-    @Query("select new com.example.medcheckb8.db.dto.response.SearchResponse(d.id, p.id, d.firstName, d.lastName, d.position, lower(p.name)) from Doctor d join d.department p" +
+    @Query("select new com.example.medcheckb8.db.dto.response.SearchResponse(d.id, p.id, d.firstName, d.lastName, d.position, lower(p.name), d.image) from Doctor d join d.department p" +
             " where  d.firstName ilike %:word% or d.lastName ilike %:word% or lower(p.name) ilike lower(concat('%', :word, '%'))")
     List<SearchResponse> globalSearch(String word);
 
