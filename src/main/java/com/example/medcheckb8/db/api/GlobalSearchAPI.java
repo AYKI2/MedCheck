@@ -5,7 +5,6 @@ import com.example.medcheckb8.db.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class GlobalSearchAPI {
 
     private final SearchService searchService;
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','PATIENT')")
     @GetMapping
     @Operation(summary = "Метод глобального поиска",
                     description = "С помощью этого метода вы можете найти врача по имени и фамилии, " +

@@ -28,7 +28,6 @@ public class ResultApi {
         return resultService.addResult(request);
     }
 
-    @PreAuthorize("hasAnyAuthority('PATIENT')")
     @GetMapping
     @Operation(summary = "Метод получения результата",
             description = "Вы можете получить результат по номеру заказа.")

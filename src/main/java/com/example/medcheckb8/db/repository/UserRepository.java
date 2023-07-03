@@ -16,15 +16,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByAccountId(Long id);
 
-    @Query("SELECT DISTINCT new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email, r.dateOfIssue, r.timeOfIssue) " +
+    @Query("SELECT DISTINCT new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email) " +
             "FROM User u " +
-            "JOIN Result r ON r.user.id = u.id " +
             "WHERE u.firstName <> 'Админ'")
     List<UserResponse> getAllPatients();
 
-    @Query("SELECT DISTINCT new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email, r.dateOfIssue, r.timeOfIssue) " +
+    @Query("SELECT DISTINCT new com.example.medcheckb8.db.dto.response.UserResponse(u.id, u.firstName, u.lastName, u.phoneNumber, u.account.email) " +
             "FROM User u " +
-            "JOIN Result r ON r.user.id = u.id " +
             "WHERE u.firstName <> 'Админ' AND " +
             "(u.firstName LIKE %:word% OR u.lastName LIKE %:word% OR u.account.email LIKE %:word%)")
     List<UserResponse> getAllPatients(@Param("word") String word);

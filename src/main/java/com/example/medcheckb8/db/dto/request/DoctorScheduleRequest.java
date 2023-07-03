@@ -11,7 +11,7 @@ import java.util.Map;
 @Builder
 public record DoctorScheduleRequest(
         @NotBlank(message = "Отдел не может быть пустым!")
-        @NotNull(message = "Отдел не может быть null!")
+        @NotNull(message = "Отдел не может быть пустым!")
         String department,
         Long doctorId,
         @FutureOrPresent
